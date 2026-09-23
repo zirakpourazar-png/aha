@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yağmurla π</title>
+<meta name="description" content="Bir kareye rastgele damlalar düşür, π sayısını bul. Şansla matematik.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E9EEF5;--ink:#0F1726;--muted:#56627A;--card:#FFFFFF;--line:#CBD4E2;--in:#2563EB;--out:#F97316;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A0F18;--ink:#E4EAF4;--muted:#95A2BA;--card:#111827;--line:#243148;--in:#60A5FA;--out:#FB923C;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0A0F18;--ink:#E4EAF4;--muted:#95A2BA;--card:#111827;--line:#243148;--in:#60A5FA;--out:#FB923C;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Space Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 3vh}
+h1{margin:0;font-weight:700;font-size:clamp(58px,12vw,136px);line-height:.88;letter-spacing:-.045em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:27em}
+.lab{display:grid;grid-template-columns:1fr;gap:18px;margin:0 0 2em}
+@media (min-width:860px){.lab{grid-template-columns:minmax(0,480px) minmax(0,1fr);align-items:start}}
+.sq{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.sq canvas{display:block;width:100%;aspect-ratio:1/1}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.pi{font-family:"JetBrains Mono",ui-monospace,monospace;font-weight:700;font-size:clamp(40px,6vw,64px);line-height:1;font-variant-numeric:tabular-nums;margin:0}
+.real{margin:.3em 0 1em;color:var(--muted);font-family:"JetBrains Mono",ui-monospace,monospace}
+.real b{color:var(--ink)}
+.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 1em}
+.kv p{margin:0}.kv b{display:block;font-size:22px;font-variant-numeric:tabular-nums}.kv span{color:var(--muted);font-size:14px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.btn{font:inherit;font-weight:700;font-size:16px;padding:11px 18px;min-height:48px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.btn2{font:inherit;font-weight:600;font-size:15px;padding:10px 14px;min-height:48px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+button:focus-visible{outline:3px solid var(--in);outline-offset:2px}
+.chart svg{display:block;width:100%;height:auto}
+.facts{max-width:44em}
+.facts h2{font-size:clamp(24px,3vw,32px);margin:1.2em 0 .4em}
+.facts p{margin:0 0 .9em}
+.fine{margin:2.5em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Yağmurla π</h1>
+    <p class="lede">Bir kareye rastgele yağmur damlaları düşür. İçindeki çeyrek daireye düşenleri say. Bu kadar. Şansın içinden π sayısı çıkacak.</p>
+  </header>
+  <section class="lab">
+    <div class="sq"><canvas id="cv" role="img" aria-label="Kare ve içinde çeyrek daire; üzerine düşen rastgele noktalar"></canvas></div>
+    <div class="panel" aria-live="polite">
+      <p class="pi" id="pi">—</p>
+      <p class="real">Gerçek π: <b>3,14159265…</b></p>
+      <div class="kv"><p><b id="n">0</b><span>damla</span></p><p><b id="in">0</b><span>dairenin içinde</span></p><p><b id="err">—</b><span>sapma</span></p></div>
+      <div class="row">
+        <button class="btn" id="rain" type="button">Yağmuru başlat</button>
+        <button class="btn2" id="burst" type="button">+10.000 damla</button>
+        <button class="btn2" id="reset" type="button">Sıfırla</button>
+      </div>
+      <div class="chart"><svg id="svg" viewBox="0 0 500 180" role="img" aria-label="Tahminin zamanla π'ye yaklaşması"></svg></div>
+    </div>
+  </section>
+  <section class="facts">
+    <h2>Neden işe yarıyor?</h2>
+    <p>Kenarı 1 olan karenin alanı 1. İçindeki çeyrek dairenin alanı ise π/4. Damlalar rastgele ve eşit dağılırsa, dairenin içine düşenlerin oranı bu iki alanın oranına yaklaşır: π/4. Oranı 4'le çarparsın, π'ye ulaşırsın.</p>
+    <p>Yöntemin adı Monte Carlo; adını kumarhanesiyle ünlü şehirden alır. Rastgeleliği hesap aracına çeviren bu fikir, 1940'larda nükleer fizikte kullanılmaya başlandı ve bugün hava tahmininden ilaç geliştirmeye kadar her yerde.</p>
+    <h2>Neden bu kadar yavaş?</h2>
+    <p>Tahminin hatası damla sayısının kareköküyle küçülür: bir basamak daha doğru sonuç için yaklaşık 100 kat daha fazla damla gerekir. Bilgisayarlar π'yi başka yöntemlerle trilyonlarca basamağa kadar hesapladı; Monte Carlo onun için değil, formülü olmayan sorular için değerli.</p>
+  </section>
+  <p class="fine">Rastgele sayılar tarayıcının üretecinden gelir. Her denemede tahmin farklı olur; damla arttıkça gerçek değere yaklaşır. Bilgilendirme amaçlıdır.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const cv = $('cv'), ctx = cv.getContext('2d');
+  let S = 400, n = 0, inside = 0, raining = false, hist = [];
+  const css = k => getComputedStyle(document.documentElement).getPropertyValue(k).trim();
+  function size(){ const d = Math.min(devicePixelRatio || 1, 2), r = cv.getBoundingClientRect(); S = r.width || 400; cv.width = cv.height = Math.round(S * d); ctx.setTransform(d, 0, 0, d, 0, 0); base(); }
+  function base(){ ctx.fillStyle = css('--card'); ctx.fillRect(0, 0, S, S); ctx.strokeStyle = css('--ink'); ctx.lineWidth = 2; ctx.strokeRect(1, 1, S - 2, S - 2); ctx.beginPath(); ctx.arc(0, S, S - 1, -Math.PI / 2, 0); ctx.stroke(); }
+  function drop(m, draw){
+    const cI = css('--in'), cO = css('--out'), r = Math.max(1, S / 260);
+    for (let i = 0; i < m; i++){
+      const x = Math.random(), y = Math.random(), inn = x * x + y * y <= 1;
+      n++; if (inn) inside++;
+      if (draw){ ctx.fillStyle = inn ? cI : cO; ctx.fillRect(x * S - r / 2, (1 - y) * S - r / 2, r, r); }
+      if (n <= 100 || n % Math.max(1, Math.floor(n / 200)) === 0) hist.push([n, 4 * inside / n]);
+    }
+    ui();
+  }
+  function ui(){
+    const est = n ? 4 * inside / n : NaN;
+    $('pi').textContent = n ? est.toLocaleString('tr-TR', { minimumFractionDigits: 5, maximumFractionDigits: 5 }) : '—';
+    $('n').textContent = n.toLocaleString('tr-TR'); $('in').textContent = inside.toLocaleString('tr-TR');
+    $('err').textContent = n ? '%' + (Math.abs(est - Math.PI) / Math.PI * 100).toLocaleString('tr-TR', { maximumFractionDigits: 3 }) : '—';
+    chart();
+  }
+  function chart(){
+    const W = 500, H = 180, L = 40, B = 24, T = 8, R = 8, lo = 2.6, hi = 3.7;
+    const maxN = Math.max(100, n), X = v => L + Math.log10(Math.max(1, v)) / Math.log10(maxN) * (W - L - R), Y = v => T + (1 - (Math.min(hi, Math.max(lo, v)) - lo) / (hi - lo)) * (H - T - B);
+    let s = `<line x1="${L}" x2="${W - R}" y1="${Y(Math.PI)}" y2="${Y(Math.PI)}" stroke="${css('--muted')}" stroke-dasharray="4 4"/><text x="${L - 6}" y="${Y(Math.PI) + 4}" font-size="12" text-anchor="end" fill="${css('--muted')}">π</text>`;
+    [1, 10, 100, 1000, 10000, 100000, 1000000].filter(v => v <= maxN).forEach(v => { s += `<text x="${X(v)}" y="${H - 6}" font-size="11" text-anchor="middle" fill="${css('--muted')}">${v >= 1e6 ? (v / 1e6) + ' mn' : v >= 1000 ? (v / 1000) + ' bin' : v}</text>`; });
+    if (hist.length > 1){ const d = hist.map(([a, b], i) => (i ? 'L' : 'M') + X(a).toFixed(1) + ' ' + Y(b).toFixed(1)).join(''); s += `<path d="${d}" fill="none" stroke="${css('--in')}" stroke-width="2"/>`; }
+    $('svg').innerHTML = s;
+  }
+  let last = 0;
+  function loop(now){ if (!raining) return; const per = Math.min(400, 20 + Math.floor(n / 50)); drop(per, true); requestAnimationFrame(loop); }
+  $('rain').addEventListener('click', () => { raining = !raining; $('rain').textContent = raining ? 'Durdur' : 'Yağmuru başlat'; if (raining) requestAnimationFrame(loop); });
+  $('burst').addEventListener('click', () => drop(10000, true));
+  $('reset').addEventListener('click', () => { raining = false; $('rain').textContent = 'Yağmuru başlat'; n = 0; inside = 0; hist = []; base(); ui(); });
+  window.addEventListener('resize', () => { size(); });
+  size(); ui();
+})();
+</script>
+</body>
+</html>

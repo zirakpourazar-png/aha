@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dünya'nın Merkezine</title>
+<meta name="description" content="Aşağı kaydır ve kaz: kabuktan mantoya, sıvı demirden katı çekirdeğe, 6.371 km.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,400..900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#fff;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark}}
+:root[data-theme="dark"]{color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:#6FAE4E;color:#fff;font-family:"Anybody",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5;transition:background-color .2s linear}
+.hud{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);z-index:5;display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:12px 18px;background:rgba(0,0,0,.28);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.depth{font-weight:900;font-stretch:70%;font-size:clamp(32px,6vw,52px);line-height:1;font-variant-numeric:tabular-nums}
+.layer{font-weight:700;font-size:16px;text-align:right}
+.intro{min-height:92vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 18px 10vh;max-width:1000px;margin:0 auto}
+.intro h1{margin:0;font-weight:900;font-stretch:65%;font-size:clamp(64px,14vw,170px);line-height:.85;letter-spacing:-.01em;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.2)}
+.intro p{font-size:clamp(19px,2.4vw,24px);max-width:24em;margin:.6em 0 0}
+.shaft{position:relative;max-width:1000px;margin:0 auto}
+.note{position:absolute;left:18px;right:18px;max-width:30em;padding:14px 16px;border-radius:12px;background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.note .d{margin:0;font-weight:900;font-stretch:70%;font-size:26px;line-height:1.1}
+.note h2{margin:.1em 0 .25em;font-size:21px;line-height:1.2}
+.note p{margin:0}
+.end{max-width:1000px;margin:0 auto;padding:10vh 18px 12vh}
+.end h2{margin:0;font-weight:900;font-stretch:65%;font-size:clamp(52px,10vw,120px);line-height:.9}
+.end p{max-width:34em;font-size:19px}
+.end button{font:inherit;font-weight:700;padding:12px 20px;min-height:48px;border-radius:10px;border:0;background:#fff;color:#2B0A00;cursor:pointer}
+.end button:focus-visible{outline:3px solid #FFD34D;outline-offset:3px}
+.fine{font-size:14px;opacity:.85;max-width:46em}
+@media (prefers-reduced-motion:reduce){body{transition:none}}
+</style>
+</head>
+<body>
+<div class="hud" aria-live="off"><span class="depth" id="depth">0 km</span><span class="layer" id="layer">Yüzey</span></div>
+<header class="intro">
+  <h1>Dünya'nın Merkezine</h1>
+  <p>Ayağının altında 6.371 kilometre var. Aşağı kaydır ve kazmaya başla. İlk metreler yavaş, sonra hızlanıyoruz: ölçek derinleştikçe büyüyor.</p>
+</header>
+<main class="shaft" id="shaft"></main>
+<section class="end" id="end">
+  <h2>6.371 km. Merkez.</h2>
+  <p>Buradaki basınç yüzeydekinin yaklaşık 3,6 milyon katı, sıcaklık Güneş'in yüzeyi kadar. Ve biz, insanlık tarihinin en derin deliğiyle bu yolun yalnızca %0,2'sini kazabildik.</p>
+  <p><button type="button" id="top">Yüzeye dön</button></p>
+  <p class="fine">Derinlikler yaklaşıktır; katmanların sınırları yere göre değişir. Merkez sıcaklığı için tahminler yaklaşık 5.000–6.000 °C arasındadır. Görsel ölçek doğrusal değildir: ilk kilometreler görünür olsun diye büyütüldü. Bilgilendirme amaçlıdır.</p>
+</section>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const R = 6371, K = 7.5;
+  const N = [
+    [0.002, 'Bir kazma boyu', 'Toprak, kök ve kum. Bir çay kaşığı toprakta, Dünya\'daki insan sayısından fazla mikroorganizma yaşar.'],
+    [0.105, 'En derin metro istasyonu', 'Kiev\'deki Arsenalna istasyonu yaklaşık 105 metre derinlikte.'],
+    [0.83, 'Burj Halife ters çevrilse', 'Dünyanın en yüksek binası yere gömülse ancak buraya kadar gelirdi.'],
+    [2.2, 'En derin mağara', 'Kafkasya\'daki Veryovkina Mağarası, insanların inebildiği en derin mağara: yaklaşık 2,2 km.'],
+    [4, 'En derin maden', 'Güney Afrika\'daki altın madenleri yaklaşık 4 km derinliğe iniyor. Kayalar burada 60 °C\'yi buluyor; madenciler yoğun soğutmayla çalışıyor.'],
+    [10.9, 'Okyanusun dibi', 'Mariana Çukuru\'nun en derin noktası deniz seviyesinin yaklaşık 10,9 km altında. Kıtaların altında ise hâlâ kabuktayız.'],
+    [12.26, 'İnsanlığın en derin deliği', 'Rusya\'daki Kola Süper Derin Kuyusu 1989\'da 12.262 metrede durdu. Dipte sıcaklık 180 °C\'ye ulaşmıştı ve kaya plastik gibi davranmaya başlamıştı. Dünya\'nın yarıçapının yalnızca %0,2\'si.'],
+    [35, 'Kabuğun sonu', 'Kıtaların altında kabuk ortalama 30–50 km kalınlığında; okyanusların altında yalnızca 5–10 km. Bu sınıra Moho denir. Altında manto başlar.'],
+    [150, 'Elmasların doğduğu yer', 'Elmaslar yaklaşık 150–200 km derinlikte, muazzam basınç ve sıcaklıkta oluşur; volkanik patlamalarla yüzeye taşınır.'],
+    [700, 'En derin depremler', 'Depremlerin çoğu ilk birkaç on kilometrede olur, ama bazıları 700 km derinlikte başlayabilir.'],
+    [2890, 'Sıvı çekirdek', 'Manto burada biter. Aşağısı erimiş demir ve nikelden oluşan bir okyanus. Bu sıvının dönmesi Dünya\'nın manyetik alanını üretir; pusulan bu yüzden kuzeyi gösterir.'],
+    [5150, 'Katı iç çekirdek', 'Sıcaklık artmaya devam ediyor ama basınç o kadar büyük ki demir yeniden katılaşıyor. İç çekirdek Ay\'ın yaklaşık üçte ikisi büyüklüğünde bir demir top.']
+  ];
+  const LAYERS = [[0, 'Toprak', '#6B4A2E'], [0.05, 'Kabuk', '#7A5A45'], [35, 'Üst manto', '#9C3D1E'], [660, 'Alt manto', '#B8401A'], [2890, 'Dış çekirdek (sıvı)', '#E0781C'], [5150, 'İç çekirdek (katı)', '#F4C23C']];
+  const shaft = document.getElementById('shaft');
+  const Hpx = () => window.innerHeight * 30;
+  const pOf = d => Math.log(1 + d / R * (Math.exp(K) - 1)) / K;
+  const dOf = p => R * (Math.exp(K * p) - 1) / (Math.exp(K) - 1);
+  function layout(){
+    shaft.style.height = Hpx() + 'px'; shaft.textContent = '';
+    let prev = -1e9;
+    N.forEach(([d, h, t]) => {
+      const el = document.createElement('div'); el.className = 'note';
+      el.innerHTML = '<p class="d"></p><h2></h2><p></p>';
+      el.querySelector('.d').textContent = fmt(d); el.querySelector('h2').textContent = h; el.querySelector('p:last-child').textContent = t;
+      shaft.appendChild(el);
+      let top = pOf(d) * Hpx(); top = Math.max(top, prev + el.offsetHeight + 40); el.style.top = top + 'px'; prev = top;
+    });
+  }
+  function fmt(d){ return d < 1 ? Math.round(d * 1000).toLocaleString('tr-TR') + ' m' : d < 100 ? d.toLocaleString('tr-TR', { maximumFractionDigits: 1 }) + ' km' : Math.round(d).toLocaleString('tr-TR') + ' km'; }
+  const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  function update(){
+    const top = shaft.getBoundingClientRect().top + window.scrollY, y = window.scrollY + window.innerHeight * .5 - top;
+    const p = Math.max(0, Math.min(1, y / Hpx())), d = y <= 0 ? 0 : dOf(p);
+    document.getElementById('depth').textContent = fmt(d);
+    let li = 0; LAYERS.forEach((l, i) => { if (d >= l[0]) li = i; });
+    document.getElementById('layer').textContent = y <= 0 ? 'Yüzey' : LAYERS[li][1];
+    let col;
+    if (y <= 0) col = [111, 174, 78];
+    else { const a = LAYERS[li], b = LAYERS[li + 1]; const c1 = hex(a[2]);
+      if (!b) col = c1; else { const f = Math.max(0, (pOf(d) - pOf(a[0])) / (pOf(b[0]) - pOf(a[0]))); const c2 = hex(b[2]); const e = f > .85 ? (f - .85) / .15 : 0; col = c1.map((v, i) => Math.round(v + (c2[i] - v) * e)); } }
+    document.body.style.backgroundColor = `rgb(${col.join(',')})`;
+    document.body.style.color = li >= 5 && y > 0 ? '#2B0A00' : '#fff';
+  }
+  let tick = false;
+  window.addEventListener('scroll', () => { if (!tick){ tick = true; requestAnimationFrame(() => { tick = false; update(); }); } }, { passive: true });
+  window.addEventListener('resize', () => { layout(); update(); });
+  document.getElementById('top').addEventListener('click', () => window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }));
+  layout(); update();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { layout(); update(); });
+})();
+</script>
+</body>
+</html>

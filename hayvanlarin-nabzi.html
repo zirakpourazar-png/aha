@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hayvanların Nabzı</title>
+<meta name="description" content="Nabzını ölç, sonra bir fare, bir fil ve bir mavi balinayla karşılaştır.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFF1EC;--ink:#2A1512;--muted:#76574F;--card:#FFFFFF;--line:#F0D6CD;--red:#D6283B;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#170C0A;--ink:#F6E8E4;--muted:#B89C94;--card:#20120F;--line:#3A2520;--red:#FF5A6A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#170C0A;--ink:#F6E8E4;--muted:#B89C94;--card:#20120F;--line:#3A2520;--red:#FF5A6A;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Fredoka",ui-rounded,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.45}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px}
+header{padding:7vh 0 3vh}
+h1{margin:0;font-weight:700;font-size:clamp(54px,11vw,124px);line-height:.88;letter-spacing:-.02em}
+.lede{margin:.4em 0 0;font-size:clamp(19px,2.4vw,24px);max-width:26em}
+.tap{display:grid;grid-template-columns:1fr;gap:16px;margin:1.4em 0 2em}
+@media (min-width:760px){.tap{grid-template-columns:auto 1fr;align-items:center}}
+.pad{width:min(240px,70vw);aspect-ratio:1/1;border-radius:50%;border:0;background:var(--red);color:#fff;font:inherit;font-weight:700;font-size:22px;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;box-shadow:0 10px 30px color-mix(in srgb,var(--red) 35%,transparent);transition:transform .08s}
+.pad.hit{transform:scale(.94)}
+.pad:focus-visible,.btn:focus-visible{outline:3px solid var(--ink);outline-offset:4px}
+.tapinfo p{margin:0 0 .5em}
+.bpm{font-weight:700;font-size:clamp(48px,8vw,80px);line-height:1;font-variant-numeric:tabular-nums}
+.btn{font:inherit;font-weight:600;font-size:16px;padding:10px 16px;min-height:46px;border-radius:999px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.zoo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 2em}
+@media (min-width:760px){.zoo{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.an{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;text-align:center}
+.an.me{border-color:var(--red);box-shadow:inset 0 0 0 1.5px var(--red)}
+.heart{width:56px;height:56px;margin:4px auto 8px;display:block;color:var(--red)}
+.an h2{margin:0;font-size:20px}
+.an b{display:block;font-size:30px;font-variant-numeric:tabular-nums;line-height:1.1}
+.an small{display:block;color:var(--muted);font-size:14px;line-height:1.35;margin-top:4px}
+.facts{max-width:44em}
+.facts h2{font-size:clamp(26px,3.2vw,36px);margin:0 0 .3em}
+.facts p{margin:0 0 .8em}
+.fine{margin:2em 0 4em;max-width:46em;font-size:14.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Hayvanların Nabzı</h1>
+    <p class="lede">Küçük hayvanların kalbi çılgınca hızlı, büyüklerinki ağır ağır atar. Önce kendi nabzını ölç, sonra karşılaştır.</p>
+  </header>
+  <main>
+    <section class="tap">
+      <button class="pad" id="pad" type="button">Her atışta dokun</button>
+      <div class="tapinfo" aria-live="polite">
+        <p>İki parmağını boynunun yanına ya da bileğinin iç tarafına koy. Her atışı hissettiğinde kırmızı düğmeye dokun. 10 atış yeter.</p>
+        <p class="bpm" id="bpm">—</p>
+        <p id="msg">dakikada atış</p>
+        <button class="btn" id="reset" type="button">Sıfırla</button>
+      </div>
+    </section>
+    <section class="zoo" id="zoo"></section>
+    <section class="facts">
+      <h2>Neden küçük olan hızlı?</h2>
+      <p>Küçük bir hayvanın vücut yüzeyi, hacmine göre çok daha büyüktür; ısıyı hızla kaybeder ve bunu telafi etmek için metabolizması yüksek çalışır. Kalbi de o hıza yetişmek zorundadır. Büyük hayvanlarda ise tek bir atış çok daha fazla kan pompalar.</p>
+      <p>İlginç bir kural: memelilerin çoğu, ömürleri boyunca aşağı yukarı aynı sayıda, yaklaşık 1 milyar kez kalp atışı yapar. Fare hızlı atar ve kısa yaşar, fil yavaş atar ve uzun yaşar. İnsan bu kuralın dışında: modern tıp ve yaşam koşullarıyla ortalama bir insan kalbi ömrü boyunca 2,5–3 milyar kez atar.</p>
+      <p>Mavi balinanın kalbi, derinlere daldığında dakikada 2 atışa kadar yavaşlayabilir; yüzeyde nefes alırken ise 30'un üstüne çıkar.</p>
+    </section>
+  </main>
+  <p class="fine">Değerler, sağlıklı yetişkin hayvanların dinlenme hâlindeki yaklaşık aralıklarıdır; tür, yaş, boyut ve etkinliğe göre değişir. Çok hızlı kalpler ekranda gerçek hızında gösterilemediği için animasyonları yavaşlatıldı. Kendi nabzın dinlenirken dakikada 100'ün üstünde ya da 50'nin altındaysa ve şikâyetin varsa bir hekime danış. Bilgilendirme amaçlıdır.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const A = [
+    { n: 'Sen', bpm: null, s: 'Ölçmek için yukarıya dokun', me: true },
+    { n: 'Sinekkuşu', bpm: 1200, s: 'Uçarken dakikada 1.200\'e kadar; dinlenirken çok daha yavaş' },
+    { n: 'Fare', bpm: 600, s: 'Dakikada yaklaşık 500–700' },
+    { n: 'Kedi', bpm: 180, s: 'Dakikada yaklaşık 140–220' },
+    { n: 'Köpek', bpm: 90, s: 'Boyuta göre 60–140; küçük köpeklerde daha hızlı' },
+    { n: 'At', bpm: 36, s: 'Dakikada yaklaşık 28–44' },
+    { n: 'Fil', bpm: 30, s: 'Dakikada yaklaşık 25–35' },
+    { n: 'Mavi balina', bpm: 2, s: 'Derin dalışta dakikada 2\'ye kadar iner' }
+  ];
+  const svg = '<svg class="heart" viewBox="0 0 32 29" aria-hidden="true"><path fill="currentColor" d="M16 29 2.7 15.6A8.3 8.3 0 0 1 16 5.3a8.3 8.3 0 0 1 13.3 10.3Z"/></svg>';
+  const zoo = $('zoo'); const cards = [];
+  A.forEach(a => { const d = document.createElement('div'); d.className = 'an' + (a.me ? ' me' : ''); d.innerHTML = `${svg}<h2></h2><b></b><small></small>`; d.querySelector('h2').textContent = a.n; d.querySelector('small').textContent = a.s; zoo.appendChild(d); cards.push({ a, d, h: d.querySelector('.heart'), b: d.querySelector('b'), ph: Math.random() }); });
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function paint(){ cards.forEach(c => c.b.textContent = c.a.bpm ? c.a.bpm.toLocaleString('tr-TR') : '—'); }
+  let last = performance.now();
+  function loop(now){
+    const dt = (now - last) / 1000; last = now;
+    cards.forEach(c => { if (!c.a.bpm || reduce){ c.h.style.transform = ''; return; }
+      const hz = Math.min(c.a.bpm / 60, 5); c.ph = (c.ph + dt * hz) % 1;
+      const s = c.ph < .15 ? 1 + .25 * Math.sin(c.ph / .15 * Math.PI) : 1; c.h.style.transform = `scale(${s})`; });
+    requestAnimationFrame(loop);
+  }
+  let taps = [];
+  function tap(){
+    const now = performance.now();
+    if (taps.length && now - taps[taps.length - 1] > 2500) taps = [];
+    taps.push(now); if (taps.length > 12) taps.shift();
+    $('pad').classList.add('hit'); setTimeout(() => $('pad').classList.remove('hit'), 90);
+    if (taps.length < 4){ $('bpm').textContent = '…'; $('msg').textContent = `${taps.length} atış, devam et`; return; }
+    const bpm = Math.round(60000 * (taps.length - 1) / (taps[taps.length - 1] - taps[0]));
+    $('bpm').textContent = bpm; A[0].bpm = bpm; paint();
+    const r = 600 / bpm, whale = Math.round(bpm / 2);
+    const m = r >= 1.5 ? `Bir farenin kalbi seninkinden yaklaşık ${r.toLocaleString('tr-TR', { maximumFractionDigits: 0 })} kat hızlı` : 'Bu hızda kalbin neredeyse bir farenin kalbi kadar hızlı atıyor; ölçümü dinlenirken tekrarla';
+    $('msg').textContent = `dakikada atış. ${m}; seninki derin dalıştaki bir mavi balinanınkinden ${whale} kat hızlı.`;
+  }
+  $('pad').addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && e.button !== 0) return; e.preventDefault(); tap(); });
+  $('pad').addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat){ e.preventDefault(); tap(); } });
+  $('reset').addEventListener('click', () => { taps = []; A[0].bpm = null; $('bpm').textContent = '—'; $('msg').textContent = 'dakikada atış'; paint(); });
+  paint(); requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

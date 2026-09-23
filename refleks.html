@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Refleks</title>
+<meta name="description" content="Ne kadar hızlısın? Ekran yeşile döndüğünde ya da sesi duyduğunda dokun.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Big+Shoulders+Display:wght@800..900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF0EC;--ink:#161A15;--muted:#5D645B;--card:#FFFFFF;--line:#D3D8D0;--wait:#D2402F;--go:#1FA35B;--idle:#23302A;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E110E;--ink:#E9EEE7;--muted:#9BA698;--card:#171B17;--line:#2A3129;--idle:#1C2620;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E110E;--ink:#E9EEE7;--muted:#9BA698;--card:#171B17;--line:#2A3129;--idle:#1C2620;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Space Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+header{padding:7vh 0 3vh;display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:14px}
+h1{margin:0;font-family:"Big Shoulders Display",ui-sans-serif,system-ui,sans-serif;font-weight:900;font-size:clamp(72px,15vw,160px);line-height:.85;letter-spacing:-.01em}
+.lede{margin:.4em 0 0;font-size:clamp(19px,2.4vw,24px);max-width:24em}
+.mode{display:inline-flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+.mode button{font:inherit;font-weight:700;font-size:15px;padding:9px 14px;min-height:44px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.mode button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.pad{display:grid;place-items:center;text-align:center;width:100%;min-height:clamp(300px,52vh,520px);border:0;border-radius:18px;background:var(--idle);color:#fff;font:inherit;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;padding:24px}
+.pad:focus-visible,.mode button:focus-visible{outline:3px solid var(--go);outline-offset:3px}
+.pad.wait{background:var(--wait)}
+.pad.go{background:var(--go)}
+.pad .big{display:block;font-family:"Big Shoulders Display",ui-sans-serif,system-ui,sans-serif;font-weight:900;font-size:clamp(64px,14vw,150px);line-height:.95;font-variant-numeric:tabular-nums}
+.pad .small{display:block;font-size:clamp(17px,2.2vw,22px);opacity:.9;margin-top:.3em}
+.dots{display:flex;gap:8px;justify-content:center;margin:14px 0 0}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--go)}
+.res{padding:4vh 0 2vh}
+.res[hidden]{display:none}
+.res h2{margin:0 0 .3em;font-size:clamp(26px,3.4vw,36px);line-height:1.15}
+.scale{position:relative;height:auto;margin:1.6em 0 2em;padding:0;list-style:none}
+.scale li{display:grid;grid-template-columns:minmax(9em,14em) 1fr;gap:12px;align-items:center;margin:0 0 10px}
+.scale .bar{height:26px;border-radius:6px;background:var(--line);position:relative}
+.scale .bar b{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.scale li.me .bar{background:var(--go);color:#fff}
+.scale li span{font-size:15.5px}
+.facts{max-width:44em}
+.facts p{margin:0 0 .9em}
+.fine{margin:2.5em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}.scale li{grid-template-columns:8.5em 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Refleks</h1>
+      <p class="lede">Ne kadar hızlısın? Beş deneme, ortalamanı ölçelim.</p>
+    </div>
+    <div class="mode" role="group" aria-label="Uyaran türü"><button type="button" data-m="see" aria-pressed="true">Görüntü</button><button type="button" data-m="hear" aria-pressed="false">Ses</button></div>
+  </header>
+  <main>
+    <button class="pad" id="pad" type="button" aria-live="assertive"><span><span class="big" id="big">Başla</span><span class="small" id="small">Dokun ya da boşluk tuşuna bas.</span></span></button>
+    <div class="dots" id="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+
+    <section class="res" id="res" hidden aria-live="polite">
+      <h2 id="rh"></h2>
+      <p id="rt"></p>
+      <ul class="scale" id="scale"></ul>
+      <div class="facts">
+        <p>Tepki süresi, gözün ya da kulağın uyaranı algılamasından, beynin karar vermesine ve kasa komut gitmesine kadar geçen toplam süredir. Çoğu insanın bir ışığa tepkisi 200–300 milisaniye arasındadır. Sese verilen tepki genellikle görüntüye verilenden daha hızlıdır; "Ses" modunda deneyip karşılaştır.</p>
+        <p>Atletizmde çıkış tabancasından sonraki 100 milisaniye içinde hareket eden sporcu erken çıkış yapmış sayılır. Kural, insanın bundan hızlı tepki veremeyeceği varsayımına dayanır.</p>
+        <p>Yorgunluk tepkiyi belirgin şekilde yavaşlatır: bir çalışmada 17–19 saat uykusuz kalan kişilerin performansı, kanında %0,05 alkol olan kişilerinkine benzer ya da daha kötü bulundu.</p>
+      </div>
+      <p class="fine">Ekranın, dokunmatik yüzeyin ve tarayıcının kendi gecikmesi ölçüme onlarca milisaniye ekleyebilir; cihazlar arasında karşılaştırma yaparken bunu hesaba kat. Bilgilendirme amaçlıdır.</p>
+    </section>
+  </main>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const pad = $('pad'), big = $('big'), small = $('small'), dots = [...$('dots').children];
+  const N = 5;
+  let mode = 'see', state = 'idle', times = [], timer = 0, t0 = 0, actx = null;
+  const best = { see: null, hear: null };
+
+  function beep(){
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.frequency.value = 880; o.type = 'square'; g.gain.value = .15;
+      o.connect(g).connect(actx.destination);
+      const now = actx.currentTime; o.start(now); o.stop(now + .12);
+      return true;
+    } catch (e){ return false; }
+  }
+  function set(cls, b, s){ pad.className = 'pad' + (cls ? ' ' + cls : ''); big.textContent = b; small.textContent = s; }
+  function paintDots(){ dots.forEach((d, i) => d.classList.toggle('on', i < times.length)); }
+
+  function arm(){
+    state = 'wait';
+    set(mode === 'see' ? 'wait' : '', mode === 'see' ? 'Bekle…' : 'Dinle…', mode === 'see' ? 'Yeşile döndüğünde dokun.' : 'Sesi duyduğunda dokun.');
+    const delay = 1500 + Math.random() * 3000;
+    timer = setTimeout(fire, delay);
+  }
+  function fire(){
+    state = 'go';
+    if (mode === 'see'){
+      set('go', 'Dokun!', '');
+      requestAnimationFrame(() => { t0 = performance.now(); });
+      t0 = performance.now();
+    } else {
+      beep(); t0 = performance.now();
+    }
+  }
+  function press(){
+    if (state === 'idle' || state === 'done'){
+      if (mode === 'hear' && !actx){ try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e){} }
+      if (state === 'done'){ times = []; $('res').hidden = true; }
+      paintDots(); arm(); return;
+    }
+    if (state === 'wait'){
+      clearTimeout(timer); state = 'early';
+      set('', 'Erken!', 'Uyaranı beklemeden bastın. Tekrar denemek için dokun.');
+      return;
+    }
+    if (state === 'early'){ arm(); return; }
+    if (state === 'go'){
+      const ms = Math.round(performance.now() - t0);
+      times.push(ms); paintDots();
+      if (times.length >= N){ finish(); return; }
+      state = 'shown';
+      set('', `${ms} ms`, `${times.length} / ${N}. Devam etmek için dokun.`);
+      return;
+    }
+    if (state === 'shown'){ arm(); }
+  }
+  function finish(){
+    state = 'done';
+    const sorted = [...times].sort((a, b) => a - b);
+    const avg = Math.round(times.reduce((a, b) => a + b, 0) / times.length);
+    const med = sorted[2];
+    set('', `${avg} ms`, 'Ortalaman. Yeniden denemek için dokun.');
+    if (best[mode] == null || avg < best[mode]) best[mode] = avg;
+    const res = $('res'); res.hidden = false;
+    $('rh').textContent = avg < 200 ? 'Çok hızlı.' : avg < 260 ? 'Hızlı.' : avg < 330 ? 'Ortalama civarında.' : 'Biraz yavaş, ama cihaz gecikmesini unutma.';
+    const other = mode === 'see' ? 'hear' : 'see';
+    $('rt').textContent = `Denemelerin: ${times.join(', ')} ms. Ortanca: ${med} ms, en iyi: ${sorted[0]} ms.` + (best[other] != null ? ` ${mode === 'see' ? 'Ses' : 'Görüntü'} modundaki ortalaman: ${best[other]} ms.` : ` Şimdi ${mode === 'see' ? 'Ses' : 'Görüntü'} modunu dene ve karşılaştır.`);
+    const rows = [
+      ['Atletizmde erken çıkış sınırı', 100, false],
+      ['Senin ortalaman', avg, true],
+      ['Tipik görsel tepki, alt sınır', 200, false],
+      ['Tipik görsel tepki, üst sınır', 300, false]
+    ].sort((a, b) => a[1] - b[1]);
+    const max = Math.max(400, avg + 40);
+    const ul = $('scale'); ul.textContent = '';
+    rows.forEach(([n, v, me]) => {
+      const li = document.createElement('li'); if (me) li.className = 'me';
+      li.innerHTML = `<span></span><div class="bar" style="width:${Math.max(18, v / max * 100)}%"><b>${v} ms</b></div>`;
+      li.querySelector('span').textContent = n; ul.appendChild(li);
+    });
+  }
+
+  pad.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && e.button !== 0) return; e.preventDefault(); press(); });
+  pad.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat){ e.preventDefault(); press(); } });
+  document.addEventListener('keydown', e => { if (e.target === pad) return; if (e.key === ' ' && !e.repeat && document.activeElement.tagName !== 'BUTTON'){ e.preventDefault(); press(); } });
+  document.querySelectorAll('.mode button').forEach(b => b.addEventListener('click', () => {
+    mode = b.dataset.m; clearTimeout(timer); times = []; paintDots(); state = 'idle'; $('res').hidden = true;
+    document.querySelectorAll('.mode button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    set('', 'Başla', mode === 'see' ? 'Dokun ya da boşluk tuşuna bas.' : 'Sesi aç. Dokun ya da boşluk tuşuna bas.');
+  }));
+})();
+</script>
+</body>
+</html>

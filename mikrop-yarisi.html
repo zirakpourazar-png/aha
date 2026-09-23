@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mikrop Yarışı</title>
+<meta name="description" content="Tek bir bakteri, her 20 dakikada ikiye bölünüyor. Zamanı ileri sar, ne olduğunu izle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EDF3E6;--ink:#17220F;--muted:#5A6852;--card:#FFFFFF;--line:#CFDCC4;--acc:#4E8A1E;--bac:#6BA32B;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F140B;--ink:#E7EFDF;--muted:#9EAD94;--card:#171E12;--line:#2A3622;--acc:#9CD35E;--bac:#8FCB4E;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F140B;--ink:#E7EFDF;--muted:#9EAD94;--card:#171E12;--line:#2A3622;--acc:#9CD35E;--bac:#8FCB4E;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 3vh}
+h1{margin:0;font-size:clamp(56px,12vw,136px);line-height:.88;font-weight:800;font-stretch:78%;letter-spacing:-.02em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:26em}
+.lab{display:grid;grid-template-columns:1fr;gap:18px;margin:0 0 2.5em}
+@media (min-width:880px){.lab{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}}
+.dish{position:relative;aspect-ratio:1/1;max-width:520px;width:100%}
+.dish canvas{width:100%;height:100%;display:block}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.clock{margin:0;color:var(--muted);font-weight:600}
+.count{margin:.1em 0 0;font-size:clamp(40px,6vw,64px);line-height:1;font-weight:800;font-stretch:80%;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.cmp{margin:.4em 0 1em;font-size:18px;min-height:2.9em}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.btn{font:inherit;font-weight:700;font-size:16px;padding:11px 16px;min-height:48px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.btn2{font:inherit;font-weight:600;font-size:15px;padding:10px 14px;min-height:48px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.btn2[aria-pressed="true"]{border-color:var(--acc);box-shadow:inset 0 0 0 1.5px var(--acc)}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.env{margin:0 0 .4em;font-weight:600}
+.envtxt{margin:.2em 0 0;color:var(--muted);font-size:15.5px;min-height:3em}
+.facts{max-width:46em}
+.facts h2{margin:1.4em 0 .4em;font-size:clamp(24px,3vw,32px);line-height:1.15;font-stretch:85%}
+.facts p{margin:0 0 .9em}
+.fine{margin:2.5em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Mikrop Yarışı</h1>
+    <p class="lede">Tek bir bakteri. Koşullar uygunsa her 20 dakikada ikiye bölünür. Zamanı başlat ve ne kadar hızlı çoğaldığını izle.</p>
+  </header>
+  <section class="lab">
+    <div class="dish"><canvas id="cv" role="img" aria-label="Petri kabında çoğalan bakteriler"></canvas></div>
+    <div class="panel" aria-live="polite">
+      <p class="clock" id="clock">0 saat 0 dakika</p>
+      <p class="count" id="count">1</p>
+      <p class="cmp" id="cmp">bakteri</p>
+      <div class="btns">
+        <button class="btn" id="play" type="button">Başlat</button>
+        <button class="btn2" id="fast" type="button" aria-pressed="false">Hızlı</button>
+        <button class="btn2" id="reset" type="button">Baştan</button>
+      </div>
+      <p class="env">Ortam</p>
+      <div class="btns" id="envs" role="group" aria-label="Ortam"></div>
+      <p class="envtxt" id="envtxt"></p>
+    </div>
+  </section>
+  <section class="facts">
+    <h2>Gerçekte neden Dünya'yı kaplamıyorlar?</h2>
+    <p>Her 20 dakikada ikiye bölünen tek bir bakteri, hiçbir şey onu durdurmasa 48 saat sonra 2<sup>144</sup> bakteriye ulaşırdı. Bir bakteri yaklaşık bir pikogram, yani gramın trilyonda biri; bu kadar bakteri Dünya'dan binlerce kat ağır olurdu. Gerçekte bu hiçbir zaman olmaz: besin biter, atıklar birikir, alan daralır ve büyüme durur.</p>
+    <p>Ama ilk saatler gerçek. Oda sıcaklığında bırakılan yemek, dışarıda unutulan pilav ya da tavuk, birkaç saat içinde zararsız birkaç bakteriden hastalık yapacak kadar çok bakteriye ulaşabilir. Gıda güvenliğinde 5 ile 60 °C arasına bu yüzden "tehlikeli bölge" denir.</p>
+    <h2>Üç basit fren</h2>
+    <p><b>Soğutmak</b> büyümeyi yavaşlatır ama bakterileri öldürmez. <b>İyice pişirmek</b> çoğunu öldürür. <b>Sabunla 20 saniye el yıkamak</b> ellerdeki mikropların büyük kısmını uzaklaştırır; sabun, pek çok mikrobun dış zarını çözer ve su onları sürükleyip götürür.</p>
+  </section>
+  <p class="fine">Simülasyon basitleştirilmiştir: 20 dakikalık bölünme, E. coli gibi bazı bakterilerin laboratuvardaki ideal koşullardaki hızıdır. Oda sıcaklığında ve buzdolabında bölünme süresi bakteriye göre çok değişir; buradaki değerler yalnızca farkı göstermek için seçilmiş temsili değerlerdir. Bakteri kütlesi yaklaşık 1 pikogram alınmıştır. Bilgilendirme amaçlıdır.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const ENVS = [
+    { k: 'ideal', n: 'İdeal (37 °C)', dbl: 20, t: 'Vücut sıcaklığında, besin bol: her 20 dakikada bir bölünme.' },
+    { k: 'oda', n: 'Oda sıcaklığı', dbl: 45, t: 'Tezgâhta unutulan yemek. Biraz daha yavaş ama hâlâ çok hızlı.' },
+    { k: 'buz', n: 'Buzdolabı', dbl: 720, t: 'Soğuk büyümeyi neredeyse durdurur, ama bakteriler ölmez: dışarı çıkınca kaldıkları yerden devam ederler.' },
+    { k: 'pisir', n: 'Pişir (75 °C üstü)', dbl: -12, t: 'Yüksek ısıda bakterilerin çoğu dakikalar içinde ölür.' }
+  ];
+  const MILES = [
+    [85.7e6, 'Türkiye nüfusu kadar'], [8.2e9, 'Dünya nüfusu kadar'], [4e11, 'Samanyolu\'ndaki yıldız sayısını aştı']
+  ];
+  const MASS = [[1e-3, '1 miligram'], [1, '1 gram'], [1e3, '1 kilogram'], [7e4, 'bir insan kadar'], [6e6, 'bir fil kadar'], [5.9e12, 'Keops Piramidi kadar'], [5.97e27, 'Dünya kadar']];
+  let env = ENVS[0], minutes = 0, log2 = 0, running = false, fast = false;
+
+  ENVS.forEach(e => { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn2'; b.textContent = e.n; b.dataset.k = e.k;
+    b.addEventListener('click', () => { env = e; sync(); }); $('envs').appendChild(b); });
+
+  function fmtBig(l2){
+    const n = Math.pow(2, l2);
+    if (l2 < 40) return Math.round(n).toLocaleString('tr-TR');
+    const exp = Math.floor(l2 * Math.log10(2)), man = Math.pow(10, l2 * Math.log10(2) - exp);
+    const sup = String(exp).split('').map(c => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+c]).join('');
+    return `${man.toLocaleString('tr-TR', { maximumFractionDigits: 1 })} × 10${sup}`;
+  }
+  function compare(){
+    const n = Math.pow(2, log2), g = n * 1e-12;
+    if (log2 < 0.001 && env.k === 'pisir' && minutes > 0) return 'bakteri. Neredeyse hepsi öldü.';
+    let s = 'bakteri';
+    const c = [...MILES].reverse().find(([v]) => n >= v); if (c) s += `: ${c[1]}.`;
+    const m = [...MASS].reverse().find(([v]) => g >= v); if (m) s += ` Toplam kütle ${m[1]}.`;
+    return s;
+  }
+  function sync(){
+    [...$('envs').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.k === env.k ? 'true' : 'false'));
+    $('envtxt').textContent = env.t;
+    const h = Math.floor(minutes / 60), m = Math.floor(minutes % 60);
+    $('clock').textContent = `${h} saat ${m} dakika`;
+    $('count').textContent = fmtBig(log2);
+    $('cmp').textContent = compare();
+    $('play').textContent = running ? 'Durdur' : 'Başlat';
+    $('fast').setAttribute('aria-pressed', fast ? 'true' : 'false');
+  }
+  $('play').addEventListener('click', () => { running = !running; sync(); });
+  $('fast').addEventListener('click', () => { fast = !fast; sync(); });
+  $('reset').addEventListener('click', () => { running = false; minutes = 0; log2 = 0; sync(); });
+
+  // Petri kabı
+  const cv = $('cv'), ctx = cv.getContext('2d');
+  let S = 400;
+  const pts = []; let seed = 3; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 2600; i++){ const a = rnd() * 6.283, r = Math.sqrt(rnd()) * .44; pts.push([.5 + Math.cos(a) * r, .5 + Math.sin(a) * r, rnd() * 3.14]); }
+  function size(){ const d = Math.min(devicePixelRatio || 1, 2), r = cv.getBoundingClientRect(); S = r.width || 400; cv.width = cv.height = Math.round(S * d); ctx.setTransform(d, 0, 0, d, 0, 0); }
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  function draw(){
+    ctx.clearRect(0, 0, S, S);
+    const g = ctx.createRadialGradient(S / 2, S / 2, S * .3, S / 2, S / 2, S * .49);
+    g.addColorStop(0, 'rgba(236,214,160,.55)'); g.addColorStop(1, 'rgba(210,186,130,.7)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(S / 2, S / 2, S * .48, 0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(150,150,150,.6)'; ctx.lineWidth = 3; ctx.stroke();
+    const n = Math.pow(2, log2), shown = Math.min(pts.length, Math.floor(n));
+    const zoomOut = Math.max(0, Math.log2(Math.max(1, n / pts.length)));
+    const L = Math.max(3, 10 - zoomOut * .5), Wd = L * .45;
+    ctx.fillStyle = css('--bac') || '#6BA32B';
+    for (let i = 0; i < shown; i++){
+      const [x, y, a] = pts[i]; ctx.save(); ctx.translate(x * S, y * S); ctx.rotate(a);
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-L / 2, -Wd / 2, L, Wd, Wd / 2) : ctx.rect(-L / 2, -Wd / 2, L, Wd); ctx.fill(); ctx.restore();
+    }
+    if (n > pts.length){
+      const cover = Math.min(.92, .25 + zoomOut * .05);
+      ctx.fillStyle = `rgba(107,163,43,${cover})`; ctx.beginPath(); ctx.arc(S / 2, S / 2, S * .46, 0, 7); ctx.fill();
+    }
+  }
+  let last = performance.now();
+  function loop(now){
+    const dt = Math.min(.1, (now - last) / 1000); last = now;
+    if (running){
+      const simMin = dt * (fast ? 60 : 10);  // saniyede 10 ya da 60 dakika
+      minutes += simMin;
+      if (env.dbl > 0) log2 += simMin / env.dbl;
+      else log2 = Math.max(0, log2 + simMin / env.dbl * 3);
+      if (log2 > 400) log2 = 400;
+      sync();
+    }
+    draw(); requestAnimationFrame(loop);
+  }
+  window.addEventListener('resize', size);
+  size(); sync(); requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

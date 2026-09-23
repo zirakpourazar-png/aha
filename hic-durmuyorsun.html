@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hiç Durmuyorsun</title>
+<meta name="description" content="Şu anda koltukta oturuyorsun ve saatte 2 milyon kilometreden hızlı gidiyorsun.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070A12;--ink:#EAEEF8;--muted:#929BB4;--card:#101524;--line:#1F2739;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+header{padding:9vh 0 2vh}
+h1{margin:0;font-weight:800;font-stretch:80%;font-size:clamp(52px,11.5vw,128px);line-height:.88;letter-spacing:-.03em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:28em;color:var(--muted)}
+.where{margin:1.4em 0 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.where .t{display:flex;justify-content:space-between;font-weight:600;gap:12px}
+input[type=range]{width:100%;accent-color:#7DD3FC;margin:10px 0 2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.chips button{font:inherit;font-weight:600;font-size:14px;padding:8px 12px;min-height:42px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #7DD3FC;outline-offset:2px}
+.list{list-style:none;padding:0;margin:1.4em 0 1em;display:grid;gap:12px}
+.list li{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.list h2{margin:0;font-size:19px;font-weight:700}
+.list b{display:block;font-weight:800;font-stretch:78%;font-size:clamp(28px,5.5vw,44px);line-height:1.05;font-variant-numeric:tabular-nums;margin:.1em 0}
+.list p{margin:0;color:var(--muted);font-size:15.5px}
+.total{background:linear-gradient(140deg,#123,#1B2B4A);border:1px solid var(--line);border-radius:18px;padding:20px;margin:0 0 2em}
+.total b{display:block;font-weight:800;font-stretch:78%;font-size:clamp(34px,7vw,64px);line-height:1;font-variant-numeric:tabular-nums}
+.total p{margin:.3em 0 0;color:var(--muted)}
+.fine{margin:1.5em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Hiç Durmuyorsun</h1>
+    <p class="lede">Şu anda kıpırdamadan oturuyor olabilirsin. Yine de hiç olmadığın kadar hızlısın; üstelik aynı anda birkaç yöne birden.</p>
+  </header>
+  <main>
+    <div class="where">
+      <div class="t"><span>Enlemin</span><span id="latv">38°</span></div>
+      <input type="range" id="lat" min="0" max="90" step="1" value="38" aria-label="Enlem">
+      <div class="chips" id="chips"></div>
+    </div>
+    <ul class="list" id="list"></ul>
+    <div class="total"><span>Hepsi birlikte, kabaca</span><b id="tot"></b><p>Hepsi farklı yönlere olduğu için bunlar doğrudan toplanmaz; ama büyüklükleri fikir verir. Bu satırı okurken aldığın yol bile birkaç yüz kilometre.</p></div>
+    <p class="fine">Hızlar yaklaşık değerlerdir: Dünya'nın kendi ekseni etrafındaki dönüşü ekvatorda saatte 1.670 km olup enlemin kosinüsüyle azalır; Güneş çevresindeki yörünge hızı saatte yaklaşık 107.000 km; Güneş sisteminin Samanyolu merkezi çevresindeki hızı saniyede yaklaşık 230 km; Samanyolu'nun kozmik mikrodalga fon ışımasına göre hızı saniyede yaklaşık 600 km. Bilgilendirme amaçlıdır.</p>
+  </main>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const nf = (x, d = 0) => x.toLocaleString('tr-TR', { maximumFractionDigits: d });
+  const CH = [['Ekvator', 0], ['İzmir', 38], ['İstanbul', 41], ['Londra', 51], ['Kutup', 90]];
+  CH.forEach(([n, v]) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = n;
+    b.addEventListener('click', () => { $('lat').value = v; render(); }); $('chips').appendChild(b); });
+  function render(){
+    const lat = +$('lat').value;
+    $('latv').textContent = lat + '°';
+    const spin = 1670 * Math.cos(lat * Math.PI / 180);
+    const rows = [
+      ['Dünya kendi etrafında dönüyor', spin, `Ekvatorda saatte 1.670 km; kutuplara gidildikçe azalır. ${lat >= 88 ? 'Neredeyse kutuptasın: burada neredeyse yerinde dönüyorsun.' : 'Senin enleminde ' + nf(spin) + ' km/sa.'}`],
+      ['Dünya Güneş\'in etrafında dönüyor', 107000, 'Saniyede yaklaşık 30 kilometre. Bir yılda 940 milyon kilometrelik bir tur.'],
+      ['Güneş galaksinin etrafında dönüyor', 828000, 'Samanyolu\'nun merkezi çevresinde bir tur yaklaşık 230 milyon yıl sürüyor. Dinozorlar çağından beri daha bir turu tamamlamadık.'],
+      ['Samanyolu da uzayda gidiyor', 2160000, 'Evrenin fon ışımasına göre ölçülen hızımız: saniyede yaklaşık 600 kilometre.']
+    ];
+    const ul = $('list'); ul.textContent = '';
+    rows.forEach(([n, v, d]) => { const li = document.createElement('li');
+      li.innerHTML = '<h2></h2><b></b><p></p>';
+      li.querySelector('h2').textContent = n;
+      li.querySelector('b').textContent = nf(v) + ' km/sa';
+      li.querySelector('p').textContent = d; ul.appendChild(li); });
+    const tot = rows.reduce((a, r) => a + r[1], 0);
+    $('tot').textContent = nf(tot) + ' km/sa';
+  }
+  $('lat').addEventListener('input', render);
+  render();
+})();
+</script>
+</body>
+</html>

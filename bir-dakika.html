@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bir Dakika</title>
+<meta name="description" content="Saate bakmadan bir dakikayı tahmin edebilir misin? Başlat, bir dakika geçti deyince dur.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4EFE6;--ink:#1E1A14;--muted:#6B6254;--card:#FFFFFF;--line:#E2D8C6;--acc:#1E1A14;--hi:#C2410C;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12100C;--ink:#F2ECE1;--muted:#ADA392;--card:#1B1812;--line:#322C22;--acc:#F2ECE1;--hi:#FB8A4C;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12100C;--ink:#F2ECE1;--muted:#ADA392;--card:#1B1812;--line:#322C22;--acc:#F2ECE1;--hi:#FB8A4C;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px}
+header{padding:9vh 0 3vh;text-align:center}
+h1{margin:0;font-family:"Young Serif",Georgia,serif;font-weight:400;font-size:clamp(60px,13vw,136px);line-height:.9;letter-spacing:-.02em}
+.lede{margin:.5em auto 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:24em}
+.game{text-align:center;margin:1.5em 0 2.5em}
+.circle{width:min(300px,76vw);aspect-ratio:1/1;border-radius:50%;margin:0 auto 20px;border:0;background:var(--acc);color:var(--bg);font:inherit;font-family:"Young Serif",Georgia,serif;font-size:clamp(26px,5vw,34px);cursor:pointer;display:grid;place-items:center;padding:20px;touch-action:manipulation;-webkit-user-select:none;user-select:none;transition:transform .12s ease}
+.circle:active{transform:scale(.97)}
+.circle:focus-visible,.seg button:focus-visible{outline:3px solid var(--hi);outline-offset:4px}
+.circle.run{background:transparent;color:var(--ink);border:3px dashed var(--muted)}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:999px;overflow:hidden;margin:0 0 18px}
+.seg button{font:inherit;font-weight:600;font-size:15px;padding:9px 16px;min-height:44px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.res{min-height:7em}
+.res .big{font-family:"Young Serif",Georgia,serif;font-size:clamp(60px,12vw,110px);line-height:1;margin:0;font-variant-numeric:tabular-nums}
+.res .big small{font-size:.4em}
+.res p{margin:.4em auto 0;max-width:26em}
+.hist{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:14px 0 0;color:var(--muted);font-size:15px;font-variant-numeric:tabular-nums}
+.hist span{padding:4px 10px;border:1px solid var(--line);border-radius:999px}
+.facts{max-width:40em;margin:0 auto}
+.facts p{margin:0 0 .9em}
+.fine{margin:2.5em auto 4em;max-width:40em;font-size:14px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Bir Dakika</h1>
+    <p class="lede">Saate bakmadan bir dakikayı tahmin edebilir misin? Başlat, gözünü kapat istersen, bir dakika geçti deyince dokun.</p>
+  </header>
+  <main class="game">
+    <div class="seg" role="group" aria-label="Hedef süre"><button type="button" data-s="10" aria-pressed="false">10 saniye</button><button type="button" data-s="60" aria-pressed="true">1 dakika</button><button type="button" data-s="180" aria-pressed="false">3 dakika</button></div>
+    <button class="circle" id="c" type="button">Başla</button>
+    <div class="res" id="res" aria-live="polite"></div>
+    <div class="hist" id="hist" aria-label="Önceki denemeler"></div>
+  </main>
+  <section class="facts">
+    <p>Beyninde saat yok. Zamanı, sinir hücrelerinin ateşleme ritimlerinden ve olayların akışından tahmin ediyor. Bu yüzden zaman algın esnektir: heyecanlıyken, korkarken ya da çok kafein almışken iç saatin hızlanabilir ve dakikayı erken bitirirsin. Sıkıldığında ise süre uzar gibi gelir.</p>
+    <p>Sayarak yapınca sonuç genellikle çok daha iyi olur. Bir de saymadan dene: farkı gör.</p>
+  </section>
+  <p class="fine">Sonuç eğlence amaçlıdır; tek bir deneme iç saatin hakkında pek bir şey söylemez. Birkaç kez dene.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let target = 60, t0 = 0, run = false, hist = [];
+  const c = $('c');
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+    if (run) return; target = +b.dataset.s;
+    document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+  }));
+  const tLabel = s => s >= 60 ? (s / 60 === 1 ? '1 dakika' : `${s / 60} dakika`) : `${s} saniye`;
+  c.addEventListener('click', () => {
+    if (!run){ run = true; t0 = performance.now(); c.classList.add('run'); c.textContent = `${tLabel(target)} geçti deyince dokun`; $('res').textContent = ''; return; }
+    run = false; c.classList.remove('run'); c.textContent = 'Tekrar';
+    const s = (performance.now() - t0) / 1000, diff = s - target, pct = Math.abs(diff) / target * 100;
+    const fmt = x => x.toLocaleString('tr-TR', { maximumFractionDigits: 1 });
+    const verdict = pct <= 3 ? 'İnanılmaz. İçinde bir kronometre var.' : pct <= 10 ? 'Çok iyi.' : pct <= 25 ? (diff < 0 ? 'İç saatin biraz hızlı çalışıyor.' : 'İç saatin biraz ağır çalışıyor.') : (diff < 0 ? 'Aceleci bir iç saatin var.' : 'Zaman senin için yavaş akıyor.');
+    $('res').innerHTML = `<p class="big">${fmt(s)}<small> sn</small></p><p></p>`;
+    $('res').querySelector('p:last-child').textContent = `${verdict} Hedef: ${tLabel(target)}. ${fmt(Math.abs(diff))} saniye ${diff < 0 ? 'erken' : 'geç'} durdun.`;
+    hist.unshift(`${tLabel(target)}: ${fmt(s)} sn`); hist = hist.slice(0, 6);
+    $('hist').innerHTML = ''; hist.forEach(h => { const sp = document.createElement('span'); sp.textContent = h; $('hist').appendChild(sp); });
+  });
+  document.addEventListener('keydown', e => { if (e.key === ' ' && document.activeElement !== c && e.target.tagName !== 'BUTTON'){ e.preventDefault(); c.click(); } });
+})();
+</script>
+</body>
+</html>

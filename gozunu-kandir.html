@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gözünü Kandır</title>
+<meta name="description" content="Kör noktanı bul, bayrağı renksiz görüntüden gör, elinin nefes almasını izle. Beyninin görmek için ne kadar uydurduğunu keşfet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400..800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EAF1F6;--ink:#10202C;--muted:#556674;--card:#FFFFFF;--line:#CBD8E2;--acc:#1D6FA3;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1218;--ink:#E3ECF2;--muted:#97A8B6;--card:#131C24;--line:#243240;--acc:#6FB6E6;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0B1218;--ink:#E3ECF2;--muted:#97A8B6;--card:#131C24;--line:#243240;--acc:#6FB6E6;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Rubik",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 3vh}
+h1{margin:0;font-weight:800;font-size:clamp(58px,12vw,132px);line-height:.88;letter-spacing:-.04em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:27em}
+.ex{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:0 0 18px}
+.ex .n{margin:0;color:var(--muted);font-weight:600}
+.ex h2{margin:.1em 0 .4em;font-size:clamp(28px,4vw,40px);line-height:1.05;letter-spacing:-.02em}
+.ex p{margin:0 0 .8em}
+.box{position:relative;border-radius:12px;overflow:hidden;background:#fff;margin:6px 0 12px;display:flex;align-items:center;justify-content:center}
+canvas{display:block;max-width:100%}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.btn{font:inherit;font-weight:700;font-size:16px;padding:11px 18px;min-height:48px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.btn2{font:inherit;font-weight:600;font-size:15px;padding:10px 14px;min-height:48px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.btn2[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.why{padding:12px 14px;border-radius:10px;background:color-mix(in srgb,var(--acc) 10%,transparent);border-left:4px solid var(--acc)}
+.count{position:absolute;right:12px;top:10px;padding:4px 10px;border-radius:8px;background:rgba(0,0,0,.55);color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+.count[hidden]{display:none}
+.fine{margin:2em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}.ex{padding:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Gözünü Kandır</h1>
+    <p class="lede">Gördüğünü sandığın şeyin bir kısmını beynin uyduruyor. Dört küçük deneyle bunu kendi gözünle yakala.</p>
+  </header>
+  <main>
+    <section class="ex">
+      <p class="n">Deney 1</p><h2>Kör noktanı bul</h2>
+      <p><b>Sol gözünü kapat.</b> Sağ gözünle soldaki artıya bak, gözünü ondan ayırma. Ekrana yavaşça yaklaş ve uzaklaş. Bir noktada sağdaki kırmızı yuvarlak tamamen kaybolacak.</p>
+      <div class="box"><canvas id="bs" role="img" aria-label="Solda bir artı işareti, sağda kırmızı bir yuvarlak"></canvas></div>
+      <div class="row"><button class="btn2" id="bsLines" type="button" aria-pressed="false">Çizgilerle dene</button></div>
+      <p class="why">Her gözde, görme sinirinin gözden çıktığı yerde ışık algılayan hücre yoktur: kör nokta. Yuvarlak tam oraya düştüğünde görünmez olur. Günlük hayatta bunu hiç fark etmezsin, çünkü beynin boşluğu çevredeki desenle doldurur. "Çizgilerle dene"yi aç: yuvarlak kaybolduğunda çizgi kesintisiz görünecek. Beynin, orada hiç görmediği bir çizgiyi çiziyor.</p>
+    </section>
+
+    <section class="ex">
+      <p class="n">Deney 2</p><h2>Renkli hayalet</h2>
+      <p>Bayrağın ortasındaki küçük noktaya 20 saniye kıpırdamadan bak. Süre bitince görüntü beyaza dönecek; gözünü ayırmadan bakmaya devam et.</p>
+      <div class="box" style="background:#F2F2F2"><canvas id="ai" role="img" aria-label="Renkleri ters çevrilmiş bir bayrak"></canvas><span class="count" id="aiC" hidden></span></div>
+      <div class="row"><button class="btn" id="aiGo" type="button">Başlat</button></div>
+      <p class="why">Beyaz zeminde birkaç saniyeliğine gerçek renklerle bir bayrak gördün. Gözündeki renk algılayan hücreler uzun süre aynı renge bakınca yorulur. Sonra beyaza baktığında yorgun olanlar zayıf, dinlenmiş olanlar güçlü sinyal verir ve beynin karşıt rengi görür: camgöbeği yerine kırmızı, siyah yerine beyaz. Buna ardıl görüntü denir.</p>
+    </section>
+
+    <section class="ex">
+      <p class="n">Deney 3</p><h2>Elin nefes alıyor</h2>
+      <p>Dönen sarmalın tam ortasına 30 saniye bak. Sarmal durunca ortaya bakmaya devam et; sonra hemen kendi eline ya da odanın duvarına bak.</p>
+      <div class="box" style="background:#fff"><canvas id="sp" role="img" aria-label="Dönen bir sarmal"></canvas><span class="count" id="spC" hidden></span></div>
+      <div class="row"><button class="btn" id="spGo" type="button">Başlat</button></div>
+      <p class="why">Durmuş sarmal ters yöne dönüyor gibi görünür, elin ya da duvar ise birkaç saniye boyunca genişliyor ya da büzülüyor gibi. Beyninde her hareket yönü için ayrı hücre grupları var. Aynı yöne uzun süre bakınca bu grup yorulur; hareket durduğunda karşı yönü algılayan grup baskın çıkar. Şelaleye uzun süre bakıp sonra kayalara bakanlar da kayaların yukarı aktığını görür.</p>
+      <p class="n" style="font-size:14.5px">Işığa duyarlı epilepsin varsa bu deneyi atla.</p>
+    </section>
+
+    <section class="ex">
+      <p class="n">Deney 4</p><h2>Aynı gri</h2>
+      <p>Ortadaki şerit soldan sağa doğru koyulaşıyor gibi görünüyor, değil mi?</p>
+      <div class="box"><canvas id="gc" role="img" aria-label="Renk geçişli bir zemin üzerinde gri bir şerit"></canvas></div>
+      <div class="row"><button class="btn2" id="gcBg" type="button" aria-pressed="false">Zemini kaldır</button></div>
+      <p class="why">Şerit baştan sona tek bir gri tonu. Beynin bir rengin ne kadar açık olduğunu tek başına değil, çevresine göre değerlendirir: koyu zeminde daha açık, açık zeminde daha koyu görünür. Bu kurnazlık gölgedeki bir nesneyi yine aynı nesne olarak tanımanı sağlar; ama ekranda seni yanıltır.</p>
+    </section>
+  </main>
+  <p class="fine">Etkiler kişiden kişiye ve ekrana göre değişebilir. Kör nokta deneyi için ekranın genişliği küçükse telefonu yatay tutmak işe yarar. Bilgilendirme ve eğlence amaçlıdır.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function setup(cv, w, h){ const d = Math.min(devicePixelRatio || 1, 2); cv.width = Math.round(w * d); cv.height = Math.round(h * d); cv.style.width = w + 'px'; cv.style.height = h + 'px'; const c = cv.getContext('2d'); c.setTransform(d, 0, 0, d, 0, 0); return c; }
+  const boxW = cv => Math.min(760, cv.parentElement.clientWidth || 600);
+
+  // 1. Kör nokta
+  let lines = false;
+  function drawBS(){
+    const cv = $('bs'), W = boxW(cv), H = Math.max(160, W * .32), c = setup(cv, W, H);
+    c.fillStyle = '#fff'; c.fillRect(0, 0, W, H);
+    if (lines){ c.fillStyle = '#1D6FA3'; c.fillRect(0, H / 2 - 5, W, 10); }
+    const cx = W * .12, dx = W * .78;
+    c.fillStyle = '#111'; c.fillRect(cx - 14, H / 2 - 3, 28, 6); c.fillRect(cx - 3, H / 2 - 14, 6, 28);
+    c.fillStyle = '#D0202E'; c.beginPath(); c.arc(dx, H / 2, Math.max(12, W * .025), 0, 7); c.fill();
+  }
+  $('bsLines').addEventListener('click', e => { lines = !lines; e.currentTarget.setAttribute('aria-pressed', lines ? 'true' : 'false'); drawBS(); });
+
+  // 2. Ardıl görüntü: renkleri ters çevrilmiş Türk bayrağı
+  function flag(c, W, H, bg, fg, dot){
+    const fw = Math.min(W - 20, 540), G = fw * 2 / 3, x = (W - fw) / 2, y = (H - G) / 2, cy = y + G / 2;
+    c.fillStyle = bg; c.fillRect(x, y, fw, G);
+    const c1 = x + G * .5, c2 = c1 + G * .0625;
+    c.fillStyle = fg; c.beginPath(); c.arc(c1, cy, G * .25, 0, 7); c.fill();
+    c.fillStyle = bg; c.beginPath(); c.arc(c2, cy, G * .2, 0, 7); c.fill();
+    const sx = x + G * (.5 + .0625 - .2 + 1 / 3 + .125), R = G * .125, r = R * .382;
+    c.fillStyle = fg; c.beginPath();
+    for (let i = 0; i < 10; i++){ const a = Math.PI + i * Math.PI / 5, rr = i % 2 ? r : R; const px = sx + Math.cos(a) * rr, py = cy + Math.sin(a) * rr; i ? c.lineTo(px, py) : c.moveTo(px, py); }
+    c.closePath(); c.fill();
+    if (dot){ c.fillStyle = '#000'; c.beginPath(); c.arc(x + fw / 2, cy, 3.5, 0, 7); c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 1.5; c.stroke(); }
+  }
+  let aiTimer = 0;
+  function drawAI(mode){
+    const cv = $('ai'), W = boxW(cv), H = Math.min(W * .7, 380), c = setup(cv, W, H);
+    c.fillStyle = '#F2F2F2'; c.fillRect(0, 0, W, H);
+    if (mode === 'white'){ c.fillStyle = '#000'; c.beginPath(); c.arc(W / 2, H / 2, 3.5, 0, 7); c.fill(); return; }
+    flag(c, W, H, '#1FF0EB', '#000', true);
+  }
+  $('aiGo').addEventListener('click', () => {
+    clearInterval(aiTimer); drawAI('flag'); let s = 20; const cnt = $('aiC'); cnt.hidden = false; cnt.textContent = s;
+    aiTimer = setInterval(() => { s--; cnt.textContent = s; if (s <= 0){ clearInterval(aiTimer); cnt.hidden = true; drawAI('white'); $('aiGo').textContent = 'Tekrar'; } }, 1000);
+  });
+
+  // 3. Hareket ardıl etkisi
+  let spinning = false, ang = 0, spT = 0, spRaf = 0, last = 0;
+  function drawSP(){
+    const cv = $('sp'), W = boxW(cv), S = Math.min(W, 420), c = setup(cv, W, S);
+    c.fillStyle = '#fff'; c.fillRect(0, 0, W, S);
+    c.save(); c.translate(W / 2, S / 2); c.rotate(ang);
+    c.strokeStyle = '#111'; c.lineWidth = S * .03;
+    for (let arm = 0; arm < 4; arm++){ c.beginPath(); for (let r = 2; r < S * .46; r += 2){ const a = arm * Math.PI / 2 + r * .045; const x = Math.cos(a) * r, y = Math.sin(a) * r; r === 2 ? c.moveTo(x, y) : c.lineTo(x, y); } c.stroke(); }
+    c.restore();
+    c.fillStyle = '#D0202E'; c.beginPath(); c.arc(W / 2, S / 2, 5, 0, 7); c.fill();
+  }
+  function spLoop(now){
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    if (spinning){ ang += dt * 2.2; spT += dt; const left = Math.max(0, 30 - spT); $('spC').textContent = Math.ceil(left);
+      if (left <= 0){ spinning = false; $('spC').hidden = true; $('spGo').textContent = 'Tekrar'; } }
+    drawSP();
+    if (spinning) spRaf = requestAnimationFrame(spLoop);
+  }
+  $('spGo').addEventListener('click', () => {
+    if (reduce){ $('spC').hidden = false; $('spC').textContent = 'Hareket azaltma açık'; return; }
+    spinning = true; spT = 0; $('spC').hidden = false; last = performance.now(); cancelAnimationFrame(spRaf); spRaf = requestAnimationFrame(spLoop);
+  });
+
+  // 4. Eş zamanlı zıtlık
+  let noBg = false;
+  function drawGC(){
+    const cv = $('gc'), W = boxW(cv), H = Math.max(150, W * .3), c = setup(cv, W, H);
+    if (noBg){ c.fillStyle = '#fff'; c.fillRect(0, 0, W, H); }
+    else { const g = c.createLinearGradient(0, 0, W, 0); g.addColorStop(0, '#111'); g.addColorStop(1, '#F4F4F4'); c.fillStyle = g; c.fillRect(0, 0, W, H); }
+    c.fillStyle = '#808080'; c.fillRect(W * .08, H * .4, W * .84, H * .2);
+  }
+  $('gcBg').addEventListener('click', e => { noBg = !noBg; e.currentTarget.setAttribute('aria-pressed', noBg ? 'true' : 'false'); e.currentTarget.textContent = noBg ? 'Zemini geri getir' : 'Zemini kaldır'; drawGC(); });
+
+  function all(){ drawBS(); drawAI('flag'); drawSP(); drawGC(); }
+  let rs; window.addEventListener('resize', () => { clearTimeout(rs); rs = setTimeout(() => { drawBS(); drawGC(); if (!spinning) drawSP(); }, 150); });
+  all();
+})();
+</script>
+</body>
+</html>

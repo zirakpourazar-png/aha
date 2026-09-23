@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kaç Kez Attı?</title>
+<meta name="description" content="Doğduğundan beri kalbin kaç kez attı, kaç kez nefes aldın, kaç litre kan pompaladın?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500..900&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4EEF0;--ink:#22151A;--muted:#75636A;--line:#E0D3D8;--red:#C8102E;--field:#FFFFFF;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#140C0F;--ink:#F2E8EB;--muted:#A8969C;--line:#3A2A30;--red:#FF5A6E;--field:#1E1418;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#140C0F;--ink:#F2E8EB;--muted:#A8969C;--line:#3A2A30;--red:#FF5A6E;--field:#1E1418;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding:0 18px}
+header{padding:10vh 0 5vh}
+h1{margin:0 0 .2em;font-family:"Big Shoulders Display",ui-sans-serif,system-ui,sans-serif;font-weight:900;font-size:clamp(68px,15vw,168px);line-height:.86;letter-spacing:-.01em;display:flex;align-items:center;gap:.18em;flex-wrap:wrap}
+.beat{display:inline-block;width:.34em;height:.34em;border-radius:50%;background:var(--red);flex:none}
+.lede{margin:0;font-size:clamp(20px,2.5vw,26px);line-height:1.32;max-width:26em}
+.ask{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin:2.2em 0 0}
+.ask label{display:flex;flex-direction:column;gap:6px;font-weight:600}
+.ask input{font:inherit;font-size:20px;padding:12px 14px;min-height:52px;border-radius:8px;border:1.5px solid var(--line);background:var(--field);color:var(--ink)}
+.ask input:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.msg{margin:.8em 0 0;color:var(--red);font-weight:600;min-height:1.5em}
+.out[hidden]{display:none}
+.out{padding:2vh 0 8vh}
+.hero{margin:0 0 3.5em}
+.hero .n{display:block;font-family:"Big Shoulders Display",ui-sans-serif,system-ui,sans-serif;font-weight:900;font-size:clamp(60px,13vw,150px);line-height:.9;font-variant-numeric:tabular-nums;letter-spacing:-.005em;overflow-wrap:anywhere}
+.hero .l{font-size:clamp(19px,2.3vw,24px)}
+.hero .rate{display:block;color:var(--muted);font-size:15.5px;margin-top:.3em}
+.stats{display:grid;grid-template-columns:1fr;gap:2.2em 40px;margin:0 0 3.5em}
+@media (min-width:720px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat .n{display:block;font-family:"Big Shoulders Display",ui-sans-serif,system-ui,sans-serif;font-weight:800;font-size:clamp(44px,7vw,72px);line-height:.95;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.stat .l{font-weight:600}
+.stat .s{display:block;color:var(--muted);font-size:15.5px;margin-top:.2em}
+.miles{border-top:2px solid var(--ink);padding-top:1.2em;max-width:40em}
+.miles h2{margin:0 0 .5em;font-size:24px;line-height:1.2}
+.miles p{margin:0 0 .6em;font-size:19px}
+.miles b{font-weight:700}
+.fine{margin:3em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.beat.on{animation:beat var(--p,.83s) ease-out infinite}}
+@keyframes beat{0%{transform:scale(1.35)}30%{transform:scale(1)}100%{transform:scale(1)}}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><span class="beat" id="beat" aria-hidden="true"></span>Kaç Kez Attı?</h1>
+    <p class="lede">Sen doğduğundan beri kalbin bir saniye bile durmadı. Doğum tarihini gir, sayalım.</p>
+    <div class="ask">
+      <label for="dob">Doğum tarihin<input type="date" id="dob" autocomplete="bday"></label>
+    </div>
+    <p class="msg" id="msg" aria-live="polite"></p>
+  </header>
+
+  <main class="out" id="out" hidden>
+    <p class="hero"><span class="n" id="beats">0</span><span class="l">kez attı kalbin.</span><span class="rate" id="rate"></span></p>
+    <div class="stats">
+      <p class="stat"><span class="n" id="breaths">0</span><span class="l">kez nefes aldın</span><span class="s">Şu an dakikada yaklaşık <span id="rr"></span> kez.</span></p>
+      <p class="stat"><span class="n" id="blood">0</span><span class="l">litre kan pompaladı</span><span class="s" id="pools"></span></p>
+      <p class="stat"><span class="n" id="sleep">0</span><span class="l">uykuda geçti</span><span class="s">Ömrünün yaklaşık <span id="sleepPct"></span> kadarı.</span></p>
+      <p class="stat"><span class="n" id="orbit">0</span><span class="l">km yol aldın Güneş'in etrafında</span><span class="s">Dünya saniyede yaklaşık 30 km hızla dönüyor; sen de onunla.</span></p>
+    </div>
+    <section class="miles" aria-labelledby="milesH">
+      <h2 id="milesH">Kalbinin dönüm noktaları</h2>
+      <div id="miles"></div>
+    </section>
+  </main>
+
+  <p class="fine">Sayılar tahmindir. Yaş dönemlerine göre ortalama değerler kullanıldı (erişkinde dakikada 72 kalp atışı, 14 nefes, 5 litre kalp debisi, gecede 7,5 saat uyku; bebeklik ve çocuklukta daha yüksek kalp ve solunum hızları, daha düşük debi). Gerçek değerler kişiye, kondisyona ve güne göre değişir. Bilgilendirme amaçlıdır.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const YEAR = 365.2425 * 86400000, MIN_PER_YEAR = 365.2425 * 1440;
+  // [başlangıç yaşı, bitiş yaşı, kalp/dk, nefes/dk, debi L/dk, uyku saat/gün]
+  const SEG = [
+    [0, 1, 125, 40, 0.9, 14],
+    [1, 3, 110, 30, 1.8, 12.5],
+    [3, 6, 100, 24, 2.6, 11],
+    [6, 12, 88, 20, 3.5, 10],
+    [12, 18, 80, 17, 4.8, 9],
+    [18, Infinity, 72, 14, 5.0, 7.5]
+  ];
+  const nf = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
+  const df = new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+  let birth = null, raf = 0;
+
+  function total(age, col){
+    let s = 0;
+    for (const seg of SEG){
+      if (age <= seg[0]) break;
+      const span = Math.min(age, seg[1]) - seg[0];
+      s += span * seg[col] * (col === 5 ? 365.2425 / 24 : MIN_PER_YEAR);
+    }
+    return s; // col 5 → yıl cinsinden uyku değil, gün*saat/24 = gün
+  }
+  const segAt = age => SEG.find(s => age >= s[0] && age < s[1]) || SEG[SEG.length - 1];
+
+  function ageForBeats(target){
+    let acc = 0;
+    for (const seg of SEG){
+      const perYear = seg[2] * MIN_PER_YEAR;
+      const span = seg[1] - seg[0];
+      if (acc + perYear * span >= target) return seg[0] + (target - acc) / perYear;
+      acc += perYear * span;
+    }
+    return null;
+  }
+
+  function sleepText(days){
+    const y = Math.floor(days / 365.2425), d = Math.floor(days - y * 365.2425);
+    return y > 0 ? `${y} yıl ${d} gün` : `${d} gün`;
+  }
+
+  function milestones(){
+    const box = $('miles'); box.textContent = '';
+    const now = Date.now();
+    const age = (now - birth) / YEAR;
+    const done = total(age, 2);
+    const lastK = Math.floor(done / 1e9);
+    const rows = [];
+    if (lastK >= 1) rows.push([lastK, true]);
+    rows.push([lastK + 1, false]);
+    if (lastK + 2 <= 3) rows.push([lastK + 2, false]);
+    rows.forEach(([k, past]) => {
+      const a = ageForBeats(k * 1e9);
+      const when = new Date(birth + a * YEAR);
+      const p = document.createElement('p');
+      p.innerHTML = `<b>${k}. milyarıncı atış</b>: ${df.format(when)} civarı${past ? ', attı.' : `, ${nf.format(Math.floor(a))} yaşında.`}`;
+      box.appendChild(p);
+    });
+  }
+
+  function tick(){
+    const now = Date.now();
+    const age = (now - birth) / YEAR;
+    const seg = segAt(age);
+    $('beats').textContent = nf.format(total(age, 2));
+    $('breaths').textContent = nf.format(total(age, 3));
+    const litres = total(age, 4);
+    $('blood').textContent = nf.format(litres);
+    $('pools').textContent = `Yaklaşık ${(litres / 2.5e6).toLocaleString('tr-TR', { maximumFractionDigits: 1 })} olimpik yüzme havuzu dolusu.`;
+    const sleepDays = total(age, 5);
+    $('sleep').textContent = sleepText(sleepDays);
+    $('sleepPct').textContent = '%' + Math.round(sleepDays / (age * 365.2425) * 100);
+    $('orbit').textContent = nf.format((now - birth) / 1000 * 29.78);
+    $('rate').textContent = `Şu an dakikada yaklaşık ${seg[2]} kez atıyor; saniyede ${(seg[2] / 60).toLocaleString('tr-TR', { maximumFractionDigits: 1 })} atış daha ekleniyor.`;
+    $('rr').textContent = seg[3];
+    raf = requestAnimationFrame(tick);
+  }
+
+  function setBirth(v){
+    cancelAnimationFrame(raf);
+    const msg = $('msg'), out = $('out'), beat = $('beat');
+    if (!v){ out.hidden = true; msg.textContent = ''; beat.classList.remove('on'); return; }
+    const [y, m, d] = v.split('-').map(Number);
+    const b = new Date(y, m - 1, d).getTime();
+    if (!isFinite(b) || y < 1900){ msg.textContent = 'Geçerli bir tarih gir.'; out.hidden = true; return; }
+    if (b > Date.now()){ msg.textContent = 'Bu tarih henüz gelmedi.'; out.hidden = true; return; }
+    msg.textContent = '';
+    birth = b;
+    const seg = segAt((Date.now() - birth) / YEAR);
+    beat.style.setProperty('--p', (60 / seg[2]).toFixed(3) + 's');
+    beat.classList.add('on');
+    out.hidden = false;
+    milestones();
+    tick();
+  }
+
+  const dob = $('dob');
+  const t = new Date();
+  dob.max = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+  dob.min = '1900-01-01';
+  dob.addEventListener('change', () => setBirth(dob.value));
+  dob.addEventListener('input', () => { if (dob.value.length === 10) setBirth(dob.value); });
+})();
+</script>
+</body>
+</html>

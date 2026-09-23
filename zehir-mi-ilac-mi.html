@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zehir mi İlaç mı?</title>
+<meta name="description" content="Su, tuz, şeker, kafein, D vitamini, alkol: iyi ile kötüyü ayıran şey miktar. Dozu sen seç.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=DM+Sans:opsz,wght@9..40,400..700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EFEDF3;--ink:#1B1726;--muted:#5E5872;--card:#FFFFFF;--line:#D8D3E3;--ok:#2A8350;--warn:#D89A0A;--bad:#C6372A;--acc:#6B3FA0;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#110E17;--ink:#ECE8F5;--muted:#A49DB8;--card:#1A1622;--line:#2F2A3C;--ok:#5CBD88;--warn:#ECBD48;--bad:#EE6A5C;--acc:#B18CE8;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#110E17;--ink:#ECE8F5;--muted:#A49DB8;--card:#1A1622;--line:#2F2A3C;--ok:#5CBD88;--warn:#ECBD48;--bad:#EE6A5C;--acc:#B18CE8;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 4vh}
+h1{margin:0;font-family:"Fraunces",Georgia,serif;font-weight:900;font-size:clamp(54px,11vw,128px);line-height:.9;letter-spacing:-.03em}
+.quote{margin:.7em 0 0;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(20px,2.6vw,28px);line-height:1.3;max-width:24em}
+.quote small{display:block;font-family:"DM Sans",ui-sans-serif,system-ui,sans-serif;font-weight:500;font-size:15px;color:var(--muted);margin-top:.4em}
+.lede{margin:1em 0 0;max-width:34em;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr;gap:14px;margin:0 0 3em}
+@media (min-width:860px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sect{margin:1.6em 0 .7em;font-family:"Fraunces",Georgia,serif;font-weight:800;font-size:clamp(26px,3.2vw,36px);letter-spacing:-.02em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px}
+.card h2{margin:0;font-family:"Fraunces",Georgia,serif;font-weight:800;font-size:28px;line-height:1.1}
+.card .unit{margin:.2em 0 .9em;color:var(--muted);font-size:15px}
+.val{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 6px}
+.val b{font-family:"Fraunces",Georgia,serif;font-weight:800;font-size:clamp(34px,4.5vw,44px);line-height:1;font-variant-numeric:tabular-nums}
+.val span{color:var(--muted);font-size:15px}
+input[type=range]{width:100%;accent-color:var(--acc);margin:6px 0 2px}
+input[type=range]:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.gauge{position:relative;height:12px;border-radius:6px;overflow:hidden;display:flex;margin:6px 0 12px}
+.gauge i{display:block;height:100%}
+.needle{position:relative;height:0}
+.needle em{position:absolute;top:-30px;width:3px;height:22px;background:var(--ink);border-radius:2px;transform:translateX(-50%)}
+.msg{margin:0;padding:10px 12px;border-radius:10px;font-weight:500;border-left:5px solid var(--c);background:color-mix(in srgb,var(--c) 12%,transparent)}
+.msg strong{display:block;margin-bottom:.15em}
+.note{margin:.8em 0 0;font-size:14.5px;color:var(--muted)}
+.fine{margin:1em 0 4em;max-width:48em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Zehir mi, ilaç mı?</h1>
+    <p class="quote">“Her şey zehirdir; hiçbir şey zehirsiz değildir. Zehri zehir yapmayan yalnızca dozdur.”<small>Paracelsus, 1538</small></p>
+    <p class="lede">On iki gündelik şey. Kaydırıcıyı oynat, iyi ile kötü arasındaki çizginin nerede olduğunu gör.</p>
+  </header>
+  <main id="grid"></main>
+  <p class="fine">Değerler sağlıklı yetişkinler için genel tavsiyelerdir; çocuklar, gebeler, emzirenler, yaşlılar ve kronik hastalığı olanlar için sınırlar farklıdır. Kaynaklar: Dünya Sağlık Örgütü (tuz, şeker, alkol, sebze ve meyve, fiziksel aktivite), Uluslararası Kanser Araştırma Ajansı (işlenmiş et), ABD Gıda ve İlaç Dairesi (kafein), ABD Tıp Enstitüsü ve Avrupa Gıda Güvenliği Otoritesi (D vitamini, A vitamini ve demir için önerilen alım ve üst sınırlar), Amerikan Uyku Tıbbı Akademisi (uyku süresi); böbreklerin saatte 0,8–1 litre su atabildiği fizyoloji kaynaklarında yaygın olarak bildirilir. Bilgilendirme amaçlıdır, tıbbi tavsiye değildir. Kendine ya da bir başkasına zarar verme düşüncen varsa 112'yi ara.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const nf = (x, d = 0) => x.toLocaleString('tr-TR', { maximumFractionDigits: d });
+  const C = { ok: 'var(--ok)', warn: 'var(--warn)', bad: 'var(--bad)' };
+  const ITEMS = [
+    { n: 'Su', unit: 'Saatte içilen, birkaç saat boyunca', min: 0, max: 2.5, step: .1, v: .5, fmt: v => nf(v, 1) + ' L', eq: v => `yaklaşık ${nf(v / .2)} su bardağı / saat`,
+      zones: [[.8, 'ok', 'Böbreklerin rahatça atar.', 'Sağlıklı böbrekler saatte yaklaşık 0,8–1 litre su atabilir.'],
+              [1.0, 'warn', 'Böbreklerinin sınırındasın.', 'Kısa süreli sorun olmaz, ama saatlerce bu hızda içmek birikmeye başlar.'],
+              [Infinity, 'bad', 'Kanın seyrelir.', 'Saatlerce bu hızda içilirse kandaki sodyum seyrelir (hiponatremi): baş ağrısı, bulantı, kafa karışıklığı; ağır durumda beyin ödemi. En çok maraton ve uzun egzersizlerde görülür.']],
+      note: 'Önemli olan günlük toplam değil, hız. Aynı miktar gün boyuna yayıldığında sorun olmaz.' },
+    { n: 'Tuz', unit: 'Günde, gram', min: 0, max: 20, step: .5, v: 10, fmt: v => nf(v, 1) + ' g', eq: v => `yaklaşık ${nf(v / 5, 1)} çay kaşığı`,
+      zones: [[5, 'ok', 'Önerilen sınırın içinde.', 'Dünya Sağlık Örgütü günde 5 gramdan az öneriyor: bir çay kaşığından biraz az.'],
+              [10, 'warn', 'Önerilenin üstünde.', 'Uzun vadede kan basıncını yükseltir.'],
+              [Infinity, 'bad', 'Dünya ortalamasının da üstünde.', 'Dünyada ortalama tüketim günde yaklaşık 10,8 gram; önerilenin iki katından fazla. Yüksek tansiyon, kalp krizi ve inme riskini artırır.']],
+      note: 'Tuzun çoğu tuzluktan değil, ekmek, peynir, salça, turşu ve hazır gıdalardan gelir.' },
+    { n: 'Kafein', unit: 'Günde, miligram', min: 0, max: 1000, step: 10, v: 250, fmt: v => nf(v) + ' mg', eq: v => `yaklaşık ${nf(v / 95, 1)} kupa filtre kahve`,
+      zones: [[400, 'ok', 'Sağlıklı bir yetişkin için güvenli aralık.', 'ABD Gıda ve İlaç Dairesi, sağlıklı yetişkinler için günde 400 mg\'a kadar kafeinin genellikle olumsuz etki yapmadığını belirtiyor. Gebelikte önerilen sınır günde 200 mg.'],
+              [600, 'warn', 'Yan etkiler başlayabilir.', 'Çarpıntı, huzursuzluk, titreme, mide rahatsızlığı ve uykusuzluk.'],
+              [Infinity, 'bad', 'Fazla.', 'Kalp ritmi bozuklukları ve ciddi yan etki riski artar. Enerji içecekleri ve kafein tabletleriyle bu miktara kolayca ulaşılabilir.']],
+      note: 'Kafeine duyarlılık kişiden kişiye çok değişir; bazı insanlar 100 mg\'da bile uykusuz kalır.' },
+    { n: 'Eklenmiş şeker', unit: 'Günde, gram', min: 0, max: 150, step: 5, v: 60, fmt: v => nf(v) + ' g', eq: v => `yaklaşık ${nf(v / 35, 1)} kutu kola`,
+      zones: [[25, 'ok', 'İdeal hedefin içinde.', 'Dünya Sağlık Örgütü, eklenmiş şekerin günlük enerjinin %5\'inin altında, yani yaklaşık 25 gramın altında tutulmasını öneriyor.'],
+              [50, 'warn', 'Üst sınırın içinde.', 'Önerilen üst sınır enerjinin %10\'u, yaklaşık 50 gram.'],
+              [Infinity, 'bad', 'Üst sınırın üstünde.', 'Uzun vadede kilo alma, diş çürüğü ve tip 2 diyabet riski artar.']],
+      note: 'Meyvenin kendi şekeri bu hesaba girmez; meyve suyu ve baldaki şeker girer.' },
+    { n: 'D vitamini', unit: 'Günde, IU (takviye)', min: 0, max: 100, step: 1, v: 45, log: true, fmt: v => nf(v) + ' IU', eq: v => `${nf(v / 40, 1)} mikrogram`,
+      zones: [[400, 'warn', 'Yetersiz olabilir.', 'Yetişkinler için önerilen günlük alım 600 IU, 70 yaş üstünde 800 IU.'],
+              [4000, 'ok', 'Güvenli aralıkta.', 'Yetişkinler için kabul edilen günlük üst sınır 4.000 IU.'],
+              [10000, 'warn', 'Üst sınırın üstünde.', 'Doktor önerisi olmadan uzun süre alınmamalı.'],
+              [Infinity, 'bad', 'Zehirlenme riski.', 'Aylarca bu dozda alınırsa kanda kalsiyum yükselir: bulantı, kusma, kabızlık, halsizlik, böbrek taşı ve böbrek hasarı.']],
+      note: '50.000 IU\'lik preparatlar günlük değil, doktorun belirlediği aralıklarla (örneğin haftada ya da ayda bir) kullanılmak içindir.' },
+    { n: 'Alkol', unit: 'Haftada, standart içki', min: 0, max: 30, step: 1, v: 3, fmt: v => nf(v) + ' içki', eq: v => `yaklaşık ${nf(v * 10)} g saf alkol`,
+      zones: [[0, 'ok', 'Risk yok.', 'Sağlığa zararsız bir alkol miktarı tanımlanmadı; sıfır, bilinen tek risksiz düzey.'],
+              [7, 'warn', 'Düşük ama sıfır değil.', 'Dünya Sağlık Örgütü\'ne göre alkolün kanser riski ilk bardaktan itibaren başlar ve miktarla artar.'],
+              [14, 'bad', 'Risk belirgin.', 'Meme, bağırsak, karaciğer ve ağız kanserleri, tansiyon ve kalp ritmi bozuklukları için risk belirgin artar.'],
+              [Infinity, 'bad', 'Yüksek risk.', 'Karaciğer yağlanması ve sirozu, kalp hastalığı, bağımlılık ve kaza riski yüksek.']],
+      note: 'Bir standart içki yaklaşık 10 gram saf alkoldür: küçük bir bira, küçük bir kadeh şarap ya da tek bir rakı ölçüsü kadar.', nogreen: true },
+    { n: 'İşlenmiş et', unit: 'Günde, gram (sucuk, salam, sosis, pastırma)', min: 0, max: 200, step: 10, v: 30, fmt: v => nf(v) + ' g', eq: v => `yaklaşık ${nf(v / 50, 1)} sosis`,
+      zones: [[0, 'ok', 'Bu açıdan risk yok.', 'İşlenmiş et yemiyorsan bu kaynaktan gelen ek risk de yok.'],
+              [50, 'warn', 'Risk başladı.', ''],
+              [Infinity, 'bad', 'Risk belirgin.', '']],
+      dyn: v => v > 0 ? `Dünya Sağlık Örgütü'nün kanser ajansına göre her gün yenen 50 gram işlenmiş et, kalın bağırsak kanseri riskini yaklaşık %18 artırır. Bu miktarda artış yaklaşık %${nf(18 * v / 50)}.` : '',
+      note: 'Uluslararası Kanser Araştırma Ajansı işlenmiş eti, tütün ve asbestle aynı kanıt grubuna (Grup 1) koyuyor. Bu, eşit derecede tehlikeli oldukları anlamına gelmez; kanser yaptığına dair kanıtın aynı kesinlikte olduğu anlamına gelir.' },
+    { n: 'A vitamini', unit: 'Günde, mikrogram (retinol, takviye ve besin)', min: 0, max: 6000, step: 100, v: 900, fmt: v => nf(v) + ' µg', eq: v => `yaklaşık ${nf(v * 3.33)} IU`,
+      zones: [[500, 'warn', 'Yetersiz olabilir.', 'Önerilen günlük alım kadınlarda 700, erkeklerde 900 mikrogram.'],
+              [3000, 'ok', 'Güvenli aralıkta.', 'Yetişkinler için günlük üst sınır 3.000 mikrogram.'],
+              [Infinity, 'bad', 'Üst sınırın üstünde.', 'Uzun süre alınırsa karaciğer hasarı ve kemik zayıflığı yapabilir. Gebelikte yüksek doz, bebekte doğum kusuru riski taşır.']],
+      note: 'Havuç gibi bitkilerdeki beta-karoten bu sınıra girmez; vücut ondan ancak ihtiyacı kadar A vitamini yapar. Fazlası en fazla cildi turuncuya boyar, zararsızdır.' },
+    { n: 'Demir', unit: 'Günde, miligram (takviye ve besin)', min: 0, max: 100, step: 1, v: 14, fmt: v => nf(v) + ' mg', eq: v => '',
+      zones: [[7, 'warn', 'Yetersiz olabilir.', 'Önerilen günlük alım erkeklerde 8, doğurganlık çağındaki kadınlarda 18 miligram.'],
+              [45, 'ok', 'Güvenli aralıkta.', 'Yetişkinler için günlük üst sınır 45 miligram.'],
+              [Infinity, 'bad', 'Üst sınırın üstünde.', 'Bulantı, kabızlık ve karın ağrısı sık görülür; doktor önerisi olmadan bu dozda uzun süre kullanılmamalı.']],
+      note: 'Demir hapları küçük çocuklarda ciddi zehirlenmelere yol açabilir. Çocukların ulaşamayacağı yerde sakla.' },
+    { n: 'Uyku', unit: 'Gecede, saat', min: 3, max: 12, step: .5, v: 6.5, fmt: v => nf(v, 1) + ' saat', eq: v => '',
+      zones: [[5, 'bad', 'Çok az.', 'Tek bir gece bile dikkat, tepki süresi ve ruh halini bozar. Süreklileşirse kalp hastalığı, diyabet ve kilo alma riski artar.'],
+              [6.99, 'warn', 'Çoğu yetişkin için az.', 'Uyku açığı birikir; hafta sonu fazla uyumak etkilerini tam olarak geri almaz.'],
+              [9, 'ok', 'Önerilen aralıkta.', 'Yetişkinler için önerilen süre gecede 7–9 saat.'],
+              [Infinity, 'warn', 'Önerilenden uzun.', 'Sürekli olarak bu kadar uzun uyku ihtiyacı, altta yatan bir sağlık sorununun işareti olabilir.']],
+      note: 'Burada zarar iki yönlü: hem çok az hem sürekli çok uzun uyku sağlık sorunlarıyla ilişkili.' },
+    { n: 'Sebze ve meyve', unit: 'Günde, gram', min: 0, max: 800, step: 20, v: 240, fmt: v => nf(v) + ' g', eq: v => `yaklaşık ${nf(v / 80, 1)} porsiyon`,
+      zones: [[199, 'bad', 'Çok az.', 'Lif, vitamin ve mineral açığı; kalp hastalığı ve bazı kanserler için risk artar.'],
+              [399, 'warn', 'Önerilenin altında.', 'Dünya Sağlık Örgütü günde en az 400 gram öneriyor.'],
+              [Infinity, 'ok', 'Hedefin içinde.', 'Günde en az 400 gram, yani yaklaşık 5 porsiyon. Patates ve benzeri nişastalı kökler bu hesaba girmez.']],
+      note: 'Bu listede tersine çalışan kalemlerden biri: burada zarar fazlasından değil, azından geliyor.' },
+    { n: 'Hareket', unit: 'Haftada, dakika (orta şiddette: tempolu yürüyüş, bisiklet)', min: 0, max: 600, step: 10, v: 90, fmt: v => nf(v) + ' dk', eq: v => `günde yaklaşık ${nf(v / 7)} dk`,
+      zones: [[59, 'bad', 'Hareketsiz.', 'Hareketsizlik; kalp hastalığı, diyabet, depresyon ve erken ölüm için bağımsız bir risk etkenidir.'],
+              [149, 'warn', 'Önerilenin altında.', 'Her dakika fayda sağlar, ama önerilen düzeye henüz ulaşılmadı.'],
+              [300, 'ok', 'Önerilen aralıkta.', 'Dünya Sağlık Örgütü haftada 150–300 dakika orta şiddette hareket öneriyor; buna ek olarak haftada iki gün kas güçlendirme.'],
+              [Infinity, 'ok', 'Önerilenin üstünde.', 'Ek fayda sağlar.']],
+      note: 'Haftada 150 dakika, 5 gün boyunca günde 30 dakikalık tempolu yürüyüş demek.' }
+  ];
+  const SECT = [
+    ['Fazlası zararlı', ['Su', 'Tuz', 'Kafein', 'Eklenmiş şeker', 'Alkol', 'İşlenmiş et']],
+    ['Hem azı hem fazlası zararlı', ['D vitamini', 'A vitamini', 'Demir', 'Uyku']],
+    ['Azı zararlı', ['Sebze ve meyve', 'Hareket']]
+  ];
+  const logV = t => t <= 0 ? 0 : Math.round(100 * Math.pow(10, t / 100 * Math.log10(200)));
+  const main = document.getElementById('grid');
+  const cards = {};
+  ITEMS.forEach(it => {
+    const el = document.createElement('section'); el.className = 'card';
+    el.innerHTML = `<h2></h2><p class="unit"></p><div class="val"><b></b><span></span></div>
+      <input type="range"><div class="needle"><em></em></div><div class="gauge"></div><p class="msg"><strong></strong><span></span></p><p class="note"></p>`;
+    el.querySelector('h2').textContent = it.n; el.querySelector('.unit').textContent = it.unit; el.querySelector('.note').textContent = it.note;
+    const r = el.querySelector('input'); r.min = it.min; r.max = it.max; r.step = it.step; r.value = it.v; r.setAttribute('aria-label', it.n + ' miktarı');
+    const val = x => it.log ? logV(+x) : +x;
+    const pos = v => it.log ? (v <= 0 ? 0 : Math.log10(v / 100) / Math.log10(200)) * 100 : (v - it.min) / (it.max - it.min) * 100;
+    // gösterge bölgeleri
+    const g = el.querySelector('.gauge'); let prev = 0;
+    it.zones.forEach(([up, lvl]) => {
+      const end = Math.min(100, up === Infinity ? 100 : pos(up));
+      if (end > prev){ const i = document.createElement('i'); i.style.width = (end - prev) + '%'; i.style.background = C[lvl]; g.appendChild(i); prev = end; }
+    });
+    const upd = () => {
+      const v = val(r.value);
+      el.querySelector('.val b').textContent = it.fmt(v);
+      el.querySelector('.val span').textContent = it.eq(v);
+      const z = it.zones.find(([up]) => v <= up) || it.zones[it.zones.length - 1];
+      const m = el.querySelector('.msg'); m.style.setProperty('--c', C[z[1]]);
+      m.querySelector('strong').textContent = z[2]; m.querySelector('span').textContent = [z[3], it.dyn ? it.dyn(v) : ''].filter(Boolean).join(' ');
+      el.querySelector('.needle em').style.left = Math.min(100, Math.max(0, pos(v))) + '%';
+      r.setAttribute('aria-valuetext', it.fmt(v));
+    };
+    r.addEventListener('input', upd); upd();
+    cards[it.n] = el;
+  });
+  SECT.forEach(([title, names]) => {
+    const h = document.createElement('h2'); h.className = 'sect'; h.textContent = title; main.appendChild(h);
+    const g = document.createElement('div'); g.className = 'grid'; names.forEach(n => g.appendChild(cards[n])); main.appendChild(g);
+  });
+})();
+</script>
+</body>
+</html>

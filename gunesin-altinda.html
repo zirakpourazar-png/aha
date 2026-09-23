@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Güneşin Altında</title>
+<meta name="description" content="Güneş ışığı cildine ne yapıyor, güneş kremi onu nasıl durduruyor? Güneşe çık ve izle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400..800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E8F0F6;--ink:#13233A;--muted:#566479;--card:#FFFFFF;--line:#CCD7E2;--sun:#EF8A1F;--uvb:#7B3FE4;--uva:#2F72F0;--bad:#C8372B;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1422;--ink:#E7EEF7;--muted:#9AA9BD;--card:#132033;--line:#26364D;--sun:#F6A445;--uvb:#A97BFF;--uva:#6FA0FF;--bad:#F07463;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0B1422;--ink:#E7EEF7;--muted:#9AA9BD;--card:#132033;--line:#26364D;--sun:#F6A445;--uvb:#A97BFF;--uva:#6FA0FF;--bad:#F07463;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Outfit",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1140px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 3vh}
+h1{margin:0;font-size:clamp(52px,11vw,124px);line-height:.9;font-weight:800;letter-spacing:-.035em}
+.lede{margin:.5em 0 0;font-size:clamp(20px,2.5vw,26px);line-height:1.32;max-width:27em}
+.lab{display:grid;grid-template-columns:1fr;gap:18px;margin:0 0 3em}
+@media (min-width:900px){.lab{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start}}
+.scene{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--card)}
+.scene canvas{display:block;width:100%;height:clamp(360px,62vh,600px)}
+.clock{position:absolute;right:12px;top:10px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.82);color:#13233A;font-weight:700;font-variant-numeric:tabular-nums;font-size:15px}
+.play{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 0}
+.btn{font:inherit;font-weight:700;font-size:17px;padding:12px 20px;min-height:52px;border-radius:10px;border:0;background:var(--sun);color:#1B1206;cursor:pointer}
+.btn2{font:inherit;font-weight:600;font-size:16px;padding:12px 16px;min-height:52px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--uva);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 20px}
+.ctl{margin:0 0 1.1em}
+.ctl .t{display:flex;justify-content:space-between;gap:10px;font-weight:600;margin-bottom:6px}
+.ctl .t span{font-weight:500;color:var(--muted);text-align:right}
+input[type=range]{width:100%;accent-color:var(--sun)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:inherit;font-weight:600;font-size:15px;padding:8px 12px;min-height:42px;border-radius:8px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sw{width:42px;height:42px;padding:0!important;border-radius:50%!important;border:3px solid transparent!important}
+.sw[aria-pressed="true"]{border-color:var(--ink)!important;outline:2px solid var(--bg);outline-offset:-5px}
+.note{font-size:14.5px;color:var(--muted);margin:.4em 0 0}
+.out{border-top:1px solid var(--line);margin-top:1.2em;padding-top:1.1em}
+.status{margin:0;font-size:clamp(22px,2.6vw,28px);font-weight:800;line-height:1.15}
+.meter{position:relative;height:14px;border-radius:7px;background:linear-gradient(to right,#F3D9B8,#EFA07A 25%,#E0533E 45%,#A6192E);margin:12px 0 22px}
+.meter i{position:absolute;top:-4px;width:4px;height:22px;border-radius:2px;background:var(--ink);transform:translateX(-50%)}
+.meter span{position:absolute;top:18px;font-size:12px;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+.row{display:flex;gap:14px;align-items:center}
+.tomorrow{width:64px;height:64px;border-radius:12px;flex:none;border:1px solid var(--line)}
+.kv{margin:.2em 0;font-size:16px}
+.kv b{font-variant-numeric:tabular-nums}
+.facts{max-width:46em;margin:0 0 2em}
+.facts h2{font-size:26px;line-height:1.2;margin:1.6em 0 .5em}
+.facts p{margin:0 0 .9em}
+.uvb{color:var(--uvb);font-weight:700}.uva{color:var(--uva);font-weight:700}
+.fine{margin:2.5em 0 4em;max-width:48em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Güneşin Altında</h1>
+    <p class="lede">Güneş ışığı cildinin içinde ne yapıyor, güneş kremi onu nasıl durduruyor? Ayarları seç, güneşe çık ve izle.</p>
+  </header>
+
+  <section class="lab">
+    <div>
+      <div class="scene"><canvas id="cv" role="img" aria-label="Cildin kesiti ve üzerine düşen UV ışınları"></canvas><div class="clock" id="clock">Güneşte 0 dk</div></div>
+      <div class="play">
+        <button class="btn" id="go" type="button">Güneşe çık</button>
+        <button class="btn2" id="reset" type="button">Sıfırla</button>
+      </div>
+      <p class="note">Burada 1 saniye, güneşte 2 dakikaya denk geliyor. <span class="uvb">Mor</span> ışınlar UVB, <span class="uva">mavi</span> ışınlar UVA.</p>
+    </div>
+
+    <div class="panel">
+      <div class="ctl"><div class="t">UV indeksi <span id="uviL"></span></div><input type="range" id="uvi" min="1" max="11" step="1" value="8" aria-label="UV indeksi"></div>
+      <div class="ctl"><div class="t">Cilt tipin <span id="skinL"></span></div><div class="seg" id="skin" role="group" aria-label="Cilt tipi"></div></div>
+      <div class="ctl"><div class="t">Güneş kremi</div><div class="seg" id="spf" role="group" aria-label="Güneş kremi"></div></div>
+      <div class="ctl" id="amtBox"><div class="t">Ne kadar sürdün? <span id="amtL"></span></div><input type="range" id="amt" min="0.25" max="2" step="0.25" value="1" aria-label="Sürülen miktar"><p class="note">Etikette yazan SPF, santimetrekareye 2 mg krem sürülünce ölçülür. Yüz ve boyun için bu, yaklaşık yarım çay kaşığı demek. Araştırmalara göre çoğu kişi bunun çeyreği ile yarısı kadarını sürüyor.</p></div>
+
+      <div class="out" aria-live="polite">
+        <p class="status" id="status"></p>
+        <div class="meter" id="meter"><i id="needle" style="left:0%"></i><span style="left:20%">1 MED</span><span style="left:40%">2</span><span style="left:80%">4</span></div>
+        <div class="row">
+          <div class="tomorrow" id="tom" aria-hidden="true"></div>
+          <div>
+            <p class="kv">Yarın sabah cildin böyle görünecek.</p>
+            <p class="kv">Yanmadan kalabileceğin süre: <b id="left"></b></p>
+            <p class="kv">Cildine ulaşan UVB: <b id="pass"></b></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="facts">
+    <h2>İki ayrı ışın, iki ayrı hasar</h2>
+    <p><span class="uvb">UVB</span> kısa dalga boylu ve enerjilidir; çoğunlukla cildin üst katmanında, epidermiste durur. Hücrelerin DNA’sına doğrudan çarpar, zincirde bozukluk yaratır. Güneş yanığının asıl nedeni odur. Kızarıklık hemen değil, birkaç saat sonra başlar ve 12–24 saatte zirve yapar; o yüzden güneşteyken "henüz yanmadım" hissi yanıltıcıdır.</p>
+    <p><span class="uva">UVA</span> yeryüzüne ulaşan UV’nin yaklaşık %95’idir. Yanık yapmaz ama daha derine, dermise iner; kolajeni parçalayan enzimleri harekete geçirir. Kırışıklığın, sarkmanın ve lekelerin başlıca nedenidir. Bulutlardan ve pencere camından büyük ölçüde geçer.</p>
+    <h2>SPF ne demek?</h2>
+    <p>SPF, kremin güneş yanığına yol açan ışınları kaç kat azalttığını söyler. SPF 30, cildine ulaşan UVB’yi 30’da 1’e indirir: yaklaşık %97’sini durdurur. SPF 50 ise %98’ini. Fark küçük görünüyor ama cildine ulaşan miktar 30’da 1’den 50’de 1’e iniyor, yani yaklaşık %40 daha az ışın geçiyor.</p>
+    <p>Avrupa Birliği’nde satılan kremlerde UVA koruması, SPF değerinin en az üçte biri olmalı. Bu simülasyon da UVA’yı bu en düşük oranla hesaplıyor.</p>
+    <p>Krem terle, suyla ve havluyla zamanla silinir. En az 2 saatte bir ve her yüzme ya da çok terlemeden sonra yenilemek gerekir. Bulutlu havada da UV’nin büyük kısmı geçer; kar yere düşen UV’nin %80’e kadarını, kum %15 kadarını geri yansıtır.</p>
+  </section>
+
+  <p class="fine">Hesap basitleştirilmiştir. UV indeksindeki her birim, eritem açısından ağırlıklandırılmış 0,025 W/m² ışınıma karşılık gelir. Cilt tiplerine göre en düşük kızartan doz (MED) Fitzpatrick sınıflamasındaki tipik aralıkların ortası alındı; gerçek güneşte ölçülen değerler çoğu zaman daha yüksektir, yani gerçek yanma süresi buradakinden uzun olabilir. Az sürülen kremin koruması için doğrusal bir model kullanıldı; bazı çalışmalar korumanın çok daha hızlı düştüğünü gösteriyor (örneğin yarım miktarda SPF’nin karekökü kadar). Yansıma, ter ve silinme hesaba katılmadı. Bilgilendirme amaçlıdır, tıbbi tavsiye değildir.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const SKINS = [
+    { n: 'I', d: 'Her zaman yanar, hiç bronzlaşmaz', tone: '#F6D6C4', med: 2.2, mel: .15 },
+    { n: 'II', d: 'Kolay yanar, zor bronzlaşır', tone: '#EDC3A6', med: 3.0, mel: .25 },
+    { n: 'III', d: 'Bazen yanar, yavaş bronzlaşır', tone: '#D9A580', med: 4.0, mel: .4 },
+    { n: 'IV', d: 'Az yanar, kolay bronzlaşır', tone: '#B9825C', med: 5.2, mel: .6 },
+    { n: 'V', d: 'Nadiren yanar', tone: '#8A5838', med: 8.0, mel: .8 },
+    { n: 'VI', d: 'Neredeyse hiç yanmaz', tone: '#5A3926', med: 11.0, mel: 1 }
+  ];
+  const SPFS = [0, 15, 30, 50];
+  const UVI_CAT = v => v <= 2 ? 'düşük' : v <= 5 ? 'orta' : v <= 7 ? 'yüksek' : v <= 10 ? 'çok yüksek' : 'aşırı';
+  const S = { uvi: 8, skin: 1, spf: 0, amt: 1, min: 0, dose: 0, running: false };
+
+  // Kontroller
+  SKINS.forEach((k, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'sw'; b.style.background = k.tone;
+    b.setAttribute('aria-label', `Tip ${k.n}: ${k.d}`); b.dataset.i = i;
+    b.addEventListener('click', () => { S.skin = i; sync(); });
+    $('skin').appendChild(b);
+  });
+  SPFS.forEach((v, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = v ? 'SPF ' + v : 'Yok'; b.dataset.i = i;
+    b.addEventListener('click', () => { S.spf = v; sync(); });
+    $('spf').appendChild(b);
+  });
+  $('uvi').addEventListener('input', e => { S.uvi = +e.target.value; sync(); });
+  $('amt').addEventListener('input', e => { S.amt = +e.target.value; sync(); });
+
+  const spfEff = () => S.spf ? 1 + (S.spf - 1) * S.amt / 2 : 1;
+  const passB = () => 1 / spfEff();
+  const passA = () => S.spf ? Math.min(1, 3 / spfEff()) : 1;
+  const sedPerMin = () => S.uvi * 0.025 * 60 / 100 / spfEff();
+  const nfm = x => x.toLocaleString('tr-TR', { maximumFractionDigits: 1 });
+
+  function mix(a, b, t){
+    const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+    const A = p(a), B = p(b);
+    return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`;
+  }
+  function sync(){
+    const k = SKINS[S.skin];
+    $('uviL').textContent = `${S.uvi} (${UVI_CAT(S.uvi)})`;
+    $('skinL').textContent = `Tip ${k.n}: ${k.d.toLocaleLowerCase('tr-TR')}`;
+    [...$('skin').children].forEach(b => b.setAttribute('aria-pressed', +b.dataset.i === S.skin ? 'true' : 'false'));
+    [...$('spf').children].forEach(b => b.setAttribute('aria-pressed', SPFS[+b.dataset.i] === S.spf ? 'true' : 'false'));
+    $('amt').disabled = !S.spf; $('amtBox').style.opacity = S.spf ? 1 : .45;
+    $('amtL').textContent = S.spf ? `${nfm(S.amt)} mg/cm²${S.amt >= 2 ? ' (önerilen)' : ''}, etkin koruma ≈ SPF ${Math.round(spfEff())}` : '';
+    const ratio = S.dose / k.med;
+    const st = ratio < .5 ? 'Kızarıklık beklenmez.' : ratio < 1 ? 'Sınırdasın: hassas yerlerde hafif pembelik olabilir.' : ratio < 2 ? 'Yarın cildin kızarık olacak.' : ratio < 4 ? 'Ağrılı bir güneş yanığı yolda.' : 'Su toplayan yanık riski.';
+    $('status').textContent = st;
+    $('status').style.color = ratio >= 1 ? 'var(--bad)' : '';
+    $('needle').style.left = Math.min(100, ratio / 5 * 100) + '%';
+    const red = Math.min(1, ratio / 3) * (1 - k.mel * .55);
+    $('tom').style.background = mix(k.tone, '#D9412F', red * .85);
+    const leftMin = (k.med - S.dose) / sedPerMin();
+    $('left').textContent = leftMin <= 0 ? 'çoktan aştın' : leftMin > 600 ? '10 saatten fazla' : `yaklaşık ${Math.round(leftMin)} dk`;
+    $('pass').textContent = S.spf ? `%${nfm(passB() * 100)} (kremsiz: %100)` : '%100';
+    $('clock').textContent = `Güneşte ${Math.floor(S.min)} dk`;
+  }
+
+  // Sahne
+  const cv = $('cv'), ctx = cv.getContext('2d');
+  let W = 0, H = 0, dpr = 1;
+  const Y = { film: .3, sc: .315, epi: .335, basal: .47, derm: .8 };
+  let photons = [], hits = [], fibers = [], cells = [], mels = [], fat = [];
+  function layout(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const r = cv.getBoundingClientRect(); W = r.width || 600; H = r.height || 420;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cells = []; for (let x = 8; x < W; x += 22) for (let y = Y.epi * H + 8; y < Y.basal * H - 6; y += 18) cells.push([x + (Math.random() - .5) * 6 + ((Math.round(y) % 2) ? 8 : 0), y + (Math.random() - .5) * 4]);
+    mels = []; for (let x = 6; x < W; x += 14) mels.push([x + Math.random() * 6, Y.basal * H - 3 + Math.random() * 4, Math.random()]);
+    fibers = []; for (let i = 0; i < Math.round(W / 9); i++){ const y = (Y.basal + .03 + Math.random() * (Y.derm - Y.basal - .05)) * H; fibers.push({ x: Math.random() * W - 40, y, len: 60 + Math.random() * 90, ph: Math.random() * 6, dmg: 0 }); }
+    fat = []; for (let x = 20; x < W + 30; x += 46) for (let y = Y.derm * H + 22; y < H + 20; y += 40) fat.push([x + (Math.random() - .5) * 14 + ((Math.round(y / 40) % 2) ? 22 : 0), y + (Math.random() - .5) * 8, 17 + Math.random() * 6]);
+  }
+  function spawn(dt){
+    const rate = S.uvi * 3.2;
+    let n = rate * dt; while (n > 0){ if (Math.random() < n){ const uvb = Math.random() < .28;
+      const x = Math.random() * W;
+      photons.push({ x: x - H * .25 + Math.random() * 20, y: -10, tx: x, uvb, st: 0, depth: uvb ? (Y.epi + Math.random() * (Y.basal - Y.epi + (Math.random() < .12 ? .06 : 0))) * H : (Y.epi + Math.random() * (Y.derm - Y.epi - .04)) * H, blocked: Math.random() > (uvb ? passB() : passA()) }); } n -= 1; }
+  }
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  function draw(dt){
+    const k = SKINS[S.skin];
+    // gökyüzü
+    const sky = ctx.createLinearGradient(0, 0, 0, Y.film * H);
+    sky.addColorStop(0, '#8EC5F0'); sky.addColorStop(1, '#DCEFFC');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, Y.film * H + 1);
+    const sg = ctx.createRadialGradient(W * .08, H * .02, 0, W * .08, H * .02, H * .3);
+    sg.addColorStop(0, 'rgba(255,224,130,1)'); sg.addColorStop(.25, 'rgba(255,200,90,.9)'); sg.addColorStop(1, 'rgba(255,200,90,0)');
+    ctx.fillStyle = sg; ctx.fillRect(0, 0, W, Y.film * H);
+    // yağ dokusu
+    ctx.fillStyle = '#F7E3A6'; ctx.fillRect(0, Y.derm * H, W, H);
+    ctx.strokeStyle = '#E3C77A'; ctx.lineWidth = 1.5; fat.forEach(([x, y, r]) => { ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke(); });
+    // dermis
+    ctx.fillStyle = '#F2C6BE'; ctx.fillRect(0, Y.basal * H, W, (Y.derm - Y.basal) * H);
+    fibers.forEach(f => {
+      const a = 1 - Math.min(.85, f.dmg);
+      ctx.strokeStyle = `rgba(214,140,130,${a})`; ctx.lineWidth = 2; ctx.setLineDash(f.dmg > .35 ? [4, 5] : []);
+      ctx.beginPath(); for (let s = 0; s <= f.len; s += 4){ const x = f.x + s, y = f.y + Math.sin(s * .08 + f.ph) * 4; s ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
+    });
+    ctx.setLineDash([]);
+    ctx.strokeStyle = 'rgba(200,60,70,.55)'; ctx.lineWidth = 3;
+    for (let x = 30; x < W; x += 120){ ctx.beginPath(); ctx.moveTo(x, Y.derm * H - 6); ctx.bezierCurveTo(x, Y.basal * H + 10, x + 40, Y.basal * H + 10, x + 40, Y.derm * H - 6); ctx.stroke(); }
+    // epidermis
+    ctx.fillStyle = k.tone; ctx.fillRect(0, Y.epi * H, W, (Y.basal - Y.epi) * H);
+    ctx.fillStyle = 'rgba(255,255,255,.18)'; cells.forEach(([x, y]) => { ctx.beginPath(); ctx.ellipse(x, y, 9, 7, 0, 0, 7); ctx.fill(); });
+    ctx.fillStyle = `rgba(70,40,22,${.25 + k.mel * .6})`; mels.forEach(([x, y, r]) => { if (r < .35 + k.mel * .65){ ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); } });
+    // boynuz tabaka
+    ctx.fillStyle = mix(k.tone, '#FFF6EE', .45); ctx.fillRect(0, Y.sc * H, W, (Y.epi - Y.sc) * H);
+    // krem filmi
+    if (S.spf){ const th = 3 + S.amt * 5; ctx.fillStyle = 'rgba(255,255,255,.78)'; ctx.fillRect(0, Y.sc * H - th, W, th); ctx.fillStyle = 'rgba(255,255,255,.95)'; ctx.fillRect(0, Y.sc * H - th, W, 1.5); }
+    // etiketler
+    ctx.font = '600 12px "Outfit", system-ui, sans-serif'; ctx.fillStyle = 'rgba(19,35,58,.72)'; ctx.textAlign = 'right';
+    ctx.fillText('Epidermis', W - 10, Y.epi * H + 16); ctx.fillText('Dermis', W - 10, Y.basal * H + 18); ctx.fillText('Yağ dokusu', W - 10, Y.derm * H + 18);
+    if (S.spf) ctx.fillText('Güneş kremi', W - 10, Y.sc * H - 14);
+    ctx.textAlign = 'left';
+    // fotonlar
+    const topY = S.spf ? Y.sc * H - (3 + S.amt * 5) : Y.sc * H;
+    const cB = css('--uvb') || '#7B3FE4', cA = css('--uva') || '#2F72F0';
+    photons = photons.filter(p => {
+      const speed = H * .9;
+      p.y += speed * dt; p.x += (p.tx - p.x) * Math.min(1, dt * 3.2);
+      if (p.blocked && p.y >= topY){ hits.push({ x: p.x, y: topY, t: 0, kind: 'blk' }); return false; }
+      if (p.y >= p.depth){ hits.push({ x: p.x, y: p.depth, t: 0, kind: p.uvb ? 'dna' : 'col' });
+        if (!p.uvb){ const f = fibers.find(f => Math.abs(f.y - p.depth) < 14 && p.x > f.x && p.x < f.x + f.len); if (f) f.dmg = Math.min(1, f.dmg + .12); }
+        return false; }
+      ctx.strokeStyle = p.uvb ? cB : cA; ctx.lineWidth = 2; ctx.beginPath();
+      const L = p.uvb ? 20 : 28, fq = p.uvb ? .9 : .45;
+      for (let s = 0; s <= L; s += 2){ const x = p.x + Math.sin((p.y - s) * fq) * 3, y = p.y - s; s ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke(); return true;
+    });
+    hits = hits.filter(h => {
+      h.t += dt; const life = h.kind === 'blk' ? .35 : 5; if (h.t > life) return false;
+      const a = 1 - h.t / life;
+      if (h.kind === 'blk'){ ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.beginPath(); ctx.arc(h.x, h.y, 5 + h.t * 20, 0, 7); ctx.fill(); }
+      else if (h.kind === 'dna'){ ctx.strokeStyle = `rgba(230,120,20,${a})`; ctx.lineWidth = 2; ctx.beginPath(); for (let i = 0; i < 4; i++){ const an = i * Math.PI / 4; ctx.moveTo(h.x - Math.cos(an) * 5, h.y - Math.sin(an) * 5); ctx.lineTo(h.x + Math.cos(an) * 5, h.y + Math.sin(an) * 5); } ctx.stroke(); }
+      else { ctx.fillStyle = `rgba(47,114,240,${a * .5})`; ctx.beginPath(); ctx.arc(h.x, h.y, 6, 0, 7); ctx.fill(); }
+      return true;
+    });
+  }
+
+  let last = performance.now();
+  function loop(now){
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    if (S.running){
+      spawn(dt);
+      S.min += dt * 2; S.dose += sedPerMin() * dt * 2;
+      sync();
+    }
+    ctx.clearRect(0, 0, W, H); draw(dt);
+    requestAnimationFrame(loop);
+  }
+  $('go').addEventListener('click', () => { S.running = !S.running; $('go').textContent = S.running ? 'Gölgeye geç' : 'Güneşe çık'; });
+  $('reset').addEventListener('click', () => { S.running = false; S.min = 0; S.dose = 0; photons = []; hits = []; fibers.forEach(f => f.dmg = 0); $('go').textContent = 'Güneşe çık'; sync(); });
+  window.addEventListener('resize', () => layout());
+  layout(); sync(); requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

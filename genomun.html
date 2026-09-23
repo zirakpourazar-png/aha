@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Genomun</title>
+<meta name="description" content="Kendi DNA'nı saniyede bir harf okusan 100 yıl sürerdi. Saymaya başlayalım.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A1410;--ink:#E6F2EA;--muted:#93AEA0;--card:#111F19;--line:#1F3429;--a:#F2B705;--c:#3FA7F2;--g:#4ADE80;--t:#F2554B;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 2vh}
+h1{margin:0;font-weight:700;font-size:clamp(56px,12vw,132px);line-height:.9;letter-spacing:-.04em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:28em;color:var(--muted)}
+.reader{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:1.4em 0 12px;overflow:hidden}
+.seq{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:clamp(15px,3.4vw,22px);letter-spacing:.14em;line-height:1.7;word-break:break-all;height:5.1em;overflow:hidden}
+.seq i{font-style:normal}
+.seq .A{color:var(--a)}.seq .C{color:var(--c)}.seq .G{color:var(--g)}.seq .T{color:var(--t)}
+.bar{height:6px;border-radius:3px;background:var(--line);margin:12px 0 6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--g);width:0}
+.count{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.count b{font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600;font-size:clamp(22px,4vw,32px)}
+.count span{color:var(--muted);font-size:14.5px;display:block}
+.rate{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 2em}
+.rate button{font:inherit;font-weight:600;font-size:15px;padding:10px 14px;min-height:46px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.rate button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+.cards{display:grid;grid-template-columns:1fr;gap:12px;margin:0 0 2em}
+@media (min-width:760px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.card b{display:block;font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600;font-size:clamp(26px,4.4vw,36px);line-height:1.05;margin-bottom:.25em}
+.card p{margin:0;color:var(--muted)}
+.fine{margin:1.5em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Genomun</h1>
+    <p class="lede">Her hücrende, dört harfle yazılmış 3,1 milyar harflik bir metin var. Okumaya başlayalım; ne kadar sürdüğünü birlikte görelim.</p>
+  </header>
+  <main>
+    <div class="reader">
+      <div class="seq" id="seq" aria-hidden="true"></div>
+      <div class="bar"><i id="bar"></i></div>
+      <div class="count">
+        <p><b id="n">0</b><span>okunan harf</span></p>
+        <p><b id="pct">%0</b><span>genomun tamamlanan kısmı</span></p>
+        <p><b id="eta">—</b><span>bu hızla bitirme süresi</span></p>
+      </div>
+    </div>
+    <div class="rate" id="rate" role="group" aria-label="Okuma hızı"></div>
+    <section class="cards" id="cards"></section>
+    <p class="fine">İnsan genomu yaklaşık 3,1 milyar baz çiftidir ve her hücrede iki kopya hâlinde bulunur. Ekrandaki harfler rastgele üretilmiştir; gerçek bir dizilim değildir. Karşılaştırma oranları farklı yöntemlere göre değişebilir. Bilgilendirme amaçlıdır.</p>
+  </main>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const G = 3.1e9, L = ['A', 'C', 'G', 'T'];
+  const RATES = [['Saniyede 1 harf', 1], ['Okuma hızında (saniyede 15)', 15], ['Dakikada 1 sayfa (3.000)', 50], ['Dizileme makinesi (milyonda)', 1e6]];
+  let rate = 1, n = 0, last = performance.now(), buf = '';
+  const nf = (x, d = 0) => x.toLocaleString('tr-TR', { maximumFractionDigits: d });
+  RATES.forEach(([t, v], i) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.dataset.v = v;
+    b.addEventListener('click', () => { rate = v; paintRate(); }); $('rate').appendChild(b); });
+  const paintRate = () => [...$('rate').children].forEach(b => b.setAttribute('aria-pressed', +b.dataset.v === rate ? 'true' : 'false'));
+  function eta(){
+    const s = (G - n) / rate;
+    if (s > 3.15e7) return nf(s / 3.15e7, 1) + ' yıl';
+    if (s > 86400) return nf(s / 86400, 1) + ' gün';
+    if (s > 3600) return nf(s / 3600, 1) + ' saat';
+    if (s > 60) return nf(s / 60, 1) + ' dakika';
+    return nf(s, 0) + ' saniye';
+  }
+  function tick(now){
+    const dt = (now - last) / 1000; last = now;
+    const add = rate * dt;
+    n = Math.min(G, n + add);
+    const show = Math.min(60, Math.max(1, Math.round(add)));
+    for (let i = 0; i < show; i++) buf += L[(Math.random() * 4) | 0];
+    if (buf.length > 900) buf = buf.slice(-900);
+    $('seq').innerHTML = buf.slice(-320).split('').map(c => `<i class="${c}">${c}</i>`).join('');
+    $('n').textContent = nf(n);
+    $('pct').textContent = '%' + (n / G * 100).toLocaleString('tr-TR', { maximumFractionDigits: 6 });
+    $('bar').style.width = Math.min(100, n / G * 100) + '%';
+    $('eta').textContent = eta();
+    requestAnimationFrame(tick);
+  }
+  const CARDS = [
+    ['2 metre', 'Tek bir hücrendeki DNA uç uca açılsa yaklaşık 2 metre olurdu. Bu iplik, milimetrenin yüzde biri kadar bir çekirdeğin içine katlanmış durumda.'],
+    ['Güneş\'e gidip gelmek', 'Vücudundaki bütün hücrelerin DNA\'sı uç uca eklenseydi, Güneş ile Dünya arasında yüzlerce kez gidip gelebilirdi.'],
+    ['%99,9', 'İki insanın genomu ortalama bu oranda aynıdır. Dünyadaki bütün farklılıklar, kalan binde birlik kısımda saklı.'],
+    ['%98,8', 'Şempanzelerle paylaştığımız oran. Aradaki fark, harflerin kendisinden çok hangi genin ne zaman ve ne kadar çalıştığında.'],
+    ['4 harf', 'Bütün canlılar aynı alfabeyi kullanır: A, C, G, T. Bir muzla da, bir bakteriyle de aynı dili konuşuyoruz; sadece metin farklı.'],
+    ['Her gün trilyonlarca kopya', 'Hücrelerin bölünürken bu 3,1 milyar harfi baştan kopyalar. Hata payı o kadar düşüktür ki, milyarda birkaç harf yanlış gider; onları da tamir eden ayrı bir sistem vardır.']
+  ];
+  const box = $('cards');
+  CARDS.forEach(([b, p]) => { const d = document.createElement('div'); d.className = 'card'; d.innerHTML = '<b></b><p></p>';
+    d.querySelector('b').textContent = b; d.querySelector('p').textContent = p; box.appendChild(d); });
+  paintRate(); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

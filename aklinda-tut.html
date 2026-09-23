@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aklında Tut</title>
+<meta name="description" content="Ekranda sayılar birer birer yanıp sönecek. Kaç tanesini aklında tutabilirsin?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400..800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E9F4F4;--ink:#0F2426;--muted:#52696B;--card:#FFFFFF;--line:#C8DDDE;--acc:#0E8A8F;--bad:#C6372A;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A1415;--ink:#E2F0F0;--muted:#94ADAE;--card:#111E20;--line:#223638;--acc:#4FD1D6;--bad:#EE6A5C;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0A1415;--ink:#E2F0F0;--muted:#94ADAE;--card:#111E20;--line:#223638;--acc:#4FD1D6;--bad:#EE6A5C;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Sora",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:640px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 3vh;text-align:center}
+h1{margin:0;font-weight:800;font-size:clamp(56px,12vw,120px);line-height:.9;letter-spacing:-.05em}
+.lede{margin:.5em auto 0;font-size:clamp(18px,2.3vw,22px);line-height:1.4;max-width:24em}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;text-align:center;margin:1em 0 2em}
+.lvl{margin:0;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums}
+.show{height:clamp(120px,24vw,170px);display:grid;place-items:center;font-weight:800;font-size:clamp(90px,22vw,150px);line-height:1;font-variant-numeric:tabular-nums;color:var(--acc)}
+.show.msg{font-size:clamp(22px,4vw,30px);color:var(--ink);font-weight:700}
+.typed{min-height:1.4em;font-weight:800;font-size:clamp(30px,6vw,44px);letter-spacing:.12em;font-variant-numeric:tabular-nums;margin:0 0 12px;word-break:break-all}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:320px;margin:0 auto}
+.pad button,.go{font:inherit;font-weight:700;font-size:24px;min-height:58px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;touch-action:manipulation}
+.pad .ok{background:var(--acc);color:#fff;border-color:var(--acc);font-size:18px}
+.pad .del{font-size:18px}
+.pad[hidden],.go[hidden]{display:none}
+.go{background:var(--acc);color:#fff;border-color:var(--acc);padding:0 30px;font-size:20px}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+button[disabled]{opacity:.4;cursor:default}
+.lives{margin:10px 0 0;color:var(--muted);font-size:15px}
+.facts{max-width:40em;margin:0 auto}
+.facts h2{font-size:clamp(24px,3vw,30px);margin:1.2em 0 .4em;letter-spacing:-.02em}
+.facts p{margin:0 0 .9em}
+.fine{margin:2.5em auto 4em;max-width:40em;font-size:14px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Aklında Tut</h1>
+    <p class="lede">Ekranda rakamlar birer birer yanıp sönecek. Bittiğinde aynı sırayla yaz. Her doğru cevapta dizi bir rakam uzuyor.</p>
+  </header>
+  <main class="stage" aria-live="polite">
+    <p class="lvl" id="lvl">3 rakamla başlıyoruz</p>
+    <div class="show msg" id="show">Hazır olunca başla</div>
+    <div class="typed" id="typed" aria-label="Yazdığın"></div>
+    <div class="pad" id="pad" hidden></div>
+    <button class="go" id="go" type="button">Başla</button>
+    <p class="lives" id="lives"></p>
+  </main>
+  <section class="facts">
+    <h2>Neden 7 civarı?</h2>
+    <p>Kısa süreli belleğin sınırlıdır: çoğu yetişkin, tekrar etmeden yaklaşık 7 rakamı aklında tutabilir. Psikolog George Miller bunu 1956'da "sihirli sayı 7, artı eksi 2" diye tanımladı. Yorgunluk, dikkat dağınıklığı ve kaygı bu sayıyı düşürür.</p>
+    <h2>Hile: gruplamak</h2>
+    <p>Telefon numaralarını "0532 123 45 67" diye bölmemizin sebebi bu. Rakamları üçlü ya da ikili gruplara ayırınca beynin her grubu tek bir parça gibi saklar ve kapasiten sanki büyür. Bellek şampiyonları bu yöntemi rakamları resimlere ve hikâyelere çevirerek uç noktaya taşır ve birkaç dakikada yüzlerce rakamı ezberleyebilir.</p>
+    <p>Bir kez daha dene, bu sefer rakamları kafanda gruplayarak.</p>
+  </section>
+  <p class="fine">Eğlence amaçlıdır; bir bellek testi yerine geçmez.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let len = 3, seq = '', typed = '', strikes = 0, best = 0, busy = false;
+  const show = $('show'), pad = $('pad');
+  ['1','2','3','4','5','6','7','8','9','del','0','ok'].forEach(k => {
+    const b = document.createElement('button'); b.type = 'button';
+    b.textContent = k === 'del' ? 'Sil' : k === 'ok' ? 'Tamam' : k; if (k === 'del') b.className = 'del'; if (k === 'ok') b.className = 'ok';
+    b.addEventListener('click', () => key(k)); pad.appendChild(b);
+  });
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  async function round(){
+    busy = true; typed = ''; $('typed').textContent = ''; pad.hidden = true; $('go').hidden = true;
+    seq = Array.from({ length: len }, () => Math.floor(Math.random() * 10)).join('');
+    $('lvl').textContent = `${len} rakam`;
+    show.classList.add('msg'); show.textContent = 'Dikkat…'; await wait(900);
+    show.classList.remove('msg');
+    for (const d of seq){ show.textContent = d; await wait(750); show.textContent = ''; await wait(250); }
+    show.classList.add('msg'); show.textContent = 'Şimdi yaz';
+    pad.hidden = false; busy = false; lives();
+  }
+  function lives(){ $('lives').textContent = strikes ? 'Bu uzunlukta bir hakkın kaldı.' : ''; }
+  function key(k){
+    if (busy || pad.hidden) return;
+    if (k === 'del'){ typed = typed.slice(0, -1); }
+    else if (k === 'ok'){ check(); return; }
+    else if (typed.length < 20){ typed += k; }
+    $('typed').textContent = typed;
+    if (typed.length === len) setTimeout(check, 150);
+  }
+  function check(){
+    if (busy || !typed) return; busy = true; pad.hidden = true;
+    if (typed === seq){ best = Math.max(best, len); len++; strikes = 0; show.textContent = 'Doğru!'; setTimeout(round, 900); }
+    else {
+      strikes++;
+      if (strikes >= 2) return end();
+      show.textContent = `Olmadı. Doğrusu: ${seq}`; setTimeout(round, 1800);
+    }
+  }
+  function end(){
+    show.classList.add('msg');
+    const msg = best >= 9 ? 'Olağanüstü bir kısa süreli bellek.' : best >= 7 ? 'Tam da ortalama insanın sınırında, harika.' : best >= 5 ? 'İyi. Rakamları gruplayarak dene; sonuç büyür.' : 'Bir kez daha dene; ilk turda heyecan her şeyi zorlaştırır.';
+    show.textContent = best ? `En uzun: ${best} rakam` : 'Isınma turu sayılır';
+    $('lvl').textContent = `Son dizi: ${seq}`; $('lives').textContent = msg;
+    len = 3; strikes = 0; busy = false; $('go').textContent = 'Yeniden oyna'; $('go').hidden = false; best = 0;
+  }
+  $('go').addEventListener('click', () => { if (!busy) round(); });
+  document.addEventListener('keydown', e => {
+    if (/^[0-9]$/.test(e.key)) { key(e.key); e.preventDefault(); }
+    else if (e.key === 'Backspace') { key('del'); e.preventDefault(); }
+    else if (e.key === 'Enter' && !pad.hidden) { key('ok'); e.preventDefault(); }
+  });
+})();
+</script>
+</body>
+</html>

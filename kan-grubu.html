@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kan Grubu Bulmacası</title>
+<meta name="description" content="Hastaya hangi kanlar verilebilir? Torbaları seç, uyumu öğren.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@500..900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5EFF1;--ink:#1F1418;--muted:#6B5A61;--card:#FFFFFF;--line:#E0D2D7;--blood:#B3122E;--ok:#1F8A4C;--bad:#C6372A;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#150D10;--ink:#F3E9EC;--muted:#B09EA5;--card:#1E1418;--line:#382A30;--blood:#F04A62;--ok:#5CC08A;--bad:#EE6A5C;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#150D10;--ink:#F3E9EC;--muted:#B09EA5;--card:#1E1418;--line:#382A30;--blood:#F04A62;--ok:#5CC08A;--bad:#EE6A5C;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Red Hat Display",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 3vh}
+h1{margin:0;font-weight:900;font-size:clamp(50px,10vw,112px);line-height:.9;letter-spacing:-.035em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:27em}
+.patient{display:flex;align-items:center;gap:18px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:0 0 16px}
+.ptype{display:grid;place-items:center;min-width:92px;height:92px;border-radius:50%;background:var(--blood);color:#fff;font-weight:900;font-size:34px;letter-spacing:-.02em}
+.patient p{margin:0}
+.patient .r{color:var(--muted);font-weight:600}
+.patient h2{margin:.1em 0 .1em;font-size:24px;line-height:1.2}
+.bags{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 14px}
+.bag{position:relative;font:inherit;font-weight:900;font-size:24px;padding:18px 6px 14px;min-height:92px;border-radius:14px 14px 22px 22px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.bag::before{content:"";position:absolute;left:50%;top:-8px;width:18px;height:10px;border-radius:4px 4px 0 0;background:var(--line);transform:translateX(-50%)}
+.bag[aria-pressed="true"]{border-color:var(--blood);background:color-mix(in srgb,var(--blood) 14%,var(--card))}
+.bag.ok{border-color:var(--ok)!important;background:color-mix(in srgb,var(--ok) 14%,var(--card))!important}
+.bag.miss{border-color:var(--ok)!important;border-style:dashed!important}
+.bag.bad{border-color:var(--bad)!important;background:color-mix(in srgb,var(--bad) 14%,var(--card))!important}
+.bag:focus-visible,.btn:focus-visible{outline:3px solid var(--blood);outline-offset:2px}
+.bag[disabled]{cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font:inherit;font-weight:800;font-size:17px;padding:12px 20px;min-height:50px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.hint{margin:0;color:var(--muted);font-size:15px}
+.fb{margin:16px 0 0}
+.fb[hidden]{display:none}
+.fb .v{margin:0 0 .3em;font-weight:900;font-size:22px}
+.fb .v.ok{color:var(--ok)} .fb .v.bad{color:var(--bad)}
+.fb p{margin:0 0 .8em}
+.end[hidden],.game[hidden]{display:none}
+.big{margin:0;font-weight:900;font-size:clamp(84px,17vw,160px);line-height:.9;font-variant-numeric:tabular-nums}
+table{border-collapse:collapse;margin:1em 0 1.5em;font-variant-numeric:tabular-nums;width:100%;max-width:620px}
+th,td{border:1px solid var(--line);padding:6px;text-align:center;font-size:15px}
+th{background:var(--card);font-weight:800}
+td.y{background:color-mix(in srgb,var(--ok) 22%,transparent);font-weight:800}
+.why{max-width:44em}
+.why h2{font-size:clamp(24px,3vw,32px);margin:1.4em 0 .4em;letter-spacing:-.02em}
+.why p{margin:0 0 .9em}
+.fine{margin:2.5em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}.bag{font-size:21px;min-height:80px}.ptype{min-width:72px;height:72px;font-size:26px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Kan Grubu Bulmacası</h1>
+    <p class="lede">Acil serviste bir hasta kan bekliyor. Önündeki torbalardan hangileri ona güvenle verilebilir? Hepsini seç.</p>
+  </header>
+
+  <main>
+    <section class="game" id="game">
+      <div class="patient" aria-live="polite"><div class="ptype" id="ptype"></div><div><p class="r" id="round"></p><h2>Bu hastaya hangi alyuvar torbaları verilebilir?</h2><p class="hint">Uygun olanların hepsini seç, sonra kontrol et.</p></div></div>
+      <div class="bags" id="bags" role="group" aria-label="Kan torbaları"></div>
+      <div class="row"><button class="btn" id="check" type="button" disabled>Kontrol et</button></div>
+      <div class="fb" id="fb" hidden aria-live="polite"><p class="v" id="v"></p><p id="exp"></p><button class="btn" id="next" type="button">Sonraki hasta</button></div>
+    </section>
+
+    <section class="end" id="end" hidden>
+      <p class="big" id="score"></p>
+      <h2 id="endH"></h2>
+      <p>Tüm uyumlar tek tabloda. Satır, kanı alacak hasta; sütun, verilecek alyuvar.</p>
+      <div style="overflow-x:auto"><table id="tbl"></table></div>
+      <button class="btn" id="again" type="button">Yeniden oyna</button>
+    </section>
+
+    <section class="why">
+      <h2>Kural aslında basit</h2>
+      <p>Alyuvarların yüzeyinde A ve B adlı iki işaret (antijen) olabilir: A grubunda A, B grubunda B, AB grubunda ikisi de, 0 grubunda hiçbiri yoktur. Bağışıklık sistemin, kendinde olmayan işareti yabancı sayar ve ona karşı hazır antikorlar taşır. Bu yüzden hastaya, onun tanımadığı bir işaret taşıyan alyuvar verilemez.</p>
+      <p>Rh (D) işareti de aynı mantıkla çalışır: Rh negatif birine mümkünse Rh negatif kan verilir. 0 Rh negatif alyuvar hiçbir işaret taşımadığı için herkese verilebilir; bu yüzden "evrensel verici" denir ve acilde, grup bilinmeden verilen kan odur. AB Rh pozitif ise tüm işaretleri tanıdığı için her gruptan alyuvar alabilir: "evrensel alıcı".</p>
+      <p>Plazmada durum tersine döner: plazma antikor taşıdığı için evrensel plazma vericisi AB grubudur.</p>
+    </section>
+  </main>
+  <p class="fine">Bu oyun yalnızca ABO ve Rh(D) uyumunu gösterir. Gerçek transfüzyonda çapraz karşılaştırma, başka alt gruplar ve antikor taramaları da yapılır; acil durumlarda uygulanan kurallar kuruma göre farklılık gösterebilir. Bilgilendirme amaçlıdır.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const T = ['0−', '0+', 'A−', 'A+', 'B−', 'B+', 'AB−', 'AB+'];
+  const ag = t => ({ A: t.startsWith('A'), B: t.includes('B'), D: t.endsWith('+') });
+  const can = (donor, rec) => { const d = ag(donor), r = ag(rec); return (!d.A || r.A) && (!d.B || r.B) && (!d.D || r.D); };
+  const N = 6;
+  let order = [], k = 0, score = 0, sel = new Set();
+  function start(){
+    order = [...T].sort(() => Math.random() - .5).slice(0, N);
+    if (!order.includes('0−')) order[N - 1] = '0−';
+    if (!order.includes('AB+')) order[N - 2] = order[N - 2] === '0−' ? order[N - 2] : 'AB+';
+    order = order.sort(() => Math.random() - .5);
+    k = 0; score = 0; $('end').hidden = true; $('game').hidden = false; show();
+  }
+  function show(){
+    const p = order[k]; sel = new Set();
+    $('ptype').textContent = p; $('round').textContent = `Hasta ${k + 1} / ${N}`;
+    const box = $('bags'); box.textContent = '';
+    T.forEach(t => { const b = document.createElement('button'); b.type = 'button'; b.className = 'bag'; b.textContent = t; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', `${t} torbası`);
+      b.addEventListener('click', () => { if (sel.has(t)) sel.delete(t); else sel.add(t); b.setAttribute('aria-pressed', sel.has(t) ? 'true' : 'false'); $('check').disabled = sel.size === 0; });
+      box.appendChild(b); });
+    $('check').disabled = true; $('check').hidden = false; $('fb').hidden = true;
+  }
+  $('check').addEventListener('click', () => {
+    const p = order[k], ok = T.filter(t => can(t, p));
+    const perfect = ok.length === sel.size && ok.every(t => sel.has(t));
+    if (perfect) score++;
+    [...$('bags').children].forEach(b => { const t = b.textContent, good = ok.includes(t);
+      b.disabled = true; if (good && sel.has(t)) b.classList.add('ok'); else if (good) b.classList.add('miss'); else if (sel.has(t)) b.classList.add('bad'); });
+    const wrong = [...sel].filter(t => !ok.includes(t)), missed = ok.filter(t => !sel.has(t));
+    const v = $('v'); v.className = 'v ' + (perfect ? 'ok' : 'bad');
+    v.textContent = perfect ? 'Tam isabet.' : wrong.length ? 'Tehlikeli bir torba seçtin.' : 'Güvenli, ama bazı uygun torbaları atladın.';
+    const a = ag(p);
+    const parts = [];
+    parts.push(`${p} hastanın alyuvarlarında ${[a.A && 'A', a.B && 'B'].filter(Boolean).join(' ve ') || 'A ya da B işareti yok'}${(a.A || a.B) ? ' işareti var' : ''}; ${a.D ? 'Rh pozitif' : 'Rh negatif'}.`);
+    parts.push(`Verilebilecek torbalar: ${ok.join(', ')}.`);
+    if (wrong.length) parts.push(`${wrong.join(', ')} hastanın tanımadığı bir işaret taşıyor; bağışıklık sistemi bu alyuvarlara saldırabilir.`);
+    if (p === 'AB+') parts.push('AB Rh pozitif "evrensel alıcı"dır: her gruptan alyuvar alabilir.');
+    if (p === '0−') parts.push('0 Rh negatif yalnızca 0 Rh negatif alyuvar alabilir; en çok verebilen, en az alabilen gruptur.');
+    $('exp').textContent = parts.join(' ');
+    $('next').textContent = k + 1 < N ? 'Sonraki hasta' : 'Sonucu gör';
+    $('check').hidden = true; $('fb').hidden = false; $('next').focus({ preventScroll: true });
+  });
+  $('next').addEventListener('click', () => { k++; if (k < N) show(); else end(); });
+  function end(){
+    $('game').hidden = true; $('end').hidden = false;
+    $('score').textContent = `${score}/${N}`;
+    $('endH').textContent = score === N ? 'Kan bankası seni işe almak ister.' : score >= 4 ? 'Çok iyi. Tabloya bir göz at.' : 'Aşağıdaki tablo ve açıklama kuralı bir kerede oturtur.';
+    let h = '<tr><th>Hasta ↓ / Torba →</th>' + T.map(t => `<th>${t}</th>`).join('') + '</tr>';
+    T.forEach(r => { h += `<tr><th>${r}</th>` + T.map(d => can(d, r) ? '<td class="y">✓</td>' : '<td></td>').join('') + '</tr>'; });
+    $('tbl').innerHTML = h;
+    $('end').scrollIntoView({ block: 'start' });
+  }
+  $('again').addEventListener('click', start);
+  start();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hangisi Daha Çok Öldürür?</title>
+<meta name="description" content="Köpekbalığı mı, kuduz mu? Terör mü, boğulma mı? Dünyada her yıl hangisi daha çok can alıyor?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EEF2;--ink:#0F1B26;--muted:#56636F;--card:#FFFFFF;--line:#C9D2DA;
+  --more:#0E7C66;--less:#B4462B;--acc:#1B4F8A;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D141B;--ink:#E4EBF1;--muted:#94A3B1;--card:#16202A;--line:#2A3846;--more:#4FC3A6;--less:#EE7F63;--acc:#7FB2EA;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0D141B;--ink:#E4EBF1;--muted:#94A3B1;--card:#16202A;--line:#2A3846;--more:#4FC3A6;--less:#EE7F63;--acc:#7FB2EA;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Space Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 3vh;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px}
+h1{margin:0;font-size:clamp(40px,7.5vw,84px);line-height:.95;font-weight:700;letter-spacing:-.03em;max-width:11em}
+.lede{margin:.5em 0 0;color:var(--muted);max-width:30em}
+.streak{text-align:right}
+.streak b{display:block;font-size:clamp(44px,7vw,68px);line-height:1;font-weight:700;font-variant-numeric:tabular-nums}
+.streak span{color:var(--muted);font-size:15px}
+.duel{display:grid;grid-template-columns:1fr;gap:12px;margin:0 0 20px;position:relative}
+@media (min-width:760px){.duel{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 22px 24px;min-height:250px;display:flex;flex-direction:column}
+.q{margin:0 0 .15em;color:var(--muted);font-size:15px}
+.name{margin:0;font-size:clamp(26px,3.6vw,38px);line-height:1.1;font-weight:700;letter-spacing:-.015em}
+.note{margin:.35em 0 0;color:var(--muted);font-size:15.5px}
+.num{margin:auto 0 0;padding-top:18px;font-size:clamp(40px,6.5vw,64px);line-height:1;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.num small{display:block;font-size:15px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:6px}
+.src{margin:.6em 0 0;font-size:13.5px;color:var(--muted)}
+.btns{margin-top:auto;padding-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{font:inherit;font-weight:700;font-size:18px;min-height:56px;border-radius:8px;border:2px solid currentColor;background:transparent;cursor:pointer;touch-action:manipulation}
+.btn.more{color:var(--more)} .btn.less{color:var(--less)}
+.btn:focus-visible,.go:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.vs{display:none}
+@media (min-width:760px){.vs{display:grid;place-items:center;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:52px;height:52px;border-radius:50%;background:var(--bg);border:1px solid var(--line);font-weight:700;color:var(--muted)}}
+.card.win{border-color:var(--more);box-shadow:inset 0 0 0 1px var(--more)}
+.card.lose{border-color:var(--less);box-shadow:inset 0 0 0 1px var(--less)}
+.result{min-height:5.5em}
+.verdict{margin:0 0 .2em;font-size:clamp(22px,3vw,30px);font-weight:700;line-height:1.2}
+.verdict.ok{color:var(--more)} .verdict.bad{color:var(--less)}
+.ratio{margin:0 0 1em;max-width:44em}
+.go{font:inherit;font-weight:700;font-size:17px;min-height:50px;padding:12px 22px;border-radius:8px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.go[hidden],.btns[hidden],.num[hidden],.src[hidden]{display:none}
+.fine{margin:3.5em 0 4em;max-width:48em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}.card{min-height:0;padding:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Hangisi daha çok öldürür?</h1>
+      <p class="lede">Dünyada her yıl. Korktuğumuz şeylerle bizi gerçekten öldüren şeyler aynı değil.</p>
+    </div>
+    <p class="streak"><b id="streak">0</b><span>seri, en iyi <span id="best">0</span></span></p>
+  </header>
+
+  <main>
+    <div class="duel">
+      <article class="card" id="cardA">
+        <p class="q">Her yıl dünyada</p>
+        <h2 class="name" id="nameA"></h2>
+        <p class="note" id="noteA"></p>
+        <p class="num" id="numA"></p>
+        <p class="src" id="srcA"></p>
+      </article>
+      <div class="vs" aria-hidden="true">ya da</div>
+      <article class="card" id="cardB">
+        <p class="q">Soldakinden daha çok mu, daha az mı?</p>
+        <h2 class="name" id="nameB"></h2>
+        <p class="note" id="noteB"></p>
+        <p class="num" id="numB" hidden></p>
+        <p class="src" id="srcB" hidden></p>
+        <div class="btns" id="btns">
+          <button class="btn more" id="more" type="button">Daha çok</button>
+          <button class="btn less" id="less" type="button">Daha az</button>
+        </div>
+      </article>
+    </div>
+    <div class="result" aria-live="polite">
+      <p class="verdict" id="verdict"></p>
+      <p class="ratio" id="ratio"></p>
+      <button class="go" id="go" type="button" hidden>Devam</button>
+    </div>
+  </main>
+
+  <p class="fine">Tüm sayılar dünya genelinde yıllık ölüm tahminleridir ve farklı yıllara aittir; her kartta kaynağı ve yılı yazılı. Yılan ısırığı bir aralık olarak tahmin ediliyor, karşılaştırmada orta değer kullanıldı. Köpekbalığı için neden olunmamış saldırılardaki ölümlerin son beş yıllık ortalaması alındı. Oyun, tahmin aralıkları birbirine çok yakın olan ikilileri karşılaştırmaz. Kaynaklar: DSÖ (WHO), Global Terrorism Index (IEP), International Shark Attack File (Florida Museum).</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const D = [
+    { n:'İskemik kalp hastalığı', note:'Kalp krizi ve koroner arter hastalığı', v:9100000, src:'DSÖ, 2021' },
+    { n:'Tütün kullanımı', note:'Yalnızca doğrudan kullanım; pasif içicilik hariç', v:7000000, txt:'7 milyondan fazla', src:'DSÖ' },
+    { n:'Alkol', note:'Alkole bağlı hastalık, kaza ve şiddet', v:2600000, src:'DSÖ, 2019' },
+    { n:'Alt solunum yolu enfeksiyonları', note:'Zatürre dahil', v:2500000, src:'DSÖ, 2021' },
+    { n:'Tüberküloz', note:'Verem', v:1230000, src:'DSÖ, 2024' },
+    { n:'Trafik kazaları', note:'Kazadan sonraki 30 gün içindeki ölümler', v:1190000, src:'DSÖ, 2021' },
+    { n:'Sıtma', note:'Sivrisineklerin taşıdığı parazit', v:597000, src:'DSÖ, 2023' },
+    { n:'Boğulma', note:'Deniz, göl, havuz, sel', v:300000, src:'DSÖ, 2021' },
+    { n:'Yılan ısırığı', note:'Zehirlenmeye bağlı ölümler', v:110000, txt:'81.000–138.000', src:'DSÖ' },
+    { n:'Kuduz', note:'Vakaların neredeyse tamamı köpek ısırığından', v:59000, src:'DSÖ' },
+    { n:'Terör saldırıları', note:'Dünya genelindeki tüm terör saldırıları', v:7555, src:'Global Terrorism Index, 2024' },
+    { n:'Köpekbalığı saldırısı', note:'Neden olunmamış saldırılar', v:6, txt:'yaklaşık 6', src:'ISAF, 5 yıllık ortalama' }
+  ];
+  const MIN_RATIO = 1.35;
+  const $ = id => document.getElementById(id);
+  const fmt = x => x.txt || (x.v >= 1e6 ? (x.v / 1e6).toLocaleString('tr-TR', { maximumFractionDigits: 2 }) + ' milyon' : x.v.toLocaleString('tr-TR'));
+  const ratioOk = (a, b) => Math.max(a.v, b.v) / Math.min(a.v, b.v) >= MIN_RATIO;
+  let A = null, B = null, streak = 0, best = 0, recent = [], live = false, over = false;
+  try { best = Number(localStorage.getItem('hangisi-best')) || 0; } catch (e) {}
+
+  function pick(exclude){
+    const pool = D.filter(x => x !== exclude && !recent.includes(x) && ratioOk(x, exclude));
+    const src = pool.length ? pool : D.filter(x => x !== exclude && ratioOk(x, exclude));
+    return src[Math.floor(Math.random() * src.length)];
+  }
+  function show(){
+    $('nameA').textContent = A.n; $('noteA').textContent = A.note;
+    $('numA').innerHTML = `${fmt(A)}<small>ölüm</small>`; $('srcA').textContent = A.src;
+    $('nameB').textContent = B.n; $('noteB').textContent = B.note;
+    $('numB').hidden = true; $('srcB').hidden = true; $('btns').hidden = false;
+    $('cardB').classList.remove('win', 'lose');
+    $('verdict').textContent = ''; $('ratio').textContent = ''; $('go').hidden = true;
+    $('streak').textContent = streak; $('best').textContent = best;
+    live = true;
+  }
+  function start(){
+    streak = 0; over = false; recent = [];
+    A = D[Math.floor(Math.random() * D.length)];
+    B = pick(A);
+    show();
+  }
+  function explain(){
+    const hi = A.v > B.v ? A : B, lo = hi === A ? B : A;
+    const k = hi.v / lo.v;
+    const ks = k >= 10 ? Math.round(k).toLocaleString('tr-TR') : k.toLocaleString('tr-TR', { maximumFractionDigits: 1 });
+    return `${hi.n}, ${lo.n.toLocaleLowerCase('tr-TR')} ölümlerinin yaklaşık ${ks} katı.`;
+  }
+  function answer(sayMore){
+    if (!live) return;
+    live = false;
+    const ok = (B.v > A.v) === sayMore;
+    $('numB').innerHTML = `${fmt(B)}<small>ölüm</small>`; $('srcB').textContent = B.src;
+    $('numB').hidden = false; $('srcB').hidden = false; $('btns').hidden = true;
+    $('cardB').classList.add(ok ? 'win' : 'lose');
+    const v = $('verdict');
+    v.className = 'verdict ' + (ok ? 'ok' : 'bad');
+    if (ok){
+      streak++;
+      if (streak > best){ best = streak; try { localStorage.setItem('hangisi-best', best); } catch (e) {} }
+      v.textContent = 'Doğru.';
+      $('go').textContent = 'Devam';
+    } else {
+      over = true;
+      v.textContent = streak ? `Yanlış. Seri bitti: ${streak} doğru.` : 'Yanlış.';
+      $('go').textContent = 'Yeniden başla';
+    }
+    $('ratio').textContent = explain();
+    $('streak').textContent = streak; $('best').textContent = best;
+    $('go').hidden = false; $('go').focus({ preventScroll: true });
+  }
+  function next(){
+    if (over){ start(); return; }
+    recent.push(A); if (recent.length > 4) recent.shift();
+    A = B; B = pick(A);
+    show();
+  }
+  $('more').addEventListener('click', () => answer(true));
+  $('less').addEventListener('click', () => answer(false));
+  $('go').addEventListener('click', next);
+  document.addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (live && (e.key === 'ArrowUp' || e.key === 'ArrowRight')){ e.preventDefault(); answer(true); }
+    else if (live && (e.key === 'ArrowDown' || e.key === 'ArrowLeft')){ e.preventDefault(); answer(false); }
+  });
+  start();
+})();
+</script>
+</body>
+</html>

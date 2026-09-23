@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kara Deliğe Düşersen</title>
+<meta name="description" content="Küçük bir kara delik seni daha ufka varmadan koparır; devasa olanına farkına varmadan girersin. Kütleyi sen seç.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050508;--ink:#E9E9F2;--muted:#9494AC;--card:#0E0E16;--line:#20202E;--acc:#FF8A3D;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:960px;margin:0 auto;padding:0 18px}
+header{padding:9vh 0 2vh}
+h1{margin:0;font-weight:700;font-size:clamp(46px,9.5vw,108px);line-height:.92;letter-spacing:-.04em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:28em;color:var(--muted)}
+.scene{border:1px solid var(--line);border-radius:18px;overflow:hidden;margin:1.4em 0 14px}
+.scene canvas{display:block;width:100%;height:clamp(280px,42vh,380px)}
+.ctl{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:0 0 1.4em}
+.mass{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.mass b{font-family:"Space Mono",ui-monospace,monospace;font-size:clamp(24px,4.2vw,34px);line-height:1.1}
+input[type=range]{width:100%;accent-color:var(--acc);margin:10px 0 2px}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.presets button{font:inherit;font-weight:600;font-size:14px;padding:9px 12px;min-height:44px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:1.2em 0 0}
+@media (min-width:760px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.grid p{margin:0}
+.grid b{display:block;font-family:"Space Mono",ui-monospace,monospace;font-size:clamp(19px,2.6vw,24px);line-height:1.15;word-break:break-word}
+.grid span{color:var(--muted);font-size:14px}
+.verdict{margin:1.2em 0 0;font-size:19px;border-left:3px solid var(--acc);padding-left:14px}
+.facts{max-width:44em}
+.facts h2{font-size:clamp(24px,3vw,32px);margin:1.4em 0 .4em;letter-spacing:-.02em}
+.facts p{margin:0 0 .9em;color:var(--muted)}
+.facts b{color:var(--ink)}
+.fine{margin:2em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Kara Deliğe Düşersen</h1>
+    <p class="lede">Kara deliklerin en tuhaf yanı şu: küçük olanı büyüğünden çok daha tehlikeli. Kütleyi seç, sana ne olacağını hesaplayalım.</p>
+  </header>
+  <main>
+    <div class="scene"><canvas id="cv" role="img" aria-label="Kara delik ve olay ufku"></canvas></div>
+    <div class="ctl">
+      <div class="mass"><span>Kütle</span><b id="m"></b></div>
+      <input type="range" id="sl" min="0" max="100" step="1" value="12" aria-label="Kara deliğin kütlesi">
+      <div class="presets" id="pre"></div>
+      <div class="grid">
+        <p><b id="rs"></b><span>olay ufkunun yarıçapı</span></p>
+        <p><b id="tide"></b><span>ufuktayken vücuduna binen gerilme</span></p>
+        <p><b id="fall"></b><span>ufuktan merkeze düşüş süresi</span></p>
+        <p><b id="dil"></b><span>ufkun 10 km üstünde zaman akışı</span></p>
+      </div>
+      <p class="verdict" id="verdict"></p>
+    </div>
+    <section class="facts">
+      <h2>Neden küçük olan daha tehlikeli?</h2>
+      <p>Seni öldüren çekim kuvvetinin kendisi değil, <b>farkı</b>: ayaklarına uygulanan çekim, başına uygulanandan büyükse gerilirsin. Buna spagettileşme denir. Küçük bir kara delikte ufuk çok yakın ve dar olduğu için bu fark devasadır; daha ufka varmadan koparsın. Dev bir kara delikte ise ufuk o kadar geniştir ki fark önemsizleşir: olay ufkunu geçtiğini fark bile etmezsin.</p>
+      <h2>Dışarıdan bakan ne görür?</h2>
+      <p>Sen düşerken, uzaktaki bir gözlemci saatinin gitgide yavaşladığını görür. Ufka yaklaşırken görüntün donar, kızarır ve söner; ona göre içeri hiç girmezsin. Sana göre ise hiçbir şey olmaz: ufku geçer ve kısa bir süre sonra merkeze varırsın.</p>
+      <p>Olay ufku bir yüzey değil, bir sınırdır: orada kaçış hızı ışık hızını aşar. İçeriden hiçbir sinyal, hiçbir ışık dışarı çıkamaz.</p>
+    </section>
+  </main>
+  <p class="fine">Hesaplar dönmeyen (Schwarzschild) bir kara delik içindir. Yarıçap 2GM/c², düşüş süresi ufuktan merkeze serbest düşüş için yaklaşık değer, gerilme ise 1,75 m boyunda bir insan için gelgit ivmesinden hesaplanır. Gerçek kara deliklerin çoğu döner ve bu durum yapıyı değiştirir. Bilgilendirme amaçlıdır.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const G = 6.674e-11, c = 299792458, Msun = 1.989e30, L = 1.75, g0 = 9.81;
+  const PRE = [['Yıldız kalıntısı', 10], ['Cygnus X-1', 21], ['Samanyolu merkezi (Sgr A*)', 4.3e6], ['M87 devi', 6.5e9]];
+  const val = t => Math.pow(10, t / 100 * 10);        // 1 → 10^10 güneş kütlesi
+  const pos = m => Math.log10(m) / 10 * 100;
+  const nf = (x, d = 1) => x.toLocaleString('tr-TR', { maximumFractionDigits: d });
+  function fmtM(m){ return m >= 1e9 ? nf(m / 1e9, 1) + ' milyar Güneş' : m >= 1e6 ? nf(m / 1e6, 1) + ' milyon Güneş' : m >= 1000 ? nf(m / 1000, 1) + ' bin Güneş' : nf(m, 1) + ' Güneş kütlesi'; }
+  function fmtLen(km){ return km >= 1.5e8 ? nf(km / 1.496e8, 2) + ' astronomik birim' : km >= 1000 ? nf(km, 0) + ' km' : km >= 1 ? nf(km, 1) + ' km' : nf(km * 1000, 0) + ' m'; }
+  function fmtT(s){ return s < 1e-3 ? nf(s * 1e6, 0) + ' mikrosaniye' : s < 1 ? nf(s * 1000, 1) + ' milisaniye' : s < 60 ? nf(s, 1) + ' saniye' : s < 3600 ? nf(s / 60, 1) + ' dakika' : nf(s / 3600, 1) + ' saat'; }
+  PRE.forEach(([n, m]) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = n; b.addEventListener('click', () => { $('sl').value = pos(m); render(); }); $('pre').appendChild(b); });
+  let rsKm = 30;
+  function render(){
+    const M = val(+$('sl').value) * Msun;
+    const rs = 2 * G * M / (c * c);                    // metre
+    const tide = 2 * G * M * L / Math.pow(rs, 3);      // m/s² fark
+    const fall = Math.PI / 2 * rs / c;                 // ufuktan merkeze, yaklaşık
+    const h = 10000, dil = Math.sqrt(Math.max(1e-12, 1 - rs / (rs + h)));
+    $('m').textContent = fmtM(val(+$('sl').value));
+    rsKm = rs / 1000;
+    $('rs').textContent = fmtLen(rsKm);
+    $('tide').textContent = tide > 1e6 ? nf(tide / g0 / 1e6, 1) + ' milyon g' : tide > 1 ? nf(tide / g0, tide / g0 < 10 ? 2 : 0) + ' g' : (tide / g0 * 1000 < .05 ? 'ihmal edilebilir' : nf(tide / g0 * 1000, 2) + ' binde g');
+    $('fall').textContent = fmtT(fall);
+    $('dil').textContent = dil < .999 ? '%' + nf(dil * 100, 1) + ' hızında' : 'neredeyse normal';
+    const t = tide / g0;
+    $('verdict').textContent = t > 1000 ? 'Bu kara delik seni olay ufkuna varmadan çok önce koparır. Gelgit farkı vücudunun taşıyabileceğinin binlerce katı: önce uzar, sonra bir atom zincirine dönüşürsün.'
+      : t > 10 ? 'Ufka yaklaşırken gerilmeyi acı verici biçimde hissedersin; ayakların başından çok daha güçlü çekilir.'
+      : t > 0.1 ? 'Gerilme hissedilir ama öldürücü değil. Ufku sağ geçersin; gerisi merkeze doğru kısa bir yolculuk.'
+      : 'Olay ufkunu geçtiğini hiçbir şekilde anlayamazsın. Ne sarsıntı, ne duvar, ne uyarı. Geri dönüş ise artık imkânsız.';
+  }
+  const cv = $('cv'), ctx = cv.getContext('2d');
+  let W = 600, H = 340, stars = [];
+  function size(){ const d = Math.min(devicePixelRatio || 1, 2), r = cv.getBoundingClientRect(); W = r.width || 600; H = r.height || 340; cv.width = Math.round(W * d); cv.height = Math.round(H * d); ctx.setTransform(d, 0, 0, d, 0, 0);
+    if (!stars.length) stars = Array.from({ length: 120 }, () => [Math.random(), Math.random(), Math.random() * 1.4 + .3]); }
+  let t = 0;
+  function draw(){
+    t += .016;
+    ctx.fillStyle = '#050508'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(255,255,255,.75)'; stars.forEach(([x, y, s]) => ctx.fillRect(x * W, y * H, s, s));
+    const R = Math.min(W, H) * .26, cx = W / 2, cy = H / 2;
+    ctx.save(); ctx.translate(cx, cy); ctx.scale(1, .28);
+    for (let i = 0; i < 90; i++){ const a = i / 90 * 6.283 + t * .6; const rr = R * (1.35 + .55 * ((i * 7919) % 100) / 100);
+      ctx.strokeStyle = `hsla(${26 + (i % 12)}, 95%, ${52 + (i % 20)}%, .5)`; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.arc(0, 0, rr, a, a + .5); ctx.stroke(); }
+    ctx.restore();
+    const g = ctx.createRadialGradient(cx, cy, R * .96, cx, cy, R * 1.5);
+    g.addColorStop(0, 'rgba(255,150,60,.55)'); g.addColorStop(1, 'rgba(255,150,60,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R * 1.5, 0, 7); ctx.fill();
+    ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,138,61,.9)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke();
+    ctx.fillStyle = '#E9E9F2'; ctx.font = '600 13px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('olay ufku: ' + fmtLen(rsKm), cx, cy + R + 26); ctx.textAlign = 'left';
+    requestAnimationFrame(draw);
+  }
+  $('sl').addEventListener('input', render);
+  window.addEventListener('resize', size);
+  size(); render(); requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sıcaklık Merdiveni</title>
+<meta name="description" content="Mutlak sıfırdan evrenin en sıcak maddesine, basamak basamak. Her basamakta ne oluyor?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400..800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0C0E14;--ink:#EFF1F7;--muted:#98A0B4;--card:#151925;--line:#252C3D;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Outfit",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 2vh}
+h1{margin:0;font-weight:800;font-size:clamp(52px,11vw,124px);line-height:.9;letter-spacing:-.035em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:27em;color:var(--muted)}
+.card{border-radius:20px;border:1px solid var(--line);padding:24px 20px;margin:1.4em 0 12px;transition:background .3s ease;min-height:230px}
+.step{margin:0;color:rgba(255,255,255,.75);font-weight:600;font-size:15px}
+.temp{margin:.15em 0 0;font-weight:800;font-size:clamp(40px,9vw,84px);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.kelvin{margin:.2em 0 0;color:rgba(255,255,255,.78);font-size:15px;font-variant-numeric:tabular-nums}
+.what{margin:.6em 0 0;font-size:clamp(22px,3.4vw,30px);font-weight:700;line-height:1.15}
+.desc{margin:.35em 0 0;max-width:36em}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 1.6em}
+.nav button{font:inherit;font-weight:700;font-size:16px;padding:12px 18px;min-height:50px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.nav button:disabled{opacity:.35;cursor:default}
+button:focus-visible{outline:3px solid #FF8A3D;outline-offset:3px}
+.ladder{list-style:none;margin:0 0 2em;padding:0;border-top:1px solid var(--line)}
+.ladder li{border-bottom:1px solid var(--line)}
+.ladder button{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:baseline;width:100%;font:inherit;text-align:left;padding:12px 6px;background:transparent;border:0;color:var(--muted);cursor:pointer}
+.ladder button b{font-weight:600;font-size:16px}
+.ladder button span{font-variant-numeric:tabular-nums;font-size:15px}
+.ladder li.on button{color:var(--ink)}
+.ladder li.on button b{font-weight:800}
+.facts{max-width:44em}
+.facts p{margin:0 0 .9em;color:var(--muted)}
+.facts b{color:var(--ink)}
+.fine{margin:2em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Sıcaklık Merdiveni</h1>
+    <p class="lede">Evrende olabilecek en soğuk şeyden ölçülmüş en sıcak şeye, on dokuz basamakta.</p>
+  </header>
+  <main>
+    <div class="card" id="card" aria-live="polite">
+      <p class="step" id="step"></p>
+      <p class="temp" id="t"></p>
+      <p class="kelvin" id="k"></p>
+      <p class="what" id="w"></p>
+      <p class="desc" id="d"></p>
+    </div>
+    <div class="nav"><button id="down" type="button">Bir basamak aşağı</button><button id="up" type="button">Bir basamak yukarı</button></div>
+    <ul class="ladder" id="ladder"></ul>
+    <section class="facts">
+      <p><b>Sıcaklık, hareket demektir.</b> Bir maddenin sıcaklığı, atomlarının ne kadar titrediğinin ölçüsüdür. Mutlak sıfırda (−273,15 °C) bu hareket mümkün olan en alt seviyeye iner; daha aşağısı yoktur. Bu yüzden merdiven aşağıda biter, yukarıda bitmez.</p>
+      <p><b>Basamaklar eşit değil.</b> Odandan Güneş'in çekirdeğine giden yol, mutlak sıfırdan odana giden yoldan çok daha uzundur. Her basamak bir öncekini katlar.</p>
+      <p><b>En soğuk yer laboratuvar.</b> Uzayın doğal fonu −270,4 °C; ama laboratuvarlarda atomlar mutlak sıfırın milyarda biri kadar üstüne soğutuldu. Bilinen en soğuk yerler Dünya'da.</p>
+    </section>
+  </main>
+  <p class="fine">Değerler yaklaşıktır ve kaynaklara göre biraz değişebilir. Bilgilendirme amaçlıdır.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const E = [
+    [0, '−273,15 °C', 'Mutlak sıfır', 'Atom hareketinin mümkün olan en alt seviyesi. Hiçbir şey bundan soğuk olamaz; bu noktaya tam olarak ulaşmak da imkânsızdır.', '#0A1030'],
+    [1e-9, 'mutlak sıfırın milyarda biri kadar üstü', 'Laboratuvar soğuğu', 'Fizikçiler atomları lazerlerle bu kadar soğutabiliyor. Burada atomlar tek bir kuantum bulutu gibi davranmaya başlar.', '#0C1740'],
+    [2.7, '−270,4 °C', 'Uzayın fonu', 'Büyük Patlama\'dan kalan ışınımın sıcaklığı. Derin uzayın "normal" sıcaklığı budur.', '#102050'],
+    [55, '−218 °C', 'Neptün', 'Güneş sisteminin en uzak gezegeninin bulut tepeleri.', '#16346E'],
+    [90, '−183 °C', 'Sıvı oksijen', 'Oksijen bu sıcaklıkta gaz olmaktan çıkıp açık mavi bir sıvıya döner.', '#1A4A86'],
+    [184, '−89,2 °C', 'Dünya\'nın en soğuğu', 'Antarktika\'daki Vostok istasyonunda 1983\'te ölçüldü: yeryüzünde kaydedilmiş en düşük sıcaklık.', '#1E6494'],
+    [273.15, '0 °C', 'Buz erir', 'Suyun donma ve erime noktası.', '#237E9C'],
+    [293, '20 °C', 'Oda sıcaklığı', 'Hayatının neredeyse tamamını bu dar aralıkta geçiriyorsun.', '#2E8F84'],
+    [310, '37 °C', 'Vücudun', 'Birkaç derecelik sapma bile vücudun için ciddi bir sorundur.', '#57945F'],
+    [373, '100 °C', 'Su kaynar', 'Deniz seviyesinde. Yükseklerde basınç düştüğü için su daha erken kaynar.', '#8A9440'],
+    [600, '327 °C', 'Kurşun erir', 'Venüs\'ün yüzeyi bundan da sıcak: yaklaşık 465 °C.', '#B4862B'],
+    [1273, '1.000 °C', 'Lav', 'Volkandan akan lav yaklaşık 700–1.200 °C arasındadır.', '#C96A22'],
+    [1811, '1.538 °C', 'Demir erir', 'Dökümhanelerin çalışma aralığı.', '#D2521F'],
+    [5778, '5.505 °C', 'Güneş\'in yüzeyi', 'Sarı görünmesinin sebebi bu sıcaklık. Daha sıcak yıldızlar maviye, daha soğukları kırmızıya kaçar.', '#E0561F'],
+    [30000, '30.000 °C', 'Yıldırım', 'Yıldırımın geçtiği hava kanalı bir anda bu sıcaklığa çıkar: Güneş\'in yüzeyinden birkaç kat sıcak. Gök gürültüsü, aniden genleşen bu havanın sesidir.', '#EE7A1E'],
+    [1e6, '1 milyon °C', 'Güneş\'in tacı', 'Güneş\'in dış atmosferi, yüzeyinden yüzlerce kat sıcaktır. Nedeni hâlâ tam çözülmüş değil.', '#F59B2A'],
+    [1.5e7, '15 milyon °C', 'Güneş\'in çekirdeği', 'Hidrojen çekirdekleri burada kaynaşıp helyuma dönüşüyor. Gördüğün bütün gün ışığı buradan geliyor.', '#F9BE45'],
+    [1e9, '1 milyar °C', 'Süpernova', 'Bir yıldız çöküp patladığında ulaşılan sıcaklık. Demirden ağır elementlerin çoğu böyle anlarda üretildi.', '#FBD87A'],
+    [5.5e12, '5,5 trilyon °C', 'Parçacık hızlandırıcı', 'CERN\'de ağır iyonlar çarpıştırılarak elde edilen kuark-gluon plazması: ölçülmüş en yüksek sıcaklık ve evrenin ilk anlarındaki hâli.', '#FDF0C0']
+  ];
+  let i = 7;
+  const nf = (x, d = 0) => x.toLocaleString('tr-TR', { maximumFractionDigits: d });
+  const kTxt = k => k === 0 ? '0 kelvin' : k < 1 ? 'mutlak sıfırın çok az üstü' : k >= 1e12 ? nf(k / 1e12, 1) + ' trilyon kelvin' : k >= 1e9 ? nf(k / 1e9, 1) + ' milyar kelvin' : k >= 1e6 ? nf(k / 1e6, 1) + ' milyon kelvin' : nf(k, k < 100 ? 1 : 0) + ' kelvin';
+  const ul = $('ladder');
+  E.forEach((e, j) => {
+    const li = document.createElement('li');
+    const b = document.createElement('button'); b.type = 'button'; b.innerHTML = '<b></b><span></span>';
+    b.querySelector('b').textContent = e[2]; b.querySelector('span').textContent = e[1];
+    b.addEventListener('click', () => { i = j; render(); });
+    li.appendChild(b); ul.appendChild(li);
+  });
+  function render(){
+    const e = E[i];
+    $('step').textContent = `${i + 1}. basamak / ${E.length}`;
+    $('t').textContent = e[1]; $('k').textContent = kTxt(e[0]);
+    $('w').textContent = e[2]; $('d').textContent = e[3];
+    $('card').style.background = `linear-gradient(150deg, ${e[4]} 0%, ${e[4]}55 100%)`;
+    $('down').disabled = i === 0; $('up').disabled = i === E.length - 1;
+    [...ul.children].forEach((li, j) => li.classList.toggle('on', j === i));
+  }
+  $('down').addEventListener('click', () => { if (i > 0){ i--; render(); } });
+  $('up').addEventListener('click', () => { if (i < E.length - 1){ i++; render(); } });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowRight'){ if (i < E.length - 1){ i++; render(); } e.preventDefault(); }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowLeft'){ if (i > 0){ i--; render(); } e.preventDefault(); }
+  });
+  render();
+})();
+</script>
+</body>
+</html>

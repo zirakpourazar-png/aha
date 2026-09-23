@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Boşluk</title>
+<meta name="description" content="Güneş sistemi gerçek ölçekte. Gezegenler arasında ne kadar hiçbir şey olduğunu kaydırarak gör.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter+Tight:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#E9ECF5;--muted:#8E95AE;--line:#1E2336;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:#04050A;color:var(--ink);font-family:"Inter Tight",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.hud{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);z-index:9;padding:10px 16px;background:rgba(4,5,10,.82);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.hud .d{font-family:"Space Mono",ui-monospace,monospace;font-weight:700;font-size:clamp(20px,4.4vw,30px);font-variant-numeric:tabular-nums}
+.hud .s{color:var(--muted);font-size:14px}
+.jump{position:fixed;left:0;right:0;bottom:env(safe-area-inset-bottom,0px);z-index:9;display:flex;gap:6px;overflow-x:auto;padding:10px 12px;background:rgba(4,5,10,.82);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border-top:1px solid var(--line)}
+.jump button{flex:none;font:inherit;font-weight:600;font-size:14px;padding:8px 12px;min-height:42px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.jump button:focus-visible{outline:3px solid #FFC857;outline-offset:2px}
+.intro{min-height:88vh;display:flex;flex-direction:column;justify-content:center;padding:0 18px;max-width:900px;margin:0 auto}
+.intro h1{margin:0;font-weight:700;font-size:clamp(64px,15vw,180px);line-height:.85;letter-spacing:-.05em}
+.intro p{max-width:26em;font-size:clamp(19px,2.4vw,24px);color:var(--muted)}
+.track{position:relative}
+.mark{position:absolute;left:0;right:0;padding:0 18px;max-width:900px;margin:0 auto}
+.mark .dot{border-radius:50%;margin:0 0 10px}
+.mark h2{margin:0;font-size:clamp(26px,4vw,38px);line-height:1.1;letter-spacing:-.02em}
+.mark p{margin:.2em 0 0;color:var(--muted);max-width:30em}
+.mark .km{font-family:"Space Mono",ui-monospace,monospace;color:var(--ink);font-size:15px}
+.empty{position:absolute;left:18px;color:var(--muted);font-size:14px;font-family:"Space Mono",ui-monospace,monospace}
+.end{max-width:900px;margin:0 auto;padding:12vh 18px 16vh}
+.end h2{font-size:clamp(34px,7vw,72px);line-height:1;margin:0 0 .3em;letter-spacing:-.03em}
+.end p{color:var(--muted);max-width:34em}
+.end button{font:inherit;font-weight:700;padding:12px 20px;min-height:48px;border-radius:10px;border:0;background:#FFC857;color:#1B1405;cursor:pointer}
+.fine{font-size:14px;color:var(--muted);max-width:44em}
+</style>
+</head>
+<body>
+<div class="hud"><div class="d" id="dist">0 km</div><div class="s" id="sub">Güneş'in yüzeyindesin</div></div>
+<header class="intro"><h1>Boşluk</h1><p>Güneş sistemi gerçek ölçekte. Ekranında 1 piksel yaklaşık 100.000 kilometre. Aşağı kaydır: gezegenler arasında ne kadar hiçbir şey olduğunu gör.</p><p class="fine">Aceleci isen alttaki düğmelerle atlayabilirsin, ama asıl mesele atladığın kısımlar.</p></header>
+<main class="track" id="track"></main>
+<section class="end">
+  <h2>Ve burası sadece başlangıç.</h2>
+  <p>Neptün'ün ötesinde Güneş sistemi devam ediyor. En yakın yıldız Proxima Centauri ise bu ölçekte buradan yaklaşık 400.000 ekran daha aşağıda olurdu. Aradaki her şey, yine boşluk.</p>
+  <p><button type="button" id="top">Güneş'e dön</button></p>
+  <p class="fine">Mesafeler gezegenlerin Güneş'e ortalama uzaklığıdır (NASA). Gezegen çapları da aynı ölçekte çizilseydi çoğu bir pikselden küçük kalırdı; burada görünür olsunlar diye büyütüldüler. Bilgilendirme amaçlıdır.</p>
+</section>
+<div class="jump" id="jump"></div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const PXPM = 10;                       // 1 milyon km = 10 px  → 1 px = 100.000 km
+  const P = [
+    { n: 'Güneş', d: 0, r: 26, c: '#FFC857', t: 'Yola buradan çıkıyoruz. Güneş sistemin kütlesinin %99,8\'i bu topun içinde.' },
+    { n: 'Merkür', d: 57.9, r: 5, c: '#9A9186', t: 'Güneş\'e en yakın gezegen. Buraya kadar 58 milyon kilometre geldin.' },
+    { n: 'Venüs', d: 108.2, r: 9, c: '#E0B36A', t: 'Dünya\'nın neredeyse ikizi; yüzeyi 465 °C.' },
+    { n: 'Dünya', d: 149.6, r: 9, c: '#4E9BE0', t: 'Buradasın. Güneş ışığı bu aralığı 8 dakika 19 saniyede geçiyor.' },
+    { n: 'Mars', d: 227.9, r: 6, c: '#C1582E', t: 'Kızıl gezegen. Buraya kadar geldiğin yol, Dünya ile Güneş arasının 1,5 katı.' },
+    { n: 'Jüpiter', d: 778.5, r: 20, c: '#D2A57A', t: 'Mars ile arasında asteroit kuşağı var ama o kuşak da neredeyse tamamen boş: cisimler birbirinden milyonlarca kilometre uzakta.' },
+    { n: 'Satürn', d: 1432, r: 17, c: '#E3CE93', t: 'Buraya gelen Cassini sondası yolda 7 yıl geçirdi.' },
+    { n: 'Uranüs', d: 2867, r: 12, c: '#8FD3DC', t: 'Güneş buradan bakıldığında sadece çok parlak bir yıldız.' },
+    { n: 'Neptün', d: 4515, r: 12, c: '#3F6FD0', t: 'Bilinen son gezegen. Güneş ışığının buraya ulaşması 4 saat sürüyor.' }
+  ];
+  const track = document.getElementById('track');
+  const H = P[P.length - 1].d * PXPM + 400;
+  track.style.height = H + 'px';
+  const nf = n => Math.round(n).toLocaleString('tr-TR');
+  P.forEach((p, i) => {
+    const el = document.createElement('div'); el.className = 'mark'; el.style.top = (p.d * PXPM) + 'px';
+    el.innerHTML = `<div class="dot"></div><h2></h2><p class="km"></p><p></p>`;
+    const dot = el.querySelector('.dot'); dot.style.cssText += `width:${p.r * 2}px;height:${p.r * 2}px;background:${p.c};box-shadow:0 0 ${p.r}px ${p.c}66`;
+    el.querySelector('h2').textContent = p.n;
+    el.querySelector('.km').textContent = p.d ? `Güneş'ten ${nf(p.d)} milyon km` : 'başlangıç';
+    el.querySelector('p:last-child').textContent = p.t;
+    track.appendChild(el);
+    if (i < P.length - 1){
+      const gap = P[i + 1].d - p.d;
+      const e = document.createElement('div'); e.className = 'empty'; e.style.top = (p.d * PXPM + (gap * PXPM) / 2) + 'px';
+      e.textContent = `${nf(gap)} milyon km boşluk`;
+      track.appendChild(e);
+    }
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = p.n;
+    b.addEventListener('click', () => window.scrollTo({ top: track.offsetTop + p.d * PXPM - window.innerHeight * .35, behavior: 'auto' }));
+    jump.appendChild(b);
+  });
+  const dist = document.getElementById('dist'), sub = document.getElementById('sub');
+  function update(){
+    const y = window.scrollY + window.innerHeight * .35 - track.offsetTop;
+    const mkm = Math.max(0, Math.min(P[P.length - 1].d, y / PXPM));
+    dist.textContent = nf(mkm * 1e6) + ' km';
+    const au = mkm / 149.6;
+    let cur = P[0], next = null;
+    P.forEach((p, i) => { if (mkm >= p.d - 1){ cur = p; next = P[i + 1] || null; } });
+    sub.textContent = mkm < 1 ? 'Güneş\'in yüzeyindesin' : `${au.toLocaleString('tr-TR', { maximumFractionDigits: 2 })} astronomik birim, ${next ? `${cur.n} ile ${next.n} arasındasın` : 'Neptün\'ün yanındasın'}`;
+  }
+  let tick = false;
+  window.addEventListener('scroll', () => { if (!tick){ tick = true; requestAnimationFrame(() => { tick = false; update(); }); } }, { passive: true });
+  document.getElementById('top').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'auto' }));
+  update();
+})();
+</script>
+</body>
+</html>

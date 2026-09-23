@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Uzayda Vücudun</title>
+<meta name="description" content="Ay'da kaç kilo gelirsin, Plüton'da ne kadar zıplarsın, Venüs'e insen ne olur?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600..900&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#ECEEF6;--ink:#111527;--muted:#586079;--card:#FFFFFF;--line:#D0D5E4;--acc:#5B4BE0;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#07090F;--ink:#E9ECF7;--muted:#9AA2BD;--card:#10131E;--line:#232A3E;--acc:#9C90FF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#07090F;--ink:#E9ECF7;--muted:#9AA2BD;--card:#10131E;--line:#232A3E;--acc:#9C90FF;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 3vh}
+h1{margin:0;font-family:"Unbounded",ui-sans-serif,system-ui,sans-serif;font-weight:900;font-size:clamp(40px,8.5vw,96px);line-height:.95;letter-spacing:-.03em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.32;max-width:28em}
+.inputs{display:flex;flex-wrap:wrap;gap:14px;margin:1.6em 0 0}
+.inputs label{display:flex;flex-direction:column;gap:6px;font-weight:600}
+.inputs input{font:inherit;font-size:20px;width:7em;padding:10px 12px;min-height:50px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.worlds{display:flex;gap:8px;overflow-x:auto;padding:16px 2px 12px;margin:0 -2px;scrollbar-width:thin}
+.worlds button{flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;font:inherit;font-weight:600;font-size:14px;padding:10px 10px 8px;min-width:76px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.worlds button i{display:block;border-radius:50%}
+.worlds button[aria-pressed="true"]{border-color:var(--acc);box-shadow:inset 0 0 0 1.5px var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.stage{display:grid;grid-template-columns:1fr;gap:16px;margin:0 0 3em}
+@media (min-width:900px){.stage{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}}
+.scene{border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.scene canvas{display:block;width:100%;height:clamp(320px,52vh,480px)}
+.info{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.info h2{margin:0 0 .2em;font-family:"Unbounded",ui-sans-serif,system-ui,sans-serif;font-weight:800;font-size:clamp(26px,3.2vw,36px);letter-spacing:-.02em}
+.info .sub{margin:0 0 1em;color:var(--muted)}
+.nums{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;margin:0 0 1.2em}
+.nums p{margin:0}
+.nums b{display:block;font-family:"Unbounded",ui-sans-serif,system-ui,sans-serif;font-weight:800;font-size:clamp(24px,3vw,32px);line-height:1.05;font-variant-numeric:tabular-nums}
+.nums span{color:var(--muted);font-size:14.5px}
+.out h3{margin:0 0 .3em;font-size:17px}
+.out p{margin:0 0 .6em}
+.long{max-width:46em;margin:0 0 2em}
+.long h2{font-family:"Unbounded",ui-sans-serif,system-ui,sans-serif;font-weight:800;font-size:clamp(22px,2.6vw,28px);margin:1.4em 0 .5em;letter-spacing:-.02em}
+.long ul{padding-left:1.2em;margin:0}
+.long li{margin:0 0 .6em}
+.fine{margin:2.5em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Uzayda Vücudun</h1>
+    <p class="lede">Ay'da kaç kilo gelirsin, Plüton'da ne kadar zıplarsın, Venüs'e insen ne olur? Bir gezegen seç.</p>
+    <div class="inputs">
+      <label>Kilon (kg)<input type="number" id="kg" min="10" max="300" value="70" inputmode="decimal"></label>
+      <label>Dünya'da zıplaman (cm)<input type="number" id="jump" min="5" max="120" value="45" inputmode="decimal"></label>
+    </div>
+  </header>
+
+  <div class="worlds" id="worlds" role="group" aria-label="Gök cismi"></div>
+
+  <section class="stage">
+    <div class="scene"><canvas id="cv" role="img" aria-label="Seçilen gök cisminde zıplayan bir insan"></canvas></div>
+    <div class="info" aria-live="polite">
+      <h2 id="wn"></h2>
+      <p class="sub" id="ws"></p>
+      <div class="nums">
+        <p><b id="w"></b><span>tartıda görünen</span></p>
+        <p><b id="h"></b><span>zıplama yüksekliği</span></p>
+        <p><b id="t"></b><span>havada kalma süresi</span></p>
+        <p><b id="g"></b><span>yerçekimi, Dünya'ya göre</span></p>
+      </div>
+      <div class="out"><h3>Korumasız dışarı çıksaydın</h3><p id="ex"></p></div>
+    </div>
+  </section>
+
+  <section class="long">
+    <h2>Uzay istasyonunda altı ay</h2>
+    <ul>
+      <li><b>Boyun uzar.</b> Omurlarına baskı yapan yerçekimi olmayınca omurgan gevşer; astronotlar yüzde 3'e kadar uzayabiliyor. Dünya'ya dönünce birkaç gün içinde eski boylarına dönüyorlar.</li>
+      <li><b>Kemiklerin incelir.</b> Egzersiz yapılmazsa kemik kütlesinin yaklaşık yüzde 1'i her ay kaybolur. Bu yüzden istasyondakiler günde yaklaşık iki saat direnç egzersizi yapıyor.</li>
+      <li><b>Yüzün şişer, bacakların incelir.</b> Yerçekimi vücut sıvılarını aşağı çekmeyince sıvılar göğse ve başa toplanır.</li>
+      <li><b>Görmen değişebilir.</b> Bazı astronotlarda göz küresinin arkasında ve görme sinirinde değişiklikler görülüyor. Nedeni tam bilinmiyor; başa kayan sıvı en güçlü şüpheli.</li>
+    </ul>
+  </section>
+
+  <p class="fine">Yerçekimi değerleri NASA gezegen bilgi tablolarından alındı. Gaz devlerinde katı bir yüzey olmadığı için bulut tepelerindeki değer kullanıldı. Zıplama, aynı kalkış hızıyla basit bir hesaptır; gerçekte kıyafet, ekipman ve kas gücü sonucu değiştirir. Bilgilendirme amaçlıdır.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const VACUUM = 'Hava yok. Nefesini tutma, akciğerlerin zarar görür. Yaklaşık 10–15 saniye bilinçli kalırsın. Kanın kaynamaz ama tükürük ve gözyaşı kaynar, dokular şişer. Donmak sanıldığı kadar hızlı olmaz: boşlukta ısı yavaş kaybedilir. Kısa sürede basınçlı ortama alınırsan kurtulmak mümkün.';
+  const GAS = 'Katı bir yüzey yok; buradaki değer bulut tepelerindeki yerçekimi. Duracak bir zemin olmadığı için batarsın; derinlere indikçe basınç ve sıcaklık hızla artar.';
+  const W = [
+    { k: 'merkur', n: 'Merkür', g: 3.70, c: '#8C8680', sky: '#0B0B10', gr: '#8C8680', s: 'Güneş\'e en yakın gezegen', x: VACUUM + ' Gündüz yüzey 400 °C\'yi aşar, gece −170 °C\'nin altına iner.' },
+    { k: 'venus', n: 'Venüs', g: 8.87, c: '#E0B36A', sky: '#E3B26A', gr: '#9A6A3A', s: 'Kalın, zehirli bir atmosferle örtülü', x: 'Yüzey sıcaklığı yaklaşık 465 °C; kurşunu eritecek kadar sıcak. Basınç Dünya\'nın 90 katından fazla, okyanusta yaklaşık 900 metre derinliğe eşdeğer. Havası büyük ölçüde karbondioksit.' },
+    { k: 'dunya', n: 'Dünya', g: 9.81, c: '#4E9BE0', sky: '#9BD0F5', gr: '#6BAA5B', s: 'Evin', x: 'Hava, basınç ve sıcaklık tam sana göre. Bu, evrende bildiğimiz tek böyle yer.' },
+    { k: 'ay', n: 'Ay', g: 1.62, c: '#BDBDBD', sky: '#07070B', gr: '#BEBEBE', s: 'Dünya\'nın uydusu', x: VACUUM + ' Güneş gören yüzey 120 °C\'ye çıkar, gölgede −170 °C\'ye iner.' },
+    { k: 'mars', n: 'Mars', g: 3.71, c: '#C1582E', sky: '#D9A27A', gr: '#B5552E', s: 'Kızıl gezegen', x: 'Hava basıncı Dünya\'nınkinin yüzde 1\'inden az. Bu basınçta vücut sıcaklığındaki sıvılar kaynar, yani uzay boşluğundan pek farkı yok. Ortalama sıcaklık yaklaşık −60 °C, hava büyük ölçüde karbondioksit.' },
+    { k: 'jupiter', n: 'Jüpiter', g: 24.79, c: '#D2A57A', sky: '#D8B48A', gr: '#C58E5A', s: 'Güneş sisteminin devi', x: GAS + ' Olduğundan 2,5 kat ağır hissedersin; ayağa kalkmak ve yürümek bile çok yorucu olur.' },
+    { k: 'saturn', n: 'Satürn', g: 10.44, c: '#E3CE93', sky: '#E6D3A0', gr: '#CDB67A', s: 'Halkalı dev', x: GAS + ' Kütlesi çok büyük ama yoğunluğu düşük olduğu için bulut tepelerindeki yerçekimi Dünya\'ya çok yakın.' },
+    { k: 'uranus', n: 'Uranüs', g: 8.87, c: '#8FD3DC', sky: '#BFEBEF', gr: '#8FD3DC', s: 'Yan yatmış buz devi', x: GAS + ' Bulut tepelerinde sıcaklık −200 °C civarında.' },
+    { k: 'neptun', n: 'Neptün', g: 11.15, c: '#3F6FD0', sky: '#4E7BD8', gr: '#2F59B3', s: 'En uzak gezegen', x: GAS + ' Güneş sisteminin en hızlı rüzgârları burada esiyor.' },
+    { k: 'pluton', n: 'Plüton', g: 0.62, c: '#D8C7B0', sky: '#0A0A12', gr: '#D8C7B0', s: 'Cüce gezegen', x: VACUUM + ' Yüzey sıcaklığı −230 °C civarında.' },
+    { k: 'gunes', n: 'Güneş', g: 274, c: '#FF9A1F', sky: '#FFB030', gr: '#FF7A00', s: 'Yıldızımız', x: 'Yüzeyi yaklaşık 5.500 °C ve katı değil. Yerçekimi Dünya\'nın 28 katı: ayakta durmak bir yana, kalbin kanı başına pompalayamaz.' },
+    { k: 'iss', n: 'Uzay istasyonu', g: 0, real: 8.7, c: '#9AA7C7', sky: '#05060A', gr: null, s: '400 km yükseklikte, Dünya\'nın yörüngesinde', x: VACUUM }
+  ];
+  let cur = W[3];
+
+  W.forEach(w => {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.k = w.k;
+    const size = w.k === 'gunes' ? 30 : w.k === 'jupiter' || w.k === 'saturn' ? 26 : w.k === 'ay' || w.k === 'pluton' ? 12 : w.k === 'iss' ? 14 : 18;
+    b.innerHTML = `<i style="width:${size}px;height:${size}px;background:${w.c}${w.k === 'iss' ? ';border-radius:3px' : ''}"></i>`;
+    b.appendChild(document.createTextNode(w.n));
+    b.addEventListener('click', () => { cur = w; sync(); });
+    $('worlds').appendChild(b);
+  });
+  const fmt = (x, d = 1) => x.toLocaleString('tr-TR', { maximumFractionDigits: d });
+  function vals(){
+    const kg = Math.max(1, +$('kg').value || 70), j = Math.max(1, +$('jump').value || 45) / 100;
+    const v = Math.sqrt(2 * 9.81 * j);
+    if (cur.g === 0) return { kg, w: 0, h: Infinity, t: Infinity, ratio: 0, v };
+    return { kg, w: kg * cur.g / 9.81, h: j * 9.81 / cur.g, t: 2 * v / cur.g, ratio: cur.g / 9.81, v };
+  }
+  function sync(){
+    [...$('worlds').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.k === cur.k ? 'true' : 'false'));
+    const r = vals();
+    $('wn').textContent = cur.n; $('ws').textContent = cur.s;
+    $('w').textContent = cur.g === 0 ? '0 kg' : fmt(r.w) + ' kg';
+    $('h').textContent = cur.g === 0 ? 'Süzülürsün' : r.h >= 1 ? fmt(r.h, 2) + ' m' : fmt(r.h * 100) + ' cm';
+    $('t').textContent = cur.g === 0 ? 'Sonsuz' : fmt(r.t, 2) + ' sn';
+    $('g').textContent = cur.g === 0 ? 'Yaklaşık %90*' : fmt(r.ratio, 2) + ' kat';
+    $('ex').textContent = cur.k === 'iss'
+      ? '*İstasyonun bulunduğu yükseklikte yerçekimi, Dünya yüzeyindekinin yaklaşık yüzde 90\'ı. Ağırlıksız olmanın nedeni yerçekiminin yokluğu değil: istasyon ve içindekiler sürekli Dünya\'ya doğru düşüyor ama o kadar hızlı ileri gidiyorlar ki hiç yere çarpmıyorlar. ' + cur.x
+      : cur.x;
+    t0 = performance.now();
+  }
+  $('kg').addEventListener('input', sync); $('jump').addEventListener('input', sync);
+
+  // Sahne
+  const cv = $('cv'), ctx = cv.getContext('2d');
+  let Wd = 0, Hd = 0, t0 = performance.now();
+  const stars = Array.from({ length: 70 }, () => [Math.random(), Math.random() * .75, Math.random() * 1.2 + .3]);
+  function size(){ const d = Math.min(devicePixelRatio || 1, 2), r = cv.getBoundingClientRect(); Wd = r.width || 600; Hd = r.height || 400; cv.width = Math.round(Wd * d); cv.height = Math.round(Hd * d); ctx.setTransform(d, 0, 0, d, 0, 0); }
+  function person(x, yFeet, s, rot, legs){
+    ctx.save(); ctx.translate(x, yFeet - s * .5); ctx.rotate(rot || 0); ctx.translate(0, s * .5);
+    const fc = ['merkur','ay','pluton','iss','neptun'].includes(cur.k) ? '#fff' : '#1B1D2A'; ctx.strokeStyle = fc; ctx.fillStyle = fc; ctx.lineWidth = Math.max(2, s * .055); ctx.lineCap = 'round';
+    const L = legs || 0;
+    ctx.beginPath(); ctx.arc(0, -s * .9, s * .1, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(0, -s * .78); ctx.lineTo(0, -s * .42);
+    ctx.moveTo(0, -s * .42); ctx.lineTo(-s * (.12 + L * .06), -s * (.02 + L * .06)); ctx.moveTo(0, -s * .42); ctx.lineTo(s * (.12 + L * .06), -s * (.02 + L * .06));
+    ctx.moveTo(0, -s * .7); ctx.lineTo(-s * .2, -s * (.5 + L * .3)); ctx.moveTo(0, -s * .7); ctx.lineTo(s * .2, -s * (.5 + L * .3));
+    ctx.stroke(); ctx.restore();
+  }
+  function frame(now){
+    const t = (now - t0) / 1000, r = vals();
+    ctx.fillStyle = cur.sky; ctx.fillRect(0, 0, Wd, Hd);
+    const dark = ['merkur', 'ay', 'pluton', 'iss'].includes(cur.k);
+    if (dark){ ctx.fillStyle = '#fff'; stars.forEach(([x, y, s]) => { ctx.globalAlpha = .6; ctx.fillRect(x * Wd, y * Hd, s, s); }); ctx.globalAlpha = 1; }
+    if (cur.k === 'ay'){ ctx.fillStyle = '#4E9BE0'; ctx.beginPath(); ctx.arc(Wd * .82, Hd * .18, 22, 0, 7); ctx.fill(); }
+    if (cur.k === 'iss'){
+      const R = Wd * 1.4; const gE = ctx.createRadialGradient(Wd / 2, Hd + R * .78, R * .9, Wd / 2, Hd + R * .78, R);
+      gE.addColorStop(0, '#2F6FD0'); gE.addColorStop(.97, '#7FB6F0'); gE.addColorStop(1, 'rgba(127,182,240,0)');
+      ctx.fillStyle = gE; ctx.beginPath(); ctx.arc(Wd / 2, Hd + R * .78, R, 0, 7); ctx.fill();
+      const s = 70, y = Hd * .5 + Math.sin(t * .8) * 18;
+      person(Wd * .5 + Math.sin(t * .35) * 30, y + s * .5, s, Math.sin(t * .4) * .6 + t * .15, .5);
+      requestAnimationFrame(frame); return;
+    }
+    const ground = Hd * .82;
+    ctx.fillStyle = cur.gr; ctx.fillRect(0, ground, Wd, Hd - ground);
+    if (['jupiter', 'saturn', 'uranus', 'neptun'].includes(cur.k)){ ctx.fillStyle = 'rgba(255,255,255,.18)'; for (let i = 0; i < 5; i++) ctx.fillRect(0, ground + i * 12 + 4, Wd, 5); }
+    // ölçek
+    const personM = 1.75, top = Math.max(r.h + personM, 2.2);
+    const ppm = Math.min((ground - 24) / top, 140);
+    const s = personM * ppm;
+    // cetvel
+    ctx.strokeStyle = dark || cur.k === 'neptun' ? 'rgba(255,255,255,.5)' : 'rgba(0,0,0,.35)'; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1; ctx.font = '600 12px "Instrument Sans", system-ui, sans-serif';
+    const stepM = [0.5, 1, 2, 5, 10, 20].find(v => v * ppm >= 34) || 50;
+    for (let m = stepM; m * ppm < ground - 10; m += stepM){ const y = ground - m * ppm; ctx.beginPath(); ctx.moveTo(18, y); ctx.lineTo(30, y); ctx.stroke(); ctx.fillText(fmt(m) + ' m', 34, y + 4); }
+    // zıplama
+    const T = r.t, pause = .6, cyc = T + pause, ph = t % cyc;
+    const hNow = ph < T ? r.v * ph - cur.g * ph * ph / 2 : 0;
+    person(Wd * .55, ground - Math.max(0, hNow) * ppm, s, 0, ph < T ? .6 : 0);
+    ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.beginPath(); ctx.ellipse(Wd * .55, ground + 2, s * .22 * Math.max(.3, 1 - hNow / (r.h + .01) * .6), 4, 0, 0, 7); ctx.fill();
+    requestAnimationFrame(frame);
+  }
+  window.addEventListener('resize', size);
+  size(); sync(); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

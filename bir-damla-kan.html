@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bir Damla Kan</title>
+<meta name="description" content="Bir damla kanın içine, bir virüs görünene kadar yakınlaş.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1D1418;--muted:#6B5A60;--veil:rgba(255,255,255,.9);--line:rgba(29,20,24,.14);--bg:#ECECEC;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#F3EAED;--muted:#B8A7AD;--veil:rgba(22,16,19,.88);--line:rgba(255,255,255,.14);--bg:#1a1618;color-scheme:dark}}
+:root[data-theme="dark"]{--ink:#F3EAED;--muted:#B8A7AD;--veil:rgba(22,16,19,.88);--line:rgba(255,255,255,.14);--bg:#1a1618;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+#scene{position:fixed;left:0;top:0;width:100%;height:100%;display:block}
+.spacer{height:1500vh}
+.title{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);padding:9vh 20px 0;max-width:1100px;margin:0 auto;pointer-events:none;transition:opacity .3s ease}
+.title h1{margin:0;font-family:"Fraunces",Georgia,serif;font-weight:900;font-size:clamp(62px,13vw,150px);line-height:.88;letter-spacing:-.02em;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.title p{margin:.5em 0 0;color:#fff;font-size:clamp(19px,2.4vw,24px);max-width:22em;text-shadow:0 1px 12px rgba(0,0,0,.35)}
+.hud{position:fixed;left:16px;top:calc(env(safe-area-inset-top,0px) + 14px);padding:8px 12px 10px;background:var(--veil);border-radius:8px;border:1px solid var(--line);font-size:14px;font-variant-numeric:tabular-nums;transition:opacity .3s ease}
+.hud .bar{height:4px;background:var(--ink);margin:4px 0 5px;border-radius:2px}
+.hud b{font-weight:700}
+.cap{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);width:min(620px,calc(100% - 24px));padding:14px 18px 16px;background:var(--veil);border:1px solid var(--line);border-radius:10px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .25s ease}
+.cap p{margin:0}
+.cap .k{display:block;font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:21px;line-height:1.2;margin-bottom:.25em}
+.cap button{margin-top:12px;font:inherit;font-weight:700;padding:10px 16px;min-height:44px;border-radius:8px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.cap button:focus-visible{outline:3px solid #C8102E;outline-offset:2px}
+.cap .fine{margin-top:.6em;font-size:13.5px;color:var(--muted)}
+.fade{opacity:0}
+@media (max-width:560px){body{font-size:16px}.cap .k{font-size:19px}}
+@media (prefers-reduced-motion:reduce){.cap,.title,.hud{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="title" id="title"><h1>Bir Damla Kan</h1><p>Aşağı kaydır. Bir virüs görünene kadar yakınlaşacağız.</p></div>
+<div class="hud" id="hud" aria-hidden="true"><div><b id="zoom">×1</b></div><div class="bar" id="sbar"></div><div id="slabel"></div></div>
+<div class="cap" id="cap" aria-live="polite"></div>
+<div class="spacer"></div>
+<script>
+(() => {
+  const cv = document.getElementById('scene'), ctx = cv.getContext('2d');
+  const cap = document.getElementById('cap'), title = document.getElementById('title');
+  const zoomEl = document.getElementById('zoom'), sbar = document.getElementById('sbar'), slabel = document.getElementById('slabel');
+  const F0 = 12000, F1 = 0.3;              // ekran genişliği, mikrometre
+  const GRID = 9, PERIOD = 10;            // alyuvar ızgarası
+  const VIRUS = { x: 4.0, y: 0, r: 0.05 };
+  const RBC_R = 3.9;
+  const WBC = [
+    { k: 'neu', x: -24, y: 10, r: 6.5 },
+    { k: 'lym', x: 20, y: -16, r: 4.6 },
+    { k: 'mono', x: 30, y: 22, r: 8.5 }
+  ];
+  const PLT = [[7, -9], [-9, 6], [11, 7], [-6, -11], [15, -4]];
+  const BACT = { x: 5.4, y: -1.2, len: 2, w: .8, a: -.5 };
+  const CAPS = [
+    [12000, 'Parmak ucundan bir damla', 'Yaklaşık 50 mikrolitre, 4–5 mm çapında. Yakınlaşalım.'],
+    [3000, 'Kırmızı, sıvının rengi değil', 'Kanın sıvı kısmı, yani plazma, açık sarıdır. Kırmızıyı içinde yüzen milyonlarca hücre verir.'],
+    [900, 'İnce bir tabaka', 'Damlayı cam üzerine yayıp mikroskopla bakıyoruz. Artık tek tek hücreler görünüyor.'],
+    [320, '250 milyon', 'Bu damlada yaklaşık 250 milyon alyuvar var. Vücudunun tamamında yaklaşık 25 trilyon: hücrelerinin sayıca büyük çoğunluğu alyuvar.'],
+    [120, 'Arada iri hücreler', 'Akyuvarlar. Her 700 alyuvara yaklaşık 1 akyuvar düşer.'],
+    [62, 'Üç tür akyuvar', 'Soldaki parçalı çekirdekli nötrofil: bakteri avcısı. Sağ üstteki koyu çekirdekli lenfosit: bağışıklık hafızası. Sağ alttaki iri, böbrek çekirdekli monosit: dokuya geçince makrofaja dönüşür.'],
+    [28, 'Trombositler', 'Küçük mor parçacıklar, 2–3 µm. Damar yırtılınca ilk onlar gelir ve tıkaç kurar. Bir mikrolitrede 150.000–450.000 tane.'],
+    [15, 'Tek bir alyuvar', '7–8 µm çapında, ortası çukur bir disk. Çekirdeği yok. Kalpten çıkıp geri dönmesi yaklaşık bir dakika sürer.'],
+    [8, '120 gün', 'Bir alyuvar yaklaşık 120 gün yaşar. Kemik iliğin her saniye yaklaşık 2 milyon yenisini üretir.'],
+    [5, 'Bir bakteri', 'Sağdaki çubuk: yaklaşık 2 µm, alyuvarın dörtte biri kadar.'],
+    [1.3, 'Hemoglobin', 'Alyuvarın zarının içi hemoglobin molekülleriyle dolu. Tek bir alyuvarda yaklaşık 270 milyon hemoglobin var; her biri 4 oksijen molekülü taşır.'],
+    [0.62, 'Bir virüs', 'Sağdaki küçük küre yaklaşık 100 nanometre. Bir alyuvarın çapı boyunca yaklaşık 80 tane dizilir.'],
+    [0.34, '40.000 kat', 'Başladığımız yerden yaklaşık 40.000 kat yakınlaştık.', true]
+  ];
+
+  const hash = (i, j, s) => { let h = (i * 374761393 + j * 668265263 + s * 2147483647) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+  const mod = (a, n) => ((a % n) + n) % n;
+  function cellPos(i, j){
+    const a = mod(i, PERIOD), b = mod(j, PERIOD);
+    if (a === 0 && b === 0) return [i * GRID, j * GRID];
+    return [i * GRID + (hash(a, b, 1) - .5) * 3.6, j * GRID + (hash(a, b, 2) - .5) * 3.6];
+  }
+
+  // Alyuvar görüntüsü
+  const SPR = 256, spr = document.createElement('canvas'); spr.width = spr.height = SPR;
+  (() => {
+    const c = spr.getContext('2d'), r = SPR / 2;
+    const gr = c.createRadialGradient(r, r, 0, r, r, r);
+    gr.addColorStop(0, '#F5CFCB'); gr.addColorStop(.38, '#F0BDB8'); gr.addColorStop(.62, '#E0918B'); gr.addColorStop(.9, '#CF766F'); gr.addColorStop(1, 'rgba(190,95,90,0)');
+    c.fillStyle = gr; c.beginPath(); c.arc(r, r, r, 0, 7); c.fill();
+  })();
+
+  // Desen karosu (4 px/µm)
+  const TPX = 4, TW = GRID * PERIOD * TPX, tile = document.createElement('canvas'); tile.width = tile.height = TW;
+  (() => {
+    const c = tile.getContext('2d');
+    c.fillStyle = '#F6E9EC'; c.fillRect(0, 0, TW, TW);
+    for (let i = 0; i < PERIOD; i++) for (let j = 0; j < PERIOD; j++){
+      const [x, y] = cellPos(i, j), d = RBC_R * 2 * TPX;
+      for (const ox of [-TW, 0, TW]) for (const oy of [-TW, 0, TW]) c.drawImage(spr, x * TPX - d / 2 + ox, y * TPX - d / 2 + oy, d, d);
+    }
+  })();
+  let pattern = null;
+
+  let W = 0, H = 0, dpr = 1;
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    pattern = ctx.createPattern(tile, 'repeat');
+    need = true;
+  }
+
+  const smooth = t => { t = Math.min(1, Math.max(0, t)); return t * t * (3 - 2 * t); };
+  function view(p){
+    const lf = Math.log(F0) + p * (Math.log(F1) - Math.log(F0));
+    const field = Math.exp(lf);
+    const s = smooth((Math.log(20) - lf) / (Math.log(20) - Math.log(3)));
+    return { field, cx: 3.95 * s, cy: 0, k: W / field };
+  }
+
+  function drawWBC(c, v, w){
+    const R = w.r * v.k, x = (w.x - v.cx) * v.k + W / 2, y = (w.y - v.cy) * v.k + H / 2;
+    if (x + R < -10 || x - R > W + 10 || y + R < -10 || y - R > H + 10) return;
+    c.fillStyle = '#F6E9EC'; c.beginPath(); c.arc(x, y, R * 1.12, 0, 7); c.fill();
+    if (w.k === 'neu'){
+      c.fillStyle = '#E9D5E4'; c.beginPath(); c.arc(x, y, R, 0, 7); c.fill();
+      c.fillStyle = '#5B3A86'; c.strokeStyle = '#5B3A86'; c.lineWidth = R * .12;
+      const lobes = [[-.42, -.18], [-.08, -.4], [.3, -.12], [.12, .32]];
+      c.beginPath(); lobes.forEach(([a, b], i) => { const px = x + a * R, py = y + b * R; i ? c.lineTo(px, py) : c.moveTo(px, py); }); c.stroke();
+      lobes.forEach(([a, b]) => { c.beginPath(); c.arc(x + a * R, y + b * R, R * .27, 0, 7); c.fill(); });
+    } else if (w.k === 'lym'){
+      c.fillStyle = '#B9CBEA'; c.beginPath(); c.arc(x, y, R, 0, 7); c.fill();
+      c.fillStyle = '#3E2C7A'; c.beginPath(); c.arc(x + R * .08, y - R * .04, R * .8, 0, 7); c.fill();
+    } else {
+      c.fillStyle = '#D3CBE0'; c.beginPath(); c.arc(x, y, R, 0, 7); c.fill();
+      c.fillStyle = '#6A5296'; c.beginPath(); c.arc(x - R * .12, y, R * .56, 0, 7); c.fill();
+      c.fillStyle = '#D3CBE0'; c.beginPath(); c.arc(x + R * .38, y - R * .05, R * .3, 0, 7); c.fill();
+    }
+  }
+
+  function draw(p){
+    const v = view(p);
+    ctx.clearRect(0, 0, W, H);
+    const dropA = smooth((v.field - 700) / 700);
+    // Yayma (smear)
+    if (dropA < 1){
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#F6E9EC'; ctx.fillRect(0, 0, W, H);
+      if (v.k < TPX){
+        ctx.save();
+        ctx.translate(W / 2 - v.cx * v.k, H / 2 - v.cy * v.k);
+        ctx.scale(v.k / TPX, v.k / TPX);
+        ctx.fillStyle = pattern;
+        const x0 = -(W / 2) / v.k * TPX + v.cx * TPX, y0 = -(H / 2) / v.k * TPX + v.cy * TPX;
+        ctx.fillRect(x0 - TW, y0 - TW, W / v.k * TPX + 2 * TW, H / v.k * TPX + 2 * TW);
+        ctx.restore();
+      } else {
+        const xmin = v.cx - W / 2 / v.k - 6, xmax = v.cx + W / 2 / v.k + 6, ymin = v.cy - H / 2 / v.k - 6, ymax = v.cy + H / 2 / v.k + 6;
+        const d = RBC_R * 2 * v.k;
+        for (let i = Math.floor(xmin / GRID); i <= Math.ceil(xmax / GRID); i++){
+          for (let j = Math.floor(ymin / GRID); j <= Math.ceil(ymax / GRID); j++){
+            const [x, y] = cellPos(i, j);
+            const sx = (x - v.cx) * v.k + W / 2, sy = (y - v.cy) * v.k + H / 2;
+            if (sx + d / 2 < 0 || sx - d / 2 > W || sy + d / 2 < 0 || sy - d / 2 > H) continue;
+            ctx.drawImage(spr, sx - d / 2, sy - d / 2, d, d);
+          }
+        }
+      }
+      WBC.forEach(w => drawWBC(ctx, v, w));
+      ctx.fillStyle = '#8E6BB8';
+      PLT.forEach(([x, y], n) => { const r = (1 + (n % 3) * .2) * v.k, sx = (x - v.cx) * v.k + W / 2, sy = (y - v.cy) * v.k + H / 2; if (sx > -r && sx < W + r && sy > -r && sy < H + r){ ctx.beginPath(); ctx.ellipse(sx, sy, r, r * .78, n, 0, 7); ctx.fill(); } });
+      // Bakteri
+      { const b = BACT, sx = (b.x - v.cx) * v.k + W / 2, sy = (b.y - v.cy) * v.k + H / 2, L = b.len * v.k, Wd = b.w * v.k;
+        if (L > 1.5 && sx > -L && sx < W + L && sy > -L && sy < H + L){
+          ctx.save(); ctx.translate(sx, sy); ctx.rotate(b.a);
+          ctx.fillStyle = '#7C9C5E'; ctx.strokeStyle = '#4E6B38'; ctx.lineWidth = Math.max(1, Wd * .08);
+          ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-L / 2, -Wd / 2, L, Wd, Wd / 2) : ctx.rect(-L / 2, -Wd / 2, L, Wd); ctx.fill(); ctx.stroke();
+          ctx.restore();
+        } }
+      // Hemoglobin ve zar
+      if (v.k > 60){
+        const sx = (0 - v.cx) * v.k + W / 2, sy = (0 - v.cy) * v.k + H / 2, R = RBC_R * v.k;
+        ctx.strokeStyle = 'rgba(160,70,70,.7)'; ctx.lineWidth = Math.max(1, .008 * v.k); ctx.beginPath(); ctx.arc(sx, sy, R, 0, 7); ctx.stroke();
+      }
+      if (v.k > 220){
+        const sp = .0068, xmin = v.cx - W / 2 / v.k, xmax = v.cx + W / 2 / v.k, ymin = v.cy - H / 2 / v.k, ymax = v.cy + H / 2 / v.k;
+        const a = Math.min(1, (v.k - 220) / 250), r = .0026 * v.k;
+        ctx.fillStyle = `rgba(176,62,58,${.85 * a})`;
+        for (let x = Math.floor(xmin / sp) * sp; x <= xmax; x += sp){
+          for (let y = Math.floor(ymin / sp) * sp; y <= ymax; y += sp){
+            const jx = x + (hash(Math.round(x / sp), Math.round(y / sp), 3) - .5) * sp * .5, jy = y + (hash(Math.round(x / sp), Math.round(y / sp), 4) - .5) * sp * .5;
+            if (jx * jx + jy * jy > (RBC_R - .01) ** 2) continue;
+            const qx = (jx - v.cx) * v.k + W / 2, qy = (jy - v.cy) * v.k + H / 2;
+            if (r < 1.2) ctx.fillRect(qx, qy, 1.4, 1.4); else { ctx.beginPath(); ctx.arc(qx, qy, r, 0, 7); ctx.fill(); }
+          }
+        }
+      }
+      // Virüs
+      { const R = VIRUS.r * v.k, sx = (VIRUS.x - v.cx) * v.k + W / 2, sy = (VIRUS.y - v.cy) * v.k + H / 2;
+        if (R > .6){
+          if (R > 6){ ctx.strokeStyle = '#B85A33'; ctx.fillStyle = '#B85A33'; ctx.lineWidth = Math.max(1, R * .05);
+            for (let n = 0; n < 22; n++){ const a = n / 22 * Math.PI * 2, x1 = sx + Math.cos(a) * R, y1 = sy + Math.sin(a) * R, x2 = sx + Math.cos(a) * R * 1.22, y2 = sy + Math.sin(a) * R * 1.22;
+              ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.beginPath(); ctx.arc(x2, y2, R * .07, 0, 7); ctx.fill(); } }
+          const gv = ctx.createRadialGradient(sx - R * .3, sy - R * .3, R * .1, sx, sy, R);
+          gv.addColorStop(0, '#F2A57C'); gv.addColorStop(1, '#C8643A');
+          ctx.fillStyle = gv; ctx.beginPath(); ctx.arc(sx, sy, R, 0, 7); ctx.fill();
+        } }
+    }
+    // Damla
+    if (dropA > 0){
+      ctx.globalAlpha = dropA;
+      ctx.fillStyle = '#D9D4D0'; ctx.fillRect(0, 0, W, H);
+      const R = 2300 * v.k, sx = W / 2 - v.cx * v.k, sy = H / 2;
+      const g = ctx.createRadialGradient(sx - R * .25, sy - R * .3, R * .05, sx, sy, R);
+      g.addColorStop(0, '#C42A36'); g.addColorStop(.7, '#9A1422'); g.addColorStop(1, '#6E0B16');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy, R, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.beginPath(); ctx.ellipse(sx - R * .38, sy - R * .42, R * .16, R * .09, -.6, 0, 7); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    hud(v);
+    caption(v.field);
+  }
+
+  const nf = new Intl.NumberFormat('tr-TR');
+  function hud(v){
+    zoomEl.textContent = '×' + nf.format(Math.max(1, Math.round(F0 / v.field)));
+    const target = 110 / v.k;
+    const e = Math.pow(10, Math.floor(Math.log10(target)));
+    const L = [1, 2, 5, 10].map(m => m * e).reduce((a, b) => Math.abs(b - target) < Math.abs(a - target) ? b : a);
+    sbar.style.width = Math.round(L * v.k) + 'px';
+    const fmt = x => Number(x.toPrecision(3)).toLocaleString('tr-TR');
+    slabel.textContent = L >= 1000 ? fmt(L / 1000) + ' mm' : L >= 1 ? fmt(L) + ' µm' : fmt(L * 1000) + ' nm';
+    const t = 1 - smooth((v.field - 6000) / 5000);
+    title.style.opacity = String(1 - t);
+  }
+
+  let capIdx = -1;
+  function caption(field){
+    let idx = 0;
+    CAPS.forEach((c, i) => { if (field <= c[0] * 1.0001) idx = i; });
+    if (idx === capIdx) return;
+    capIdx = idx;
+    const c = CAPS[idx];
+    cap.innerHTML = `<span class="k"></span><p></p>${c[3] ? '<button type="button" id="top">Başa dön</button> <a href="../" style="color:inherit;font-weight:600;margin-left:12px">Aha’daki diğer sayfalar</a><p class="fine">Boyutlar gerçek oranlarında çizildi; hücre görünümleri boyanmış bir kan yaymasını temsil eder. Sayılar yetişkin için ortalama değerlerdir. Bilgilendirme amaçlıdır.</p>' : ''}`;
+    cap.querySelector('.k').textContent = c[1];
+    cap.querySelector('p').textContent = c[2];
+    const top = cap.querySelector('#top');
+    if (top) top.addEventListener('click', () => window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }));
+  }
+
+  let need = true, last = -1;
+  function progress(){ const max = document.documentElement.scrollHeight - window.innerHeight; return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0; }
+  function loop(){
+    const p = progress();
+    if (need || Math.abs(p - last) > 1e-6){ need = false; last = p; draw(p); }
+    requestAnimationFrame(loop);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

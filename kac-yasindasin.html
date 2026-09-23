@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kaç Yaşındasın, Gerçekten?</title>
+<meta name="description" content="Nüfus cüzdanındaki yaşın bir şey söylüyor, hücrelerin başka bir şey. Vücudunun çoğu senden genç.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400..800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E8F2EE;--ink:#10231C;--muted:#51645C;--card:#FFFFFF;--line:#CADBD3;--acc:#1F8A63;--you:#10231C;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1512;--ink:#E4EFEA;--muted:#98ADA4;--card:#131F1B;--line:#253631;--acc:#5CCB9E;--you:#E4EFEA;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0C1512;--ink:#E4EFEA;--muted:#98ADA4;--card:#131F1B;--line:#253631;--acc:#5CCB9E;--you:#E4EFEA;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Sora",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:16.5px;line-height:1.55}
+.wrap{max-width:1000px;margin:0 auto;padding:0 18px}
+header{padding:9vh 0 4vh}
+h1{margin:0;font-size:clamp(44px,9vw,104px);line-height:.95;font-weight:800;letter-spacing:-.045em;max-width:9em}
+.lede{margin:.6em 0 0;font-size:clamp(18px,2.3vw,23px);line-height:1.38;max-width:28em}
+.ask{margin:1.8em 0 0;display:flex;flex-direction:column;gap:6px;font-weight:600;max-width:16em}
+.ask input{font:inherit;font-size:19px;padding:11px 13px;min-height:52px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.ask input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.out[hidden]{display:none}
+.big{margin:0 0 .2em;font-size:clamp(28px,4.4vw,46px);line-height:1.1;font-weight:800;letter-spacing:-.03em;max-width:18em}
+.live{margin:0 0 2.2em;color:var(--muted);font-size:17px}
+.live b{color:var(--ink);font-variant-numeric:tabular-nums}
+.rows{list-style:none;margin:0 0 2.5em;padding:0}
+.rows li{display:grid;grid-template-columns:minmax(0,15em) minmax(0,1fr);gap:6px 18px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.rows .nm{font-weight:700}
+.rows .nm small{display:block;font-weight:400;color:var(--muted);font-size:14px;line-height:1.4;margin-top:2px}
+.track{position:relative;height:30px}
+.track .life{position:absolute;left:0;top:13px;height:4px;width:100%;background:var(--line);border-radius:2px}
+.track .bar{position:absolute;right:0;top:6px;height:18px;border-radius:5px;min-width:4px;background:var(--c)}
+.track .lab{position:absolute;top:5px;font-size:13.5px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.track .birth{position:absolute;left:0;top:0;height:30px;width:2px;background:var(--you)}
+.axis{display:grid;grid-template-columns:minmax(0,15em) minmax(0,1fr);gap:18px;font-size:13px;color:var(--muted)}
+.axis div:last-child{display:flex;justify-content:space-between}
+.facts{max-width:44em}
+.facts p{margin:0 0 .9em}
+.fine{margin:2.5em 0 4em;max-width:46em;font-size:13.5px;color:var(--muted)}
+@media (max-width:640px){.rows li,.axis{grid-template-columns:1fr}.axis div:first-child{display:none}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Kaç yaşındasın, gerçekten?</h1>
+    <p class="lede">Nüfus cüzdanındaki yaşın bir şey söylüyor, hücrelerin başka bir şey. Vücudunun bazı parçaları birkaç günlük, bazıları senden bile yaşlı.</p>
+    <label class="ask" for="dob">Doğum tarihin<input type="date" id="dob" autocomplete="bday"></label>
+  </header>
+
+  <main class="out" id="out" hidden>
+    <p class="big" id="big"></p>
+    <p class="live">Bu sayfayı açtığından beri yaklaşık <b id="cnt">0</b> hücren yenilendi.</p>
+    <div class="axis" aria-hidden="true"><div></div><div><span>doğduğun an</span><span>bugün</span></div></div>
+    <ul class="rows" id="rows"></ul>
+    <section class="facts">
+      <p>Vücudun her gün yaklaşık 330 milyar hücresini yeniler; saniyede 3,8 milyondan fazla. Bunların büyük kısmı kan hücreleri ve bağırsak yüzeyi. Kütle olarak bakınca her gün yaklaşık 80 gram hücre yenileniyor.</p>
+      <p>Buna karşın bazı hücreler hiç değişmez. Göz merceğinin çekirdeğindeki lifler anne karnında oluştu ve ömür boyu yerinde kalır; merceğin yaşla sertleşip bulanıklaşmasının bir nedeni de bu. Beyin kabuğundaki sinir hücrelerinin neredeyse hepsi seninle yaşıt.</p>
+      <p>Bu yaşlar, 1950'ler ve 60'lardaki nükleer denemelerin atmosfere yaydığı karbon-14 sayesinde ölçülebildi: o yıllarda oluşan hücrelerin DNA'sı bu izi taşıyor ve bir tarih damgası gibi okunabiliyor.</p>
+    </section>
+  </main>
+
+  <p class="fine">Süreler ortalamalardır ve kişiye, yaşa ve sağlık durumuna göre değişir. Kaynaklar: Sender ve Milo, Nature Medicine 2021 (günlük hücre yenilenmesi); Spalding ve ark. 2005, 2008 (karbon-14 ile hücre yaşları, yağ hücreleri); Bergmann ve ark. 2009 (kalp kası); Heinke ve ark. 2022 (karaciğer); standart fizyoloji kaynakları (kan hücreleri, bağırsak ve deri yenilenmesi). Bilgilendirme amaçlıdır.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const DAY = 1 / 365.2425;
+  // yas: yıl cinsinden (A = kişinin yaşı); c: renk
+  const PARTS = [
+    { n: 'Kandaki nötrofiller', d: 'Bağışıklığın ilk savunma hattı; kanda saatler içinde değişir.', age: A => .4 * DAY, lab: 'birkaç saatlik', c: '#D8414B' },
+    { n: 'İnce bağırsak yüzeyi', d: 'Besinlerin emildiği tabaka; sürekli aşınıp yenilenir.', age: A => 4 * DAY, lab: '2–6 günlük', c: '#E3872D' },
+    { n: 'Trombositler', d: 'Kanın pıhtılaşmasını başlatan parçacıklar.', age: A => 8 * DAY, lab: 'en fazla 10 günlük', c: '#D8414B' },
+    { n: 'Tat tomurcukları', d: 'Dilindeki tat alıcı hücreler.', age: A => 10 * DAY, lab: 'yaklaşık 10 günlük', c: '#E3872D' },
+    { n: 'Derinin yüzeyi', d: 'Epidermis tabandan yüzeye doğru kendini yeniler, yüzeydekiler dökülür.', age: A => 45 * DAY, lab: '1–2 aylık', c: '#C99A6B' },
+    { n: 'Alyuvarlar', d: 'Oksijen taşıyan kan hücreleri.', age: A => 60 * DAY, lab: 'en fazla 4 aylık', c: '#D8414B' },
+    { n: 'Karaciğer hücreleri', d: 'Vücudun en iyi yenilenen organlarından biri.', age: A => Math.min(A, 2.8), lab: '3 yaşından genç', c: '#8C5BC9' },
+    { n: 'İskeletin', d: 'Kemik sürekli yıkılıp yeniden yapılır; erişkinde yılda yaklaşık %10\'u yenilenir.', age: A => Math.min(A, 10), lab: A => A < 10 ? 'seninle yaşıt' : 'yaklaşık 10 yaşında', c: '#8A9A93' },
+    { n: 'Yağ hücreleri', d: 'Sayıları erişkinlikte pek değişmez ama her yıl yaklaşık %10\'u yenilenir.', age: A => Math.min(A, 10), lab: A => A < 10 ? 'seninle yaşıt' : 'yaklaşık 10 yaşında', c: '#E0B94A' },
+    { n: 'Kalp kası hücreleri', d: 'Çok yavaş yenilenir: 25 yaşında yılda yaklaşık %1, ileri yaşta daha da az. Ömür boyu yarısından azı değişir.', age: A => A * .92, lab: 'çoğu seninle yaşıt', c: '#8C5BC9' },
+    { n: 'Kalıcı dişlerinin minesi', d: 'Çocukken oluştu, bir daha hiç yenilenmez.', age: A => Math.max(0, A - 5), lab: A => `yaklaşık ${Math.max(0, Math.round(A - 5))} yaşında`, c: '#8A9A93' },
+    { n: 'Beyin kabuğundaki sinir hücreleri', d: 'Doğumdan sonra neredeyse hiç yenisi eklenmez.', age: A => A, lab: 'seninle yaşıt', c: '#3E6FD8' },
+    { n: 'Göz merceğinin çekirdeği', d: 'Anne karnında oluştu ve ömür boyu değişmez.', age: A => A + .6, lab: 'senden birkaç ay büyük', c: '#3E6FD8' }
+  ];
+  const nf = new Intl.NumberFormat('tr-TR');
+  let t0 = 0, raf = 0;
+
+  function render(A){
+    const young = PARTS.filter(p => p.age(A) < A * .5).length;
+    $('big').textContent = `Sen ${nf.format(Math.floor(A))} yaşındasın. Ama bu listedeki ${PARTS.length} parçanın ${young} tanesi senin yaşının yarısından genç.`;
+    const ul = $('rows'); ul.textContent = '';
+    PARTS.forEach(p => {
+      const a = p.age(A), frac = Math.min(1.04, a / A);
+      const lab = typeof p.lab === 'function' ? p.lab(A) : p.lab;
+      const li = document.createElement('li');
+      li.innerHTML = `<div class="nm"></div><div class="track"><span class="life"></span><span class="birth"></span><span class="bar"></span><span class="lab"></span></div>`;
+      li.querySelector('.nm').textContent = p.n;
+      const sm = document.createElement('small'); sm.textContent = p.d; li.querySelector('.nm').appendChild(sm);
+      const bar = li.querySelector('.bar'); bar.style.width = (frac * 100) + '%'; bar.style.setProperty('--c', p.c);
+      const lb = li.querySelector('.lab'); lb.textContent = lab;
+      if (frac > .45){ lb.style.left = `calc(${Math.max(0, 1 - frac) * 100}% + 8px)`; lb.style.color = '#fff'; } else { lb.style.right = `calc(${frac * 100}% + 8px)`; }
+      if (frac > 1){ bar.style.right = '0'; }
+      ul.appendChild(li);
+    });
+  }
+  function tick(){
+    const s = (performance.now() - t0) / 1000;
+    $('cnt').textContent = nf.format(Math.round(s * 3.82e6));
+    raf = requestAnimationFrame(tick);
+  }
+  function set(v){
+    if (!v){ $('out').hidden = true; return; }
+    const [y, m, d] = v.split('-').map(Number);
+    const b = new Date(y, m - 1, d).getTime(), A = (Date.now() - b) / (365.2425 * 86400000);
+    if (!isFinite(A) || A <= 0 || y < 1900){ $('out').hidden = true; return; }
+    render(A); $('out').hidden = false;
+    t0 = performance.now(); cancelAnimationFrame(raf); tick();
+  }
+  const dob = $('dob'), t = new Date();
+  dob.max = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+  dob.min = '1900-01-01';
+  dob.addEventListener('change', () => set(dob.value));
+  dob.addEventListener('input', () => { if (dob.value.length === 10) set(dob.value); });
+})();
+</script>
+</body>
+</html>

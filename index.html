@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aha</title>
+<meta name="description" content="Bilim, vücut ve zaman üzerine küçük etkileşimli sayfalar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800..900&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{--ts:55%;--tl:92%;--bg:#EFEFEC;--ink:#17171A;--muted:#66666E;--card:#FFFFFF;--line:#D9D9D4;--prev:#F6F6F3;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ts:28%;--tl:17%;--bg:#111113;--ink:#EDEDEF;--muted:#A0A0A8;--card:#1A1A1D;--line:#2C2C31;--prev:#141417;color-scheme:dark}}
+:root[data-theme="dark"]{--ts:28%;--tl:17%;--bg:#111113;--ink:#EDEDEF;--muted:#A0A0A8;--card:#1A1A1D;--line:#2C2C31;--prev:#141417;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px}
+.bar{display:flex;justify-content:flex-end;padding:16px 0 0}
+.lang{display:inline-flex;border:1.5px solid var(--line);border-radius:8px;overflow:hidden}
+.lang button{font:inherit;font-weight:700;font-size:14px;padding:7px 12px;min-height:38px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.lang button:focus-visible,.list a:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+header{padding:7vh 0 6vh}
+h1{margin:0;position:relative;font-family:"Big Shoulders Display",ui-sans-serif,system-ui,sans-serif;font-weight:900;font-size:clamp(120px,30vw,300px);line-height:.78;letter-spacing:-.02em}
+.lede{margin:.5em 0 0;font-size:clamp(20px,2.5vw,26px);line-height:1.32;max-width:24em}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.filters button{font:inherit;font-weight:600;font-size:15px;padding:9px 14px;min-height:44px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filters button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.filters button span{opacity:.6;font-weight:500}
+.list li[hidden]{display:none}
+.list{display:grid;grid-template-columns:1fr;gap:14px;margin:0 0 8vh;padding:0;list-style:none}
+@media (min-width:700px){.list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1020px){.list{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.list a{display:flex;flex-direction:column;height:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;color:inherit;text-decoration:none;overflow:hidden;transition:border-color .15s ease}
+.list a:hover{border-color:var(--muted)}
+.list canvas{display:block;width:100%;height:150px;background:hsl(var(--h) var(--ts) var(--tl));border-bottom:1px solid var(--line)}
+.txt{padding:16px 20px 20px;display:flex;flex-direction:column;flex:1}
+.list h2{margin:0 0 .25em;font-size:24px;line-height:1.12;letter-spacing:-.01em}
+.list p{margin:0;color:var(--muted)}
+.kind{margin-top:auto;padding-top:12px;font-size:14px;font-weight:600}
+.only{display:none;font-weight:500;color:var(--muted)}
+html[lang="en"] .only{display:inline}
+h1 canvas{display:none;width:100%;max-width:760px;touch-action:pan-y}
+.logo-on h1 canvas{display:block}
+.logo-on h1 .lt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+footer{padding:0 0 6vh;color:var(--muted);font-size:14px;max-width:44em}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar"><div class="lang" role="group" aria-label="Dil / Language"><button type="button" data-l="tr">TR</button><button type="button" data-l="en">EN</button></div></div>
+  <header>
+    <h1><span class="lt">Aha</span><canvas id="logo" aria-hidden="true"></canvas></h1>
+    <p class="lede" data-i="lede"></p>
+  </header>
+  <div class="filters" id="filters" role="group" aria-label="Kategoriler"></div>
+  <ul class="list">
+    <li data-tags="body time"><a href="kac-kez-atti.html" style="--h:356"><canvas data-p="heart"></canvas><div class="txt"><h2 data-i="t1"></h2><p data-i="d1"></p><span class="kind"><span data-i="k1"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body game"><a href="refleks.html" style="--h:125"><canvas data-p="reflex"></canvas><div class="txt"><h2 data-i="t10"></h2><p data-i="d10"></p><span class="kind"><span data-i="k10"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="er body"><a href="gunesin-altinda.html" style="--h:200"><canvas data-p="sun"></canvas><div class="txt"><h2 data-i="t9"></h2><p data-i="d9"></p><span class="kind"><span data-i="k9"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="er game"><a href="siradaki-hasta.html" style="--h:228"><canvas data-p="triage"></canvas><div class="txt"><h2 data-i="t2"></h2><p data-i="d2"></p><span class="kind"><span data-i="k2"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body"><a href="bir-damla-kan.html" style="--h:342"><canvas data-p="blood"></canvas><div class="txt"><h2 data-i="t6"></h2><p data-i="d6"></p><span class="kind"><span data-i="k6"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body er"><a href="kafein-saati.html" style="--h:28"><canvas data-p="coffee"></canvas><div class="txt"><h2 data-i="t7"></h2><p data-i="d7"></p><span class="kind"><span data-i="k7"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="er"><a href="on-dakika.html" style="--h:12"><canvas data-p="arrest"></canvas><div class="txt"><h2 data-i="t4"></h2><p data-i="d4"></p><span class="kind"><span data-i="k4"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="num game"><a href="hangisi.html" style="--h:165"><canvas data-p="duel"></canvas><div class="txt"><h2 data-i="t3"></h2><p data-i="d3"></p><span class="kind"><span data-i="k3"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body game"><a href="renk-gorme.html" style="--h:80"><canvas data-p="plate"></canvas><div class="txt"><h2 data-i="t8"></h2><p data-i="d8"></p><span class="kind"><span data-i="k8"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="er game"><a href="on-saniye.html" style="--h:42"><canvas data-p="ecg"></canvas><div class="txt"><h2 data-i="t5"></h2><p data-i="d5"></p><span class="kind"><span data-i="k5"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space body"><a href="uzayda-vucudun.html" style="--h:255"><canvas data-p="space"></canvas><div class="txt"><h2 data-i="t11"></h2><p data-i="d11"></p><span class="kind"><span data-i="k11"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="er body"><a href="zehir-mi-ilac-mi.html" style="--h:300"><canvas data-p="dose"></canvas><div class="txt"><h2 data-i="t12"></h2><p data-i="d12"></p><span class="kind"><span data-i="k12"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body time"><a href="kac-yasindasin.html" style="--h:150"><canvas data-p="ages"></canvas><div class="txt"><h2 data-i="t13"></h2><p data-i="d13"></p><span class="kind"><span data-i="k13"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="time"><a href="hayatin-haftalarla.html" style="--h:55"><canvas data-p="weeks"></canvas><div class="txt"><h2 data-i="t14"></h2><p data-i="d14"></p><span class="kind"><span data-i="k14"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body er"><a href="mikrop-yarisi.html" style="--h:95"><canvas data-p="microbe"></canvas><div class="txt"><h2 data-i="t15"></h2><p data-i="d15"></p><span class="kind"><span data-i="k15"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="er game"><a href="ilk-yardim.html" style="--h:0"><canvas data-p="aid"></canvas><div class="txt"><h2 data-i="t16"></h2><p data-i="d16"></p><span class="kind"><span data-i="k16"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body"><a href="vucudundaki-elementler.html" style="--h:190"><canvas data-p="elements"></canvas><div class="txt"><h2 data-i="t17"></h2><p data-i="d17"></p><span class="kind"><span data-i="k17"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="er game"><a href="kan-grubu.html" style="--h:330"><canvas data-p="bloodtype"></canvas><div class="txt"><h2 data-i="t18"></h2><p data-i="d18"></p><span class="kind"><span data-i="k18"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body"><a href="sesin-haritasi.html" style="--h:270"><canvas data-p="hearing"></canvas><div class="txt"><h2 data-i="t19"></h2><p data-i="d19"></p><span class="kind"><span data-i="k19"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space time"><a href="isik-hizinda.html" style="--h:45"><canvas data-p="light"></canvas><div class="txt"><h2 data-i="t20"></h2><p data-i="d20"></p><span class="kind"><span data-i="k20"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body game"><a href="akyuvar.html" style="--h:120"><canvas data-p="wbc"></canvas><div class="txt"><h2 data-i="t21"></h2><p data-i="d21"></p><span class="kind"><span data-i="k21"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body"><a href="gozunu-kandir.html" style="--h:205"><canvas data-p="illusion"></canvas><div class="txt"><h2 data-i="t22"></h2><p data-i="d22"></p><span class="kind"><span data-i="k22"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body"><a href="hayvanlarin-nabzi.html" style="--h:350"><canvas data-p="pulse"></canvas><div class="txt"><h2 data-i="t23"></h2><p data-i="d23"></p><span class="kind"><span data-i="k23"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space"><a href="dunyanin-merkezine.html" style="--h:20"><canvas data-p="dig"></canvas><div class="txt"><h2 data-i="t24"></h2><p data-i="d24"></p><span class="kind"><span data-i="k24"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="time game"><a href="bir-dakika.html" style="--h:40"><canvas data-p="minute"></canvas><div class="txt"><h2 data-i="t25"></h2><p data-i="d25"></p><span class="kind"><span data-i="k25"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body game"><a href="renk-mi-kelime-mi.html" style="--h:230"><canvas data-p="stroop"></canvas><div class="txt"><h2 data-i="t26"></h2><p data-i="d26"></p><span class="kind"><span data-i="k26"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body game"><a href="aklinda-tut.html" style="--h:180"><canvas data-p="digits"></canvas><div class="txt"><h2 data-i="t27"></h2><p data-i="d27"></p><span class="kind"><span data-i="k27"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="num"><a href="dogum-gunu.html" style="--h:290"><canvas data-p="bday"></canvas><div class="txt"><h2 data-i="t28"></h2><p data-i="d28"></p><span class="kind"><span data-i="k28"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="num"><a href="yagmurla-pi.html" style="--h:140"><canvas data-p="pi"></canvas><div class="txt"><h2 data-i="t29"></h2><p data-i="d29"></p><span class="kind"><span data-i="k29"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space time"><a href="gezegen-yasin.html" style="--h:240"><canvas data-p="planets"></canvas><div class="txt"><h2 data-i="t30"></h2><p data-i="d30"></p><span class="kind"><span data-i="k30"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space"><a href="tuy-ve-cekic.html" style="--h:65"><canvas data-p="drop"></canvas><div class="txt"><h2 data-i="t31"></h2><p data-i="d31"></p><span class="kind"><span data-i="k31"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space game"><a href="yorungeye-gir.html" style="--h:155"><canvas data-p="orbit"></canvas><div class="txt"><h2 data-i="t32"></h2><p data-i="d32"></p><span class="kind"><span data-i="k32"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space"><a href="kara-delik.html" style="--h:320"><canvas data-p="bh"></canvas><div class="txt"><h2 data-i="t33"></h2><p data-i="d33"></p><span class="kind"><span data-i="k33"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space"><a href="bosluk.html" style="--h:275"><canvas data-p="void"></canvas><div class="txt"><h2 data-i="t34"></h2><p data-i="d34"></p><span class="kind"><span data-i="k34"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space"><a href="simsek.html" style="--h:48"><canvas data-p="bolt"></canvas><div class="txt"><h2 data-i="t35"></h2><p data-i="d35"></p><span class="kind"><span data-i="k35"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space"><a href="sicaklik-merdiveni.html" style="--h:10"><canvas data-p="temp"></canvas><div class="txt"><h2 data-i="t36"></h2><p data-i="d36"></p><span class="kind"><span data-i="k36"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space"><a href="hic-durmuyorsun.html" style="--h:195"><canvas data-p="spin"></canvas><div class="txt"><h2 data-i="t37"></h2><p data-i="d37"></p><span class="kind"><span data-i="k37"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body"><a href="genomun.html" style="--h:135"><canvas data-p="dna"></canvas><div class="txt"><h2 data-i="t38"></h2><p data-i="d38"></p><span class="kind"><span data-i="k38"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body"><a href="nefesin.html" style="--h:185"><canvas data-p="breath"></canvas><div class="txt"><h2 data-i="t39"></h2><p data-i="d39"></p><span class="kind"><span data-i="k39"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="time num"><a href="kac-atan-var.html" style="--h:30"><canvas data-p="tree"></canvas><div class="txt"><h2 data-i="t40"></h2><p data-i="d40"></p><span class="kind"><span data-i="k40"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body"><a href="icindeki-kalabalik.html" style="--h:100"><canvas data-p="microbes"></canvas><div class="txt"><h2 data-i="t41"></h2><p data-i="d41"></p><span class="kind"><span data-i="k41"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body er"><a href="olumden-sonra.html" style="--h:215"><canvas data-p="after"></canvas><div class="txt"><h2 data-i="t42"></h2><p data-i="d42"></p><span class="kind"><span data-i="k42"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body"><a href="neren-hassas.html" style="--h:285"><canvas data-p="touch"></canvas><div class="txt"><h2 data-i="t43"></h2><p data-i="d43"></p><span class="kind"><span data-i="k43"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="space time"><a href="zaman-esner.html" style="--h:205"><canvas data-p="dilation"></canvas><div class="txt"><h2 data-i="t44"></h2><p data-i="d44"></p><span class="kind"><span data-i="k44"></span> <span class="only" data-i="only"></span></span></div></a></li>
+  </ul>
+  <footer data-i="foot"></footer>
+</div>
+<script>
+(() => {
+  const T = {
+    tr:{ lede:'Bilim, vücut ve zaman üzerine küçük etkileşimli sayfalar.',
+      t1:'Kaç Kez Attı?', d1:'Doğduğundan beri kalbin kaç kez attı, kaç litre kan pompaladı?', k1:'Canlı sayaç',
+      t2:'Sıradaki Hasta', d2:'Acilde tek doktor sensin. Altı hasta aynı anda geldi. Kimi önce görürsün?', k2:'Triyaj oyunu',
+      t3:'Hangisi Daha Çok Öldürür?', d3:'Köpekbalığı mı, kuduz mu? Korktuklarımızla bizi öldürenler aynı değil.', k3:'Tahmin oyunu',
+      t4:'On Dakika', d4:'Bir kalp durduğunda geçen ilk on dakika. Kalp masajına ne zaman başlayacağına sen karar ver.', k4:'Kaydırarak anlatım',
+      t5:'On Saniye', d5:'Bir EKG, on saniye. STEMI var mı, yok mu?', k5:'EKG oyunu',
+      t6:'Bir Damla Kan', d6:'Bir damla kanın içine, bir virüs görünene kadar 40.000 kat yakınlaş.', k6:'Yakınlaştırma',
+      t7:'Kafein Saati', d7:'Bugün içtiklerini gir: yattığında kanında ne kadar kafein kalacak?', k7:'Hesaplayıcı',
+      t8:'Renkleri Nasıl Görüyorsun?', d8:'Yedi plaka, her birinde saklı bir sayı. Sonra renk körlerinin gözünden bak.', k8:'Görme testi',
+      t9:'Güneşin Altında', d9:'Güneş ışığı cildine ne yapıyor, güneş kremi onu nasıl durduruyor? Güneşe çık ve izle.', k9:'Simülasyon',
+      t10:'Refleks', d10:'Ekran yeşile döndüğünde dokun. Ne kadar hızlısın? Sese mi, görüntüye mi daha hızlısın?', k10:'Tepki testi',
+      t11:'Uzayda Vücudun', d11:'Ay\'da kaç kilo gelirsin, Plüton\'da ne kadar zıplarsın, Venüs\'e insen ne olur?', k11:'Gezegen gezisi',
+      t12:'Zehir mi, İlaç mı?', d12:'Su, tuz, kafein, D vitamini, alkol: iyi ile kötüyü ayıran şey miktar. Dozu sen seç.', k12:'Doz oyunu',
+      t13:'Kaç Yaşındasın, Gerçekten?', d13:'Vücudunun bazı parçaları birkaç günlük, bazıları senden bile yaşlı. Doğum tarihini gir.', k13:'Hücre yaşları',
+      t14:'Hayatın, Haftalarla', d14:'Bir ömür yaklaşık 4.000 hafta. Seninkini tek ekranda gör, önemli haftalarını işaretle.', k14:'Ömür tablosu',
+      t15:'Mikrop Yarışı', d15:'Tek bir bakteri her 20 dakikada ikiye bölünüyor. Zamanı ileri sar, ne olduğunu izle.', k15:'Simülasyon',
+      t16:'İlk Yardım: Ne Yaparsın?', d16:'Biri boğuluyor, biri nöbet geçiriyor, bir el yandı. Doğru hamleyi biliyor musun?', k16:'Karar oyunu',
+      t17:'Vücudundaki Elementler', d17:'Kilonu gir: kaç litre su, ne kadar karbon, bir çivi yapacak kadar demir.', k17:'Hesaplayıcı',
+      t18:'Kan Grubu Bulmacası', d18:'Hastaya hangi kanlar verilebilir? Torbaları seç, uyumu öğren.', k18:'Bulmaca',
+      t19:'Sesin Haritası', d19:'Kulakların hangi tizliğe kadar duyuyor? Kulaklığını tak, dene.', k19:'Duyma denemesi',
+      t20:'Işık Hızında', d20:'Ay\'a, Güneş\'e, en yakın yıldıza ışıkla gerçek zamanlı yolculuk.', k20:'Gerçek zamanlı',
+      t21:'Akyuvar', d21:'Sen bir akyuvarsın. Bakteriler bölünmeden onları yakala: 60 saniye dayan.', k21:'Oyun',
+      t22:'Gözünü Kandır', d22:'Kör noktanı bul, ters renkli bayraktan gerçeğini gör, elinin nefes almasını izle.', k22:'Göz yanılsamaları',
+      t23:'Hayvanların Nabzı', d23:'Nabzını ölç, sonra bir fare, bir fil ve bir mavi balinayla karşılaştır.', k23:'Nabız ölçer',
+      t24:'Dünya\'nın Merkezine', d24:'Aşağı kaydır ve kaz: kabuktan mantoya, sıvı demirden katı çekirdeğe, 6.371 km.', k24:'Kaydırarak kazı',
+      t25:'Bir Dakika', d25:'Saate bakmadan bir dakikayı tahmin edebilir misin? Başlat, bir dakika geçti deyince dokun.', k25:'Zaman tahmini',
+      t26:'Renk mi, Kelime mi?', d26:'Yazının rengine bas, kelimeye değil. Beynin okumayı durduramıyor.', k26:'Stroop testi',
+      t27:'Aklında Tut', d27:'Rakamlar birer birer yanıp sönüyor. Kaç tanesini aklında tutabilirsin?', k27:'Bellek oyunu',
+      t28:'Doğum Günü Paradoksu', d28:'Bir odada kaç kişi olmalı ki ikisinin doğum günü aynı olsun? Tahminin muhtemelen çok yüksek.', k28:'Olasılık',
+      t29:'Yağmurla π', d29:'Bir kareye rastgele damlalar düşür, içinden π sayısı çıksın.', k29:'Matematik',
+      t30:'Gezegen Yaşın', d30:'Merkür\'de kaç yaşındasın? Neptün\'de daha ilk yaş gününü bile görmedin.', k30:'Hesaplayıcı',
+      t31:'Tüy ve Çekiç', d31:'Tüy ve çekiç aynı anda yere düşer mi? Dünya\'da, Ay\'da ve Mars\'ta dene.', k31:'Fizik deneyi',
+      t32:'Yörüngeye Gir', d32:'Topu ne kadar hızlı atarsan Dünya\'ya düşmez de etrafında dönmeye başlar?', k32:'Yörünge oyunu',
+      t33:'Kara Deliğe Düşersen', d33:'Küçük kara delik seni koparır, devasa olanına farkına varmadan girersin. Kütleyi sen seç.', k33:'Simülasyon',
+      t34:'Boşluk', d34:'Güneş sistemi gerçek ölçekte. Gezegenler arasında ne kadar hiçbir şey olduğunu kaydırarak gör.', k34:'Ölçek gezintisi',
+      t35:'Şimşek Ne Kadar Uzakta?', d35:'Şimşeği görünce dokun, gök gürültüsünü duyunca tekrar dokun. Mesafeyi hesaplayalım.', k35:'Ölçüm',
+      t36:'Sıcaklık Merdiveni', d36:'Mutlak sıfırdan Güneş\'in çekirdeğine: her sıcaklıkta ne olduğunu gör.', k36:'Ölçek',
+      t37:'Hiç Durmuyorsun', d37:'Kıpırdamadan otururken bile saatte milyonlarca kilometre gidiyorsun.', k37:'Hesaplayıcı',
+      t38:'Genomun', d38:'Kendi DNA\'nı saniyede bir harf okusan 100 yıl sürerdi. Sayaç işliyor.', k38:'Canlı sayaç',
+      t39:'Nefesin', d39:'Aldığın her nefeste Sezar\'ın son nefesinden atomlar var. Nefes al, sayalım.', k39:'Nefes sayacı',
+      t40:'Kaç Atan Var?', d40:'Her kuşakta sayı ikiye katlanıyor. Birkaç yüzyıl sonra matematik çöküyor.', k40:'Soy ağacı',
+      t41:'İçindeki Kalabalık', d41:'Vücudundaki hücrelerin yarısından fazlası sana ait değil. Mikroplarınla tanış.', k41:'Mikrobiyom',
+      t42:'Ölümden Sonra', d42:'Kalp durduktan sonra vücutta ne olur? Dakikalardan yıllara, adli tıbbın okuduğu takvim.', k42:'Zaman çizelgesi',
+      t43:'Neren Daha Hassas?', d43:'Parmak ucun sırtından on kat keskin. Vücut haritasına dokun, farkı kendin ölç.', k43:'Duyu haritası',
+      t44:'Zaman Esner', d44:'Üst katta oturan biri alt kattakinden daha hızlı yaşlanıyor. Ne kadar?', k44:'Görelilik',
+      f_all:'Hepsi', f_body:'Vücut', f_er:'Acil tıp', f_space:'Uzay ve fizik', f_time:'Zaman', f_num:'Sayılar', f_game:'Oyun',
+      only:'', foot:'Bilgilendirme amaçlıdır, tıbbi tavsiye değildir. Acil bir durumda 112’yi ara.', title:'Aha' },
+    en:{ lede:'Small interactive pages about science, the body and time.',
+      t1:'How Many Beats?', d1:'How many times has your heart beaten since you were born? How much blood has it pumped?', k1:'Live counter',
+      t2:'Next Patient', d2:'You are the only doctor in the ER. Six patients arrived at once. Who do you see first?', k2:'Triage game',
+      t3:'Which Kills More?', d3:'Sharks or rabies? What we fear and what actually kills us are not the same.', k3:'Guessing game',
+      t4:'Ten Minutes', d4:'The first ten minutes after a heart stops. You decide when CPR begins.', k4:'Scrollytelling',
+      t5:'Ten Seconds', d5:'One ECG, ten seconds. STEMI or not?', k5:'ECG game',
+      t6:'A Drop of Blood', d6:'Zoom 40,000 times into a single drop of blood, all the way down to a virus.', k6:'Zoom',
+      t7:'Caffeine Clock', d7:'Enter what you drank today: how much caffeine will still be in you at bedtime?', k7:'Calculator',
+      t8:'How Do You See Color?', d8:'Seven plates, a hidden number in each. Then see them through color-blind eyes.', k8:'Vision test',
+      t9:'Under the Sun', d9:'What does sunlight do inside your skin, and how does sunscreen stop it? Step outside and watch.', k9:'Simulation',
+      t10:'Reflex', d10:'Tap when the screen turns green. How fast are you, and are you faster to sound or to sight?', k10:'Reaction test',
+      t11:'Your Body in Space', d11:'How much would you weigh on the Moon, how high could you jump on Pluto, what happens on Venus?', k11:'Planet tour',
+      t12:'Poison or Medicine?', d12:'Water, salt, caffeine, vitamin D, alcohol: the dose makes the poison. You pick the dose.', k12:'Dose game',
+      t13:'How Old Are You, Really?', d13:'Some parts of your body are days old, some are older than you. Enter your birth date.', k13:'Cell ages',
+      t14:'Your Life in Weeks', d14:'A lifetime is about 4,000 weeks. See yours on one screen and mark the ones that mattered.', k14:'Life grid',
+      t15:'Germ Race', d15:'One bacterium splits in two every 20 minutes. Fast-forward and watch what happens.', k15:'Simulation',
+      t16:'First Aid: What Would You Do?', d16:'Someone is choking, someone is seizing, a hand is burned. Do you know the right move?', k16:'Decision game',
+      t17:'The Elements in You', d17:'Enter your weight: litres of water, kilos of carbon, iron enough for one nail.', k17:'Calculator',
+      t18:'Blood Type Puzzle', d18:'Which blood bags can this patient receive? Pick them and learn the rules.', k18:'Puzzle',
+      t19:'Map of Your Hearing', d19:'How high can your ears hear? Put on headphones and try.', k19:'Hearing sweep',
+      t20:'At the Speed of Light', d20:'Travel at light speed to the Moon, the Sun and the nearest star, in real time.', k20:'Real time',
+      t21:'White Blood Cell', d21:'You are a white blood cell. Catch the bacteria before they divide. Survive 60 seconds.', k21:'Game',
+      t22:'Fool Your Eyes', d22:'Find your blind spot, see a flag in colours that are not there, watch your hand breathe.', k22:'Illusions',
+      t23:'Animal Heartbeats', d23:'Measure your pulse, then compare it with a mouse, an elephant and a blue whale.', k23:'Pulse meter',
+      t24:'To the Centre of the Earth', d24:'Scroll down and dig: crust, mantle, liquid iron, solid core. 6,371 km.', k24:'Scroll dig',
+      t25:'One Minute', d25:'Can you feel a minute without a clock? Start, and tap when you think it has passed.', k25:'Time guess',
+      t26:'Colour or Word?', d26:'Tap the ink colour, not the word. Your brain cannot stop reading.', k26:'Stroop test',
+      t27:'Keep It in Mind', d27:'Digits flash one by one. How many can you hold in your head?', k27:'Memory game',
+      t28:'The Birthday Paradox', d28:'How many people until two share a birthday? Your guess is probably far too high.', k28:'Probability',
+      t29:'Pi From Rain', d29:'Drop random raindrops on a square and watch π appear.', k29:'Maths',
+      t30:'Your Age on Other Planets', d30:'How old are you on Mercury? On Neptune you have not had a first birthday yet.', k30:'Calculator',
+      t31:'Feather and Hammer', d31:'Do a feather and a hammer land together? Try it on Earth, the Moon and Mars.', k31:'Physics demo',
+      t32:'Make Orbit', d32:'How fast must you throw a ball before it stops falling to Earth and starts circling it?', k32:'Orbit game',
+      t33:'Falling Into a Black Hole', d33:'A small one tears you apart; a giant one lets you cross without noticing. Pick the mass.', k33:'Simulation',
+      t34:'The Void', d34:'The solar system at true scale. Scroll through how much nothing lies between planets.', k34:'Scale walk',
+      t35:'How Far Is the Lightning?', d35:'Tap at the flash, tap at the thunder, and get the distance.', k35:'Measure',
+      t36:'The Temperature Ladder', d36:'From absolute zero to the core of the Sun: see what happens at each step.', k36:'Scale',
+      t37:'You Never Stop', d37:'Sitting perfectly still, you are still moving millions of kilometres an hour.', k37:'Calculator',
+      t38:'Your Genome', d38:'Reading your own DNA at one letter a second would take a century. The counter is running.', k38:'Live counter',
+      t39:'Your Breath', d39:'Every breath you take holds atoms from Caesar\'s last one. Breathe, and count.', k39:'Breath counter',
+      t40:'How Many Ancestors?', d40:'The number doubles every generation. A few centuries back, the maths breaks.', k40:'Family tree',
+      t41:'The Crowd Inside You', d41:'More than half the cells in your body are not yours. Meet your microbes.', k41:'Microbiome',
+      t42:'After Death', d42:'What happens to a body once the heart stops, from minutes to years.', k42:'Timeline',
+      t43:'Where Are You Most Sensitive?', d43:'Your fingertip is ten times sharper than your back. Tap the body map and measure it.', k43:'Touch map',
+      t44:'Time Stretches', d44:'Someone on an upper floor ages faster than someone below. By how much?', k44:'Relativity',
+      f_all:'All', f_body:'Body', f_er:'Emergency medicine', f_space:'Space and physics', f_time:'Time', f_num:'Numbers', f_game:'Games',
+      only:'(Turkish for now)', foot:'For information only, not medical advice. In an emergency, call your local emergency number.', title:'Aha' }
+  };
+  let lang = 'tr';
+  try { lang = localStorage.getItem('aha-lang') || ((navigator.language || 'tr').toLowerCase().startsWith('tr') ? 'tr' : 'en'); } catch (e) {}
+  function setLang(l){
+    lang = l; document.documentElement.lang = l;
+    document.querySelectorAll('[data-i]').forEach(el => { el.textContent = T[l][el.dataset.i]; });
+    document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', b.dataset.l === l ? 'true' : 'false'));
+    document.querySelector('meta[name="description"]').content = T[l].lede;
+    labelFilters(l);
+    try { localStorage.setItem('aha-lang', l); } catch (e) {}
+  }
+  // Kategori filtresi
+  const KEYS = ['all', 'body', 'er', 'space', 'time', 'num', 'game'];
+  const cards = [...document.querySelectorAll('.list li')];
+  let active = 'all';
+  const fbox = document.getElementById('filters');
+  KEYS.forEach(k => {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.tag = k;
+    const n = k === 'all' ? cards.length : cards.filter(li => li.dataset.tags.split(' ').includes(k)).length;
+    b.innerHTML = '<b></b> <span>' + n + '</span>';
+    b.addEventListener('click', () => { active = k; applyFilter(); });
+    fbox.appendChild(b);
+  });
+  function applyFilter(){
+    cards.forEach(li => { li.hidden = active !== 'all' && !li.dataset.tags.split(' ').includes(active); });
+    fbox.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.tag === active ? 'true' : 'false'));
+  }
+  function labelFilters(l){
+    fbox.querySelectorAll('button').forEach(b => { b.querySelector('b').textContent = T[l]['f_' + b.dataset.tag]; });
+  }
+  document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.l)));
+  applyFilter();
+  setLang(lang);
+
+  // Canlı önizlemeler
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dark = () => getComputedStyle(document.documentElement).getPropertyValue('--bg').trim().toLowerCase() === '#111113';
+  const g = (x, c, w) => Math.exp(-0.5 * ((x - c) / w) ** 2);
+  const ecgBeat = (tau, st) => .15 * g(tau, .1, .022) - .05 * g(tau, .18, .008) + 1 * g(tau, .2, .011) - .2 * g(tau, .22, .01) + (.3 + st * .45) * g(tau, .38, .048) + st * (tau > .228 && tau < .45 ? Math.min(1, (tau - .228) / .01) * Math.min(1, (.45 - tau) / .05) : 0);
+  const nf = new Intl.NumberFormat('tr-TR');
+
+  const plateDots = (() => { const out = []; let seed = 7; const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    for (let n = 0; n < 420; n++){ const a = r() * 6.283, d = Math.sqrt(r()) * .46, x = .5 + Math.cos(a) * d, y = .5 + Math.sin(a) * d;
+      const fig = (x > .36 && x < .64 && y > .3 && y < .38) || (Math.abs((x - .64) + (y - .38) * .45) < .045 && y > .34 && y < .72);
+      out.push([x, y, .008 + r() * .014, fig, .82 + r() * .3]); } return out; })();
+  const draw = {
+    dilation(ctx, w, h, t){
+      [[w * .3, 1], [w * .7, .55]].forEach(([x, sp], i) => {
+        const r = Math.min(w, h) * .19, cy = h / 2;
+        ctx.strokeStyle = i ? '#FFB454' : '#59C2FF'; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.stroke();
+        const a = -Math.PI / 2 + t * sp * 2;
+        ctx.beginPath(); ctx.moveTo(x, cy); ctx.lineTo(x + Math.cos(a) * r * .75, cy + Math.sin(a) * r * .75); ctx.stroke();
+        ctx.fillStyle = dark() ? '#E8EDF5' : '#0B0F16'; ctx.font = '600 13px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(i ? 'hızlı giden' : 'duran', x, cy + r + 20); ctx.textAlign = 'left';
+      });
+    },
+    after(ctx, w, h, t){
+      const n = 5, k = Math.floor(t % 6);
+      ctx.strokeStyle = dark() ? '#3A4052' : '#C9CEDC'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(24, h / 2); ctx.lineTo(w - 24, h / 2); ctx.stroke();
+      for (let i = 0; i < n; i++){ const x = 24 + i * (w - 48) / (n - 1);
+        ctx.fillStyle = i <= k ? '#8FA1C7' : (dark() ? '#262A36' : '#DDE1EC');
+        ctx.beginPath(); ctx.arc(x, h / 2, i === k ? 9 : 5, 0, 7); ctx.fill(); }
+      ctx.fillStyle = dark() ? '#E7E8EE' : '#12131A'; ctx.font = '600 13px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(['dakikalar', 'saatler', 'gün', 'hafta', 'yıllar'][Math.min(k, 4)], 24 + Math.min(k, 4) * (w - 48) / (n - 1), h / 2 + 30); ctx.textAlign = 'left';
+    },
+    touch(ctx, w, h, t){
+      const k = Math.floor(t % 4), zones = [['parmak ucu', 2.5], ['avuç', 11], ['kol', 38], ['sırt', 45]];
+      const [n, mm] = zones[k], px = mm * 2.2;
+      ctx.fillStyle = '#D6283B';
+      ctx.beginPath(); ctx.arc(w / 2 - px / 2, h / 2, 6, 0, 7); ctx.fill();
+      ctx.beginPath(); ctx.arc(w / 2 + px / 2, h / 2, 6, 0, 7); ctx.fill();
+      ctx.fillStyle = dark() ? '#F0E8F3' : '#1B1420'; ctx.font = '700 14px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(`${n}: ${String(mm).replace('.', ',')} mm`, w / 2, h / 2 + 34); ctx.textAlign = 'left';
+    },
+    dna(ctx, w, h, t){
+      const cols = { A: '#F2B705', C: '#3FA7F2', G: '#4ADE80', T: '#F2554B' }, K = 'ACGT';
+      ctx.font = '600 15px "Instrument Sans", system-ui, monospace';
+      const off = (t * 40) % 22;
+      for (let r = 0; r < 7; r++){ for (let i = 0; i < 26; i++){ const k = K[(i * 7 + r * 3 + Math.floor(t * 2)) % 4];
+        ctx.fillStyle = cols[k]; ctx.globalAlpha = .85 - r * .09; ctx.fillText(k, 10 + i * 22 - off, 22 + r * 20); } }
+      ctx.globalAlpha = 1;
+    },
+    breath(ctx, w, h, t){
+      const p = (Math.sin(t * .8 - Math.PI / 2) + 1) / 2, r = Math.min(w, h) * (.18 + p * .16);
+      ctx.strokeStyle = '#1E7F8C'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(w / 2, h / 2, r, 0, 7); ctx.stroke();
+      ctx.fillStyle = 'rgba(30,127,140,.15)'; ctx.fill();
+      ctx.fillStyle = dark() ? '#E2F0F2' : '#10262B'; ctx.font = '600 14px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(p > .5 ? 'al' : 'ver', w / 2, h / 2); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    },
+    tree(ctx, w, h, t){
+      const rows = 5, gen = Math.floor(t % 6);
+      for (let r = 0; r <= rows; r++){ const c = Math.pow(2, r), y = 16 + r * (h - 32) / rows;
+        for (let i = 1; i <= c; i++){ const x = w / (c + 1) * i;
+          ctx.fillStyle = r <= gen ? '#8A5A2B' : (dark() ? '#332A20' : '#E2D9C9');
+          ctx.beginPath(); ctx.arc(x, y, Math.max(1.6, 5 - r * .6), 0, 7); ctx.fill(); } }
+    },
+    microbes(ctx, w, h, t){
+      const n = 26; ctx.fillStyle = '#2F6FD8';
+      for (let i = 0; i < 10; i++){ const x = 20 + ((i * 53) % (w - 40)), y = 20 + ((i * 37) % (h - 40)); ctx.beginPath(); ctx.arc(x, y, 8, 0, 7); ctx.fill(); }
+      ctx.fillStyle = '#5E9E2E';
+      for (let i = 0; i < n; i++){ const a = t * .5 + i, x = w / 2 + Math.cos(a * (1 + i % 3) * .5) * (w * .3), y = h / 2 + Math.sin(a * (1 + i % 4) * .4) * (h * .3);
+        ctx.save(); ctx.translate(x, y); ctx.rotate(a); ctx.fillRect(-5, -2, 10, 4); ctx.restore(); }
+    },
+    void(ctx, w, h, t){
+      ctx.fillStyle = '#04050A'; ctx.fillRect(0, 0, w, h);
+      for (let i = 0; i < 40; i++) { ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.fillRect((i * 97) % w, (i * 53) % h, 1.2, 1.2); }
+      const off = (t * 26) % (h * 2);
+      [['#FFC857', 14, 0], ['#9A9186', 4, 120], ['#E0B36A', 6, 230], ['#4E9BE0', 6, 330], ['#C1582E', 5, 500]].forEach(([c, r, d]) => {
+        const y = h - off + d * .5; if (y > -20 && y < h + 20){ ctx.fillStyle = c; ctx.beginPath(); ctx.arc(w * .5, y, r, 0, 7); ctx.fill(); } });
+    },
+    bolt(ctx, w, h, t){
+      const f = (t % 3) < .12;
+      ctx.fillStyle = f ? '#F3F6FB' : '#1B2230'; ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = f ? '#1B2230' : '#FFD84D'; ctx.lineWidth = 4; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(w * .5, 16); ctx.lineTo(w * .43, h * .45); ctx.lineTo(w * .53, h * .45); ctx.lineTo(w * .45, h - 16); ctx.stroke();
+      ctx.fillStyle = f ? '#1B2230' : '#EEF2F8'; ctx.font = '700 15px "Instrument Sans", system-ui, sans-serif';
+      ctx.fillText(((t % 3) < .12 ? 0 : (t % 3) - .12).toFixed(1).replace('.', ',') + ' sn', w * .6, h * .55);
+    },
+    temp(ctx, w, h, t){
+      const g = ctx.createLinearGradient(0, h, 0, 0);
+      g.addColorStop(0, '#0A1230'); g.addColorStop(.45, '#1E7896'); g.addColorStop(.75, '#C83C1E'); g.addColorStop(1, '#FAF0C8');
+      ctx.fillStyle = g; ctx.fillRect(w * .36, 12, w * .28, h - 24);
+      const p = (Math.sin(t * .7) + 1) / 2, y = h - 12 - p * (h - 24);
+      ctx.fillStyle = dark() ? '#EFF1F7' : '#0C0E14'; ctx.fillRect(w * .3, y - 2, w * .4, 4);
+      ctx.font = '700 14px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText(['−273 °C', '−89 °C', '37 °C', '1.538 °C', '15 milyon °C'][Math.min(4, Math.floor(p * 5))], w * .28, y + 5); ctx.textAlign = 'left';
+    },
+    spin(ctx, w, h, t){
+      const cx = w / 2, cy = h / 2;
+      ctx.strokeStyle = dark() ? '#2A3448' : '#CBD5E1'; ctx.lineWidth = 1.5;
+      [30, 52].forEach(r => { ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.stroke(); });
+      ctx.fillStyle = '#FFC857'; ctx.beginPath(); ctx.arc(cx, cy, 10, 0, 7); ctx.fill();
+      const a = t * 1.1; const ex = cx + Math.cos(a) * 52, ey = cy + Math.sin(a) * 52;
+      ctx.fillStyle = '#4E9BE0'; ctx.beginPath(); ctx.arc(ex, ey, 7, 0, 7); ctx.fill();
+      ctx.fillStyle = '#E2E8F0'; ctx.beginPath(); ctx.arc(ex + Math.cos(a * 6) * 14, ey + Math.sin(a * 6) * 14, 3, 0, 7); ctx.fill();
+    },
+    planets(ctx, w, h, t){
+      const ps = [['#9A9186', 7, .16, 1.6], ['#E0B36A', 10, .3, .9], ['#4E9BE0', 11, .46, .62], ['#C1582E', 9, .62, .33], ['#D2A57A', 17, .84, .12]];
+      ps.forEach(([c, r, fx, sp]) => { const y = h / 2 + Math.sin(t * sp) * h * .18; ctx.fillStyle = c; ctx.beginPath(); ctx.arc(w * fx, y, r, 0, 7); ctx.fill(); });
+    },
+    drop(ctx, w, h, t){
+      const cyc = t % 3, gy = h - 22, top = 20, span = gy - top;
+      const yh = Math.min(1, .5 * 9.81 * cyc * cyc / 2), yf = Math.min(1, .6 * cyc / 2);
+      ctx.strokeStyle = dark() ? '#3a3a40' : '#D7D7CE'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(10, gy); ctx.lineTo(w - 10, gy); ctx.stroke();
+      ctx.fillStyle = '#6E7379'; ctx.fillRect(w * .36 - 14, top + yh * span - 6, 28, 12); ctx.fillStyle = '#7A5230'; ctx.fillRect(w * .36 - 2, top + yh * span + 4, 4, 22);
+      ctx.fillStyle = dark() ? '#EDEDE7' : '#F2F2EC'; ctx.strokeStyle = '#B9B9AE'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.ellipse(w * .64, top + yf * span + 10, 7, 15, Math.sin(t * 3) * .4, 0, 7); ctx.fill(); ctx.stroke();
+    },
+    orbit(ctx, w, h, t){
+      ctx.fillStyle = '#05070E'; ctx.fillRect(0, 0, w, h);
+      const cx = w / 2, cy = h / 2, R = Math.min(w, h) * .2;
+      ctx.fillStyle = '#2B6BB0'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+      ctx.strokeStyle = 'rgba(74,222,128,.5)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.ellipse(cx, cy, R * 1.8, R * 1.35, .4, 0, 7); ctx.stroke();
+      const a = t * 1.1, x = cx + Math.cos(a) * R * 1.8 * Math.cos(.4) - Math.sin(a) * R * 1.35 * Math.sin(.4), y = cy + Math.cos(a) * R * 1.8 * Math.sin(.4) + Math.sin(a) * R * 1.35 * Math.cos(.4);
+      ctx.fillStyle = '#4ADE80'; ctx.beginPath(); ctx.arc(x, y, 4, 0, 7); ctx.fill();
+    },
+    bh(ctx, w, h, t){
+      ctx.fillStyle = '#050508'; ctx.fillRect(0, 0, w, h);
+      const cx = w / 2, cy = h / 2, R = Math.min(w, h) * .22;
+      ctx.save(); ctx.translate(cx, cy); ctx.scale(1, .3);
+      for (let i = 0; i < 40; i++){ const a = i / 40 * 6.283 + t * .8, rr = R * (1.4 + .6 * ((i * 7919) % 100) / 100);
+        ctx.strokeStyle = `hsla(${28 + (i % 10)},95%,${55 + (i % 18)}%,.55)`; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(0, 0, rr, a, a + .5); ctx.stroke(); }
+      ctx.restore();
+      ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,138,61,.9)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke();
+    },
+    minute(ctx, w, h, t){
+      const r = Math.min(w, h) * .36, cx = w / 2, cy = h / 2, a = (t % 6) / 6 * Math.PI * 2;
+      ctx.strokeStyle = dark() ? '#3a3a40' : '#D9D4C8'; ctx.lineWidth = 8; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.stroke();
+      ctx.strokeStyle = dark() ? '#EDEDEF' : '#1E1A14'; ctx.beginPath(); ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + a); ctx.stroke();
+      ctx.fillStyle = dark() ? '#EDEDEF' : '#1E1A14'; ctx.font = '700 30px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', cx, cy + 2); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    },
+    digits(ctx, w, h, t){
+      const seq = '4718293', i = Math.floor(t / .8) % (seq.length + 2);
+      ctx.fillStyle = '#0E8A8F'; ctx.font = '800 64px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (i < seq.length && (t % .8) < .6) ctx.fillText(seq[i], w / 2, h / 2);
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    },
+    pulse(ctx, w, h, t){
+      [['İnsan', 70, .2], ['Fare', 300, .5], ['Fil', 30, .8]].forEach(([n, bpm, fx]) => { const ph = (t * bpm / 60) % 1, s = ph < .15 ? 1 + .25 * Math.sin(ph / .15 * Math.PI) : 1, x = w * fx, y = h * .45, r = 16 * s;
+        ctx.fillStyle = '#D6283B'; ctx.beginPath(); ctx.moveTo(x, y + r * .9); ctx.bezierCurveTo(x - r * 1.6, y - r * .2, x - r * .6, y - r * 1.4, x, y - r * .5); ctx.bezierCurveTo(x + r * .6, y - r * 1.4, x + r * 1.6, y - r * .2, x, y + r * .9); ctx.fill();
+        ctx.fillStyle = dark() ? '#EDEDEF' : '#17171A'; ctx.font = '600 13px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(n, x, h * .8); ctx.textAlign = 'left'; });
+    },
+    dig(ctx, w, h, t){
+      const cols = ['#6FAE4E', '#7A5A45', '#9C3D1E', '#B8401A', '#E0781C', '#F4C23C'], off = (t * 30) % (h * 6);
+      for (let i = 0; i < 12; i++){ ctx.fillStyle = cols[i % 6]; ctx.fillRect(0, i * h - off, w, h); }
+      ctx.fillStyle = '#fff'; ctx.font = '900 30px "Instrument Sans", system-ui, sans-serif'; ctx.fillText(Math.round(((t * 30) % (h * 6)) / (h * 6) * 6371).toLocaleString('tr-TR') + ' km', 18, h / 2 + 10);
+    },
+    bday(ctx, w, h, t){
+      const n = Math.floor(t * 4) % 30, c = Math.min((w - 30) / 31, (h - 20) / 12) - 2, ox = (w - 31 * (c + 2)) / 2, oy = (h - 12 * (c + 2)) / 2;
+      let seed = 11; const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647; const pts = []; for (let i = 0; i < n; i++) pts.push(Math.floor(r() * 365));
+      for (let i = 0; i < 12 * 31; i++){ const k = Math.floor(i / 31) * 30.4 + (i % 31); const hit = pts.filter(p => Math.abs(p - k) < .5).length; ctx.fillStyle = hit > 1 ? '#E0561F' : hit ? '#F2B544' : (dark() ? '#2C2C31' : '#E6E2D8'); ctx.fillRect(ox + (i % 31) * (c + 2), oy + Math.floor(i / 31) * (c + 2), c, c); }
+    },
+    stroop(ctx, w, h, t){
+      const W = [['MAVİ', '#EF3B3B'], ['SARI', '#22C55E'], ['KIRMIZI', '#3B82F6'], ['YEŞİL', '#FACC15']], k = Math.floor(t / 1.1) % 4;
+      ctx.fillStyle = '#151515'; ctx.fillRect(12, 12, w - 24, h - 24);
+      ctx.fillStyle = W[k][1]; ctx.font = '900 40px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(W[k][0], w / 2, h / 2); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    },
+    pi(ctx, w, h, t){
+      const S = h - 24, ox = (w - S) / 2, oy = 12, n = Math.floor((t % 6) * 120);
+      ctx.strokeStyle = dark() ? '#EDEDEF' : '#17171A'; ctx.lineWidth = 1.5; ctx.strokeRect(ox, oy, S, S); ctx.beginPath(); ctx.arc(ox, oy + S, S, -Math.PI / 2, 0); ctx.stroke();
+      let seed = 5, inn = 0; const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+      for (let i = 0; i < n; i++){ const x = r(), y = r(), a = x * x + y * y <= 1; if (a) inn++; ctx.fillStyle = a ? '#2563EB' : '#F97316'; ctx.fillRect(ox + x * S - 1, oy + (1 - y) * S - 1, 2.5, 2.5); }
+      ctx.fillStyle = dark() ? '#EDEDEF' : '#17171A'; ctx.font = '700 15px "Instrument Sans", system-ui, sans-serif'; if (n) ctx.fillText('π ≈ ' + (4 * inn / n).toFixed(3).replace('.', ','), ox + S + 8 > w - 70 ? 12 : ox + S + 8, 30);
+    },
+    wbc(ctx, w, h, t){
+      const px = w / 2 + Math.cos(t * .9) * w * .28, py = h / 2 + Math.sin(t * 1.3) * h * .25;
+      for (let i = 0; i < 6; i++){ const bx = w / 2 + Math.cos(t * .9 - .5 - i * .35) * w * .33 + Math.sin(i * 7) * 14, by = h / 2 + Math.sin(t * 1.3 - .5 - i * .35) * h * .3 + Math.cos(i * 5) * 10;
+        ctx.save(); ctx.translate(bx, by); ctx.rotate(i + t); ctx.fillStyle = '#5E9E2E'; ctx.fillRect(-8, -3.5, 16, 7); ctx.restore(); }
+      ctx.fillStyle = 'rgba(233,213,228,.95)'; ctx.strokeStyle = '#9A6FB8'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(px, py, 22, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#5B3A86'; [[-7, -3], [0, -8], [7, -2], [2, 7]].forEach(([a, b]) => { ctx.beginPath(); ctx.arc(px + a, py + b, 5, 0, 7); ctx.fill(); });
+    },
+    illusion(ctx, w, h, t){
+      const S = Math.min(w, h) * .9; ctx.save(); ctx.translate(w / 2, h / 2); ctx.rotate(t * 1.2);
+      ctx.strokeStyle = dark() ? '#EDEDEF' : '#17171A'; ctx.lineWidth = S * .035;
+      for (let arm = 0; arm < 4; arm++){ ctx.beginPath(); for (let r = 2; r < S * .46; r += 2){ const a = arm * Math.PI / 2 + r * .09; const x = Math.cos(a) * r, y = Math.sin(a) * r; r === 2 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); } ctx.stroke(); }
+      ctx.restore(); ctx.fillStyle = '#D0202E'; ctx.beginPath(); ctx.arc(w / 2, h / 2, 4, 0, 7); ctx.fill();
+    },
+    microbe(ctx, w, h, t){
+      const n = Math.pow(2, Math.floor((t % 6) / .6)), cx = w / 2, cy = h / 2, R = Math.min(w, h) * .42;
+      ctx.fillStyle = 'rgba(210,186,130,.35)'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+      ctx.fillStyle = '#6BA32B';
+      for (let i = 0; i < Math.min(n, 512); i++){ const a = i * 2.39996, r = Math.sqrt(i / 512) * R * .92; ctx.save(); ctx.translate(cx + Math.cos(a) * r, cy + Math.sin(a) * r); ctx.rotate(i); ctx.fillRect(-3.5, -1.5, 7, 3); ctx.restore(); }
+    },
+    aid(ctx, w, h, t){
+      const k = Math.floor(t / 1.2) % 4, labels = ['Başını geriye at', 'Öne eğ, burnunu sık', 'Pamuk tıka'];
+      labels.forEach((l, i) => { const y = 22 + i * 40; const right = i === 1 && k >= 2, pick = k >= 1 && i === 1;
+        ctx.fillStyle = right ? 'rgba(31,138,76,.18)' : dark() ? '#1f1f24' : '#fff'; ctx.strokeStyle = right ? '#1F8A4C' : pick ? '#D0202E' : dark() ? '#3a3a40' : '#D9D9D4'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.roundRect ? ctx.roundRect(24, y, w - 48, 30, 8) : ctx.rect(24, y, w - 48, 30); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = dark() ? '#EDEDEF' : '#17171A'; ctx.font = '600 14px "Instrument Sans", system-ui, sans-serif'; ctx.fillText(l, 36, y + 20); });
+    },
+    elements(ctx, w, h, t){
+      const cols = [['#2B6CB0', 65], ['#3A3F47', 18], ['#9AA9BD', 10], ['#6B46C1', 3], ['#C9A227', 2], ['#D86A2B', 1], ['#5AA06B', 1]];
+      const seq = []; cols.forEach(([c, n]) => { for (let i = 0; i < n; i++) seq.push(c); });
+      const c = Math.min((w - 40) / 20, (h - 20) / 5) - 3, ox = (w - 20 * (c + 3)) / 2, oy = (h - 5 * (c + 3)) / 2, shown = Math.min(100, Math.floor((t % 5) * 40));
+      seq.forEach((col, i) => { ctx.fillStyle = i < shown ? col : (dark() ? '#2C2C31' : '#DCDCD6'); ctx.fillRect(ox + (i % 20) * (c + 3), oy + Math.floor(i / 20) * (c + 3), c, c); });
+    },
+    bloodtype(ctx, w, h, t){
+      const T = ['0−', '0+', 'A−', 'A+', 'B−', 'B+', 'AB−', 'AB+'], ok = ['0−', '0+', 'A−', 'A+'], bw = (w - 60) / 8;
+      const lit = Math.floor(t * 2) % 10;
+      ctx.fillStyle = '#B3122E'; ctx.beginPath(); ctx.arc(w / 2, 40, 24, 0, 7); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = '900 18px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('A+', w / 2, 46);
+      T.forEach((ty, i) => { const x = 30 + i * bw, good = ok.includes(ty) && i < lit;
+        ctx.fillStyle = good ? 'rgba(31,138,76,.25)' : dark() ? '#1f1f24' : '#fff'; ctx.strokeStyle = good ? '#1F8A4C' : dark() ? '#3a3a40' : '#D9D9D4'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x + 2, 82, bw - 4, 46, 8) : ctx.rect(x + 2, 82, bw - 4, 46); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = dark() ? '#EDEDEF' : '#17171A'; ctx.font = '800 13px "Instrument Sans", system-ui, sans-serif'; ctx.fillText(ty, x + bw / 2, 110); });
+      ctx.textAlign = 'left';
+    },
+    hearing(ctx, w, h, t){
+      ctx.strokeStyle = '#5A3FD8'; ctx.lineWidth = 2.5; ctx.beginPath();
+      for (let x = 0; x <= w; x++){ const f = .02 + (x / w) * .45, y = h / 2 + Math.sin(x * f * (1 + .15 * Math.sin(t)) + t * 4) * h * .28 * (1 - x / w * .6); x ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke();
+    },
+    light(ctx, w, h, t){
+      const y = h / 2, p = (t % 3.3) / 1.28;
+      ctx.fillStyle = '#4E9BE0'; ctx.beginPath(); ctx.arc(34, y, 16, 0, 7); ctx.fill();
+      ctx.fillStyle = '#BDBDBD'; ctx.beginPath(); ctx.arc(w - 30, y, 8, 0, 7); ctx.fill();
+      ctx.fillStyle = dark() ? '#1E1E23' : '#E4E1D6'; ctx.fillRect(52, y - 3, w - 92, 6);
+      const x = 52 + Math.min(1, p) * (w - 92);
+      const g = ctx.createRadialGradient(x, y, 0, x, y, 16); g.addColorStop(0, 'rgba(242,181,28,1)'); g.addColorStop(1, 'rgba(242,181,28,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 16, 0, 7); ctx.fill();
+      ctx.fillStyle = dark() ? '#EDEDEF' : '#17171A'; ctx.font = '700 14px "Instrument Sans", system-ui, sans-serif';
+      ctx.fillText((Math.min(1, p) * 1.28).toFixed(2).replace('.', ',') + ' sn', 52, y + 30);
+    },
+    weeks(ctx, w, h, t){
+      const cols = 26, rows = 9, c = Math.min((w - 40) / cols, (h - 20) / rows) - 2, ox = (w - cols * (c + 2)) / 2, oy = (h - rows * (c + 2)) / 2;
+      const fill = Math.floor(((t * 14) % (cols * rows + 30)));
+      for (let i = 0; i < cols * rows; i++){
+        const x = ox + (i % cols) * (c + 2), y = oy + Math.floor(i / cols) * (c + 2);
+        ctx.fillStyle = i === fill ? '#E4572E' : i < fill ? (dark() ? '#E8EAEE' : '#16181D') : (dark() ? '#2A2F37' : '#D5D9E0');
+        if (i === 40 || i === 97) ctx.fillStyle = i < fill ? '#2E86AB' : ctx.fillStyle;
+        ctx.fillRect(x, y, c, c);
+      }
+    },
+    ages(ctx, w, h, t){
+      const rows = [['4 gün', .02, '#E3872D'], ['4 ay', .06, '#D8414B'], ['10 yıl', .36, '#8A9A93'], ['28 yıl', 1, '#3E6FD8']];
+      const p = Math.min(1, (t % 5) / 2.2), x1 = w - 18, span = w - 36;
+      rows.forEach(([lab, f, c], i) => {
+        const y = 22 + i * 30, bw = Math.max(4, span * f * p);
+        ctx.fillStyle = dark() ? '#2C2C31' : '#DCDCD6'; ctx.fillRect(18, y + 7, span, 3);
+        ctx.fillStyle = c; ctx.fillRect(x1 - bw, y, bw, 16);
+        ctx.fillStyle = dark() ? '#EDEDEF' : '#17171A'; ctx.font = '700 12px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'right';
+        ctx.fillText(lab, x1 - bw - 6, y + 12); ctx.textAlign = 'left';
+      });
+    },
+    space(ctx, w, h, t){
+      ctx.fillStyle = '#0B0D18'; ctx.fillRect(0, 0, w, h);
+      for (let i = 0; i < 40; i++){ ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.fillRect((i * 73) % w, (i * 37) % (h * .7), 1.5, 1.5); }
+      ctx.fillStyle = '#BEBEBE'; ctx.fillRect(0, h * .8, w, h);
+      const T = 3.67, ph = t % (T + .6), y = ph < T ? 2.97 * ph - 1.62 * ph * ph / 2 : 0, ppm = 28, gx = w * .5, gy = h * .8 - y * ppm;
+      ctx.strokeStyle = '#fff'; ctx.fillStyle = '#fff'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.arc(gx, gy - 44, 6, 0, 7); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(gx, gy - 37); ctx.lineTo(gx, gy - 18); ctx.moveTo(gx, gy - 18); ctx.lineTo(gx - 8, gy); ctx.moveTo(gx, gy - 18); ctx.lineTo(gx + 8, gy); ctx.moveTo(gx, gy - 32); ctx.lineTo(gx - 11, gy - 42); ctx.moveTo(gx, gy - 32); ctx.lineTo(gx + 11, gy - 42); ctx.stroke();
+      ctx.fillStyle = '#4E9BE0'; ctx.beginPath(); ctx.arc(w * .84, h * .2, 13, 0, 7); ctx.fill();
+    },
+    dose(ctx, w, h, t){
+      const x0 = 22, x1 = w - 22, y = h * .52, zones = [['#2A8350', .4], ['#D89A0A', .25], ['#C6372A', .35]];
+      let x = x0; zones.forEach(([c, f]) => { ctx.fillStyle = c; ctx.fillRect(x, y - 8, (x1 - x0) * f, 16); x += (x1 - x0) * f; });
+      const p = (Math.sin(t * .9) + 1) / 2, nx = x0 + p * (x1 - x0);
+      ctx.fillStyle = dark() ? '#EDEDEF' : '#17171A'; ctx.fillRect(nx - 2, y - 26, 4, 22);
+      ctx.font = '700 15px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(p < .4 ? 'ilaç' : p < .65 ? 'dikkat' : 'zehir', nx, y + 34); ctx.textAlign = 'left';
+    },
+    sun(ctx, w, h, t){
+      const sky = h * .55;
+      const g = ctx.createRadialGradient(w * .12, 0, 0, w * .12, 0, h * .6); g.addColorStop(0, 'rgba(255,214,110,1)'); g.addColorStop(1, 'rgba(255,214,110,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, sky);
+      ctx.fillStyle = '#EDC3A6'; ctx.fillRect(0, sky, w, h * .2); ctx.fillStyle = '#F2C6BE'; ctx.fillRect(0, sky + h * .2, w, h);
+      for (let i = 0; i < 9; i++){
+        const ph = ((t * .7 + i * .37) % 1), x = ((i * 97) % w) + 20, uvb = i % 3 === 0, depth = uvb ? sky + h * .12 : sky + h * .34, y = -10 + ph * (depth + 10);
+        ctx.strokeStyle = uvb ? '#7B3FE4' : '#2F72F0'; ctx.lineWidth = 2; ctx.beginPath();
+        for (let s = 0; s <= 18; s += 2){ const yy = y - s, xx = x + Math.sin(yy * (uvb ? .9 : .45)) * 3; s ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }
+        ctx.stroke();
+      }
+    },
+    reflex(ctx, w, h, t){
+      const c = t % 3.2, go = c > 1.6 && c < 2.6, done = c >= 2.6;
+      ctx.fillStyle = go ? '#1FA35B' : done ? '#23302A' : '#D2402F';
+      const m = 14; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(m, m, w - 2 * m, h - 2 * m, 12) : ctx.rect(m, m, w - 2 * m, h - 2 * m); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = '900 44px "Big Shoulders Display", system-ui, sans-serif';
+      ctx.fillText(go ? 'Dokun!' : done ? '247 ms' : 'Bekle…', w / 2, h / 2);
+      ctx.textAlign = 'left';
+    },
+    blood(ctx, w, h, t){
+      const z = 1 + ((t * .12) % 1) * 1.8, cx = w / 2, cy = h / 2;
+      for (let i = -8; i <= 8; i++) for (let j = -5; j <= 5; j++){
+        const x = cx + (i * 26 + ((j & 1) ? 12 : 0) + Math.sin(i * 3.1 + j) * 5) * z, y = cy + (j * 24 + Math.cos(i + j * 2.3) * 5) * z, r = 10 * z;
+        if (x < -r || x > w + r || y < -r || y > h + r) continue;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, '#F5CFCB'); g.addColorStop(.6, '#E0918B'); g.addColorStop(1, 'rgba(200,110,105,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+      }
+    },
+    coffee(ctx, w, h, t){
+      const prog = Math.min(1, (t % 6) / 4.5), k = Math.LN2 / 5, ka = 4.6;
+      const lvl = x => [[2.5, 95], [5, 30], [5.5, 30], [10.5, 60]].reduce((s, [t0, d]) => x > t0 ? s + d * ka / (ka - k) * (Math.exp(-k * (x - t0)) - Math.exp(-ka * (x - t0))) : s, 0);
+      const X = x => 12 + x / 24 * (w - 24), Y = v => h - 16 - v / 130 * (h - 34);
+      ctx.strokeStyle = dark() ? '#D59A6A' : '#7B4B2A'; ctx.lineWidth = 2.5; ctx.beginPath();
+      for (let x = 0; x <= 24 * prog; x += .1){ const px = X(x), py = Y(lvl(x)); x ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+      ctx.stroke();
+      ctx.strokeStyle = dark() ? '#8FB0E6' : '#2F4C7A'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(X(17.5), 14); ctx.lineTo(X(17.5), h - 14); ctx.stroke();
+    },
+    plate(ctx, w, h, t){
+      const S = h - 16, ox = (w - S) / 2, oy = 8, show = (t % 5) < 3.2;
+      for (const [x, y, r, fig, l] of plateDots){
+        const c = fig && show ? [200 * l, 122 * l, 104 * l] : [150 * l, 160 * l, 92 * l];
+        ctx.fillStyle = `rgb(${c.map(v => Math.min(255, Math.round(v))).join(',')})`; ctx.beginPath(); ctx.arc(ox + x * S, oy + y * S, r * S, 0, 7); ctx.fill();
+      }
+    },
+    heart(ctx, w, h, t){
+      const beats = 1267840618 + Math.floor(t * 1.2);
+      const ph = (t * 1.2) % 1, s = 1 + .35 * Math.max(0, 1 - ph / .3);
+      ctx.fillStyle = '#C8102E'; ctx.beginPath(); ctx.arc(34, h / 2, 11 * s, 0, 7); ctx.fill();
+      ctx.fillStyle = dark() ? '#EDEDEF' : '#17171A';
+      const txt = nf.format(beats);
+      let fs = 48; do { ctx.font = `900 ${fs}px "Big Shoulders Display", system-ui, sans-serif`; fs -= 2; } while (fs > 14 && ctx.measureText(txt).width > w - 76);
+      ctx.textBaseline = 'middle'; ctx.fillText(txt, 60, h / 2 + 2);
+    },
+    triage(ctx, w, h, t){
+      const cols = ['#C6372A', '#C6372A', '#D89A0A', '#D89A0A', '#2A8350', '#2A8350'];
+      const step = Math.floor(t / .7) % 9, n = Math.min(6, step);
+      const gap = w / 7;
+      for (let i = 0; i < 6; i++){
+        const x = gap * (i + 1), y = h / 2;
+        ctx.lineWidth = 2;
+        if (i < n){ ctx.fillStyle = cols[i]; ctx.beginPath(); ctx.arc(x, y, 17, 0, 7); ctx.fill();
+          ctx.fillStyle = '#fff'; ctx.font = '800 17px "Instrument Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(i + 1, x, y + 1); ctx.textAlign = 'left'; }
+        else { ctx.strokeStyle = dark() ? '#3a3a40' : '#C9C9C3'; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(x, y, 16, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
+      }
+    },
+    duel(ctx, w, h, t){
+      const pairs = [['9,1 milyon', '6'], ['597.000', '7.555'], ['1,19 milyon', '300.000']];
+      const k = Math.floor(t / 2.4) % pairs.length, local = (t % 2.4) / 2.4;
+      const [a, b] = pairs[k];
+      const ink = dark() ? '#EDEDEF' : '#17171A';
+      let fs = 34; do { ctx.font = `700 ${fs}px "Instrument Sans", system-ui, sans-serif`; fs -= 2; } while (fs > 12 && Math.max(ctx.measureText(a).width, ctx.measureText(b).width) > w * .34);
+      const big = ctx.font; ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+      ctx.fillStyle = ink; ctx.fillText(a, w * .27, h / 2);
+      ctx.fillStyle = dark() ? '#A0A0A8' : '#66666E'; ctx.font = '600 15px "Instrument Sans", system-ui, sans-serif'; ctx.fillText('vs', w / 2, h / 2);
+      ctx.font = big;
+      if (local > .45){ ctx.fillStyle = '#0E7C66'; ctx.fillText(b, w * .73, h / 2); }
+      else { ctx.fillStyle = dark() ? '#3a3a40' : '#D9D9D4'; ctx.fillText('?', w * .73, h / 2); }
+      ctx.textAlign = 'left';
+    },
+    arrest(ctx, w, h, t){
+      const D = dark();
+      ctx.strokeStyle = D ? 'rgba(255,255,255,.07)' : '#F2CFC9'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let x = 0; x < w; x += 10){ ctx.moveTo(x + .5, 0); ctx.lineTo(x + .5, h); } for (let y = 0; y < h; y += 10){ ctx.moveTo(0, y + .5); ctx.lineTo(w, y + .5); } ctx.stroke();
+      const cyc = (t % 8) / 8;
+      ctx.strokeStyle = D ? '#EDEDEF' : '#2A2530'; ctx.lineWidth = 1.4; ctx.beginPath();
+      for (let x = 0; x <= w; x++){
+        const e = Math.max(0, 1 - Math.max(0, (x / w) - .15) * 1.1) * (1 - cyc * .8);
+        const ph = (x + t * 60) * .55;
+        const y = h / 2 - e * 26 * (.62 * Math.sin(ph) + .38 * Math.sin(1.63 * ph + .7));
+        x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.stroke();
+      ctx.fillStyle = D ? '#EDEDEF' : '#2A2530'; ctx.font = '800 22px "Big Shoulders Display", system-ui, sans-serif'; ctx.textBaseline = 'top';
+      const s = Math.floor(cyc * 600); ctx.fillText(String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'), 12, 10);
+    },
+    ecg(ctx, w, h, t){
+      const D = dark();
+      ctx.strokeStyle = D ? 'rgba(255,255,255,.07)' : '#F3D6BE'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let x = 0; x < w; x += 8){ ctx.moveTo(x + .5, 0); ctx.lineTo(x + .5, h); } for (let y = 0; y < h; y += 8){ ctx.moveTo(0, y + .5); ctx.lineTo(w, y + .5); } ctx.stroke();
+      const sweep = (t * 90) % (w + 40);
+      ctx.strokeStyle = D ? '#EDEDEF' : '#18181C'; ctx.lineWidth = 1.5; ctx.beginPath();
+      for (let x = 0; x <= Math.min(w, sweep); x++){
+        const tau = ((x / w) * 2.4) % .8;
+        const y = h * .6 - ecgBeat(tau, .3) * 55;
+        x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.stroke();
+      const left = 1 - ((t % 10) / 10);
+      ctx.fillStyle = '#E0A100'; ctx.fillRect(0, h - 6, w * left, 6);
+    }
+  };
+
+  const items = [...document.querySelectorAll('canvas[data-p]')].map(cv => ({ cv, fn: draw[cv.dataset.p], vis: true, w: 0, h: 0, ctx: null }));
+  function size(it){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2), r = it.cv.getBoundingClientRect();
+    it.w = r.width || 300; it.h = r.height || 150;
+    it.cv.width = Math.round(it.w * dpr); it.cv.height = Math.round(it.h * dpr);
+    it.ctx = it.cv.getContext('2d'); if (it.ctx) it.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  items.forEach(size);
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver(es => es.forEach(e => { const it = items.find(i => i.cv === e.target); if (it) it.vis = e.isIntersecting; }));
+    items.forEach(it => io.observe(it.cv));
+  }
+  const t0 = performance.now();
+  function frame(now){
+    const t = reduce ? 3.1 : (now - t0) / 1000;
+    items.forEach(it => { if (!it.vis || !it.ctx) return; it.ctx.clearRect(0, 0, it.w, it.h); it.fn(it.ctx, it.w, it.h, t); });
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  let rs; window.addEventListener('resize', () => { clearTimeout(rs); rs = setTimeout(() => { items.forEach(size); if (reduce) frame(performance.now()); }, 120); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (reduce) frame(performance.now()); });
+})();
+</script>
+<script>
+(() => {
+  const cv = document.getElementById('logo');
+  if (!cv || !cv.getContext) return;
+  const ctx = cv.getContext('2d'), h1 = cv.parentElement;
+  const HUES = [356, 198, 28, 80, 342, 165, 12, 42, 262];
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let dots = [], W = 0, H = 0, F = 200, px = -1e5, py = -1e5, running = false, lastW = -1;
+
+  function build(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.max(200, Math.min(h1.clientWidth || 600, 760));
+    const m = document.createElement('canvas').getContext('2d');
+    m.font = '900 100px "Big Shoulders Display", system-ui, sans-serif';
+    const mt = m.measureText('Aha');
+    const tw = (mt.actualBoundingBoxRight || mt.width) + (mt.actualBoundingBoxLeft || 0) || 150;
+    const asc = mt.actualBoundingBoxAscent || 75;
+    F = Math.min(340, (W - 8) / tw * 100);
+    const pad = F * .06;
+    H = Math.round(asc / 100 * F + pad * 2);
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const mk = document.createElement('canvas'); mk.width = W; mk.height = H;
+    const mc = mk.getContext('2d');
+    mc.font = `900 ${F}px "Big Shoulders Display", system-ui, sans-serif`;
+    mc.fillText('Aha', 4 + (mt.actualBoundingBoxLeft || 0) / 100 * F, pad + asc / 100 * F);
+    const data = mc.getImageData(0, 0, W, H).data;
+    const inside = (x, y) => { x |= 0; y |= 0; return x >= 0 && y >= 0 && x < W && y < H && data[(y * W + x) * 4 + 3] > 140; };
+    const rMin = Math.max(1.4, F * .010), rMax = Math.max(3, F * .026), cell = rMax * 2, grid = new Map();
+    const out = [];
+    for (let t = 0; t < 16000 && out.length < 1600; t++){
+      const r = rMin + (rMax - rMin) * Math.random() ** 1.5;
+      const x = Math.random() * W, y = Math.random() * H;
+      if (!inside(x, y) || !inside(x + r * .6, y) || !inside(x - r * .6, y) || !inside(x, y + r * .6) || !inside(x, y - r * .6)) continue;
+      const gx = Math.floor(x / cell), gy = Math.floor(y / cell);
+      let ok = true;
+      for (let i = gx - 1; i <= gx + 1 && ok; i++) for (let j = gy - 1; j <= gy + 1 && ok; j++){
+        const l = grid.get(i + ',' + j); if (!l) continue;
+        for (const o of l){ if ((o.tx - x) ** 2 + (o.ty - y) ** 2 < (o.r + r + 1) ** 2){ ok = false; break; } }
+      }
+      if (!ok) continue;
+      const h = HUES[Math.floor(Math.random() * HUES.length)];
+      const d = { tx: x, ty: y, r, col: `hsl(${h} ${62 + Math.random() * 18}% ${44 + Math.random() * 16}%)`,
+        x: reduce ? x : Math.random() * W, y: reduce ? y : Math.random() * H * 1.6 - H * .3, vx: 0, vy: 0 };
+      out.push(d); const k = gx + ',' + gy; (grid.get(k) || grid.set(k, []).get(k)).push(d);
+    }
+    dots = out;
+    document.documentElement.classList.add('logo-on');
+    kick();
+  }
+  function frame(){
+    ctx.clearRect(0, 0, W, H);
+    let moving = false;
+    const R = F * .3, R2 = R * R, push = F * .055;
+    for (const d of dots){
+      if (!reduce){
+        let ax = (d.tx - d.x) * .055, ay = (d.ty - d.y) * .055;
+        const dx = d.x - px, dy = d.y - py, q = dx * dx + dy * dy;
+        if (q < R2){ const dist = Math.sqrt(q) || 1, f = (1 - dist / R) * push; ax += dx / dist * f; ay += dy / dist * f; }
+        d.vx = (d.vx + ax) * .8; d.vy = (d.vy + ay) * .8; d.x += d.vx; d.y += d.vy;
+        if (Math.abs(d.vx) + Math.abs(d.vy) > .04 || Math.abs(d.tx - d.x) + Math.abs(d.ty - d.y) > .25) moving = true;
+      }
+      ctx.fillStyle = d.col; ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 7); ctx.fill();
+    }
+    if (moving || px > -1e4) requestAnimationFrame(frame); else running = false;
+  }
+  function kick(){ if (!running){ running = true; requestAnimationFrame(frame); } }
+  const pos = e => { const b = cv.getBoundingClientRect(); px = e.clientX - b.left; py = e.clientY - b.top; kick(); };
+  if (!reduce){
+    cv.addEventListener('pointermove', pos);
+    cv.addEventListener('pointerdown', pos);
+    cv.addEventListener('pointerleave', () => { px = py = -1e5; kick(); });
+    cv.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse'){ px = py = -1e5; kick(); } });
+    cv.addEventListener('pointercancel', () => { px = py = -1e5; kick(); });
+  }
+  let rs;
+  window.addEventListener('resize', () => { clearTimeout(rs); rs = setTimeout(() => { const w = Math.min(h1.clientWidth, 760); if (w !== lastW){ lastW = w; build(); } }, 150); });
+  const go = () => { lastW = Math.min(h1.clientWidth, 760); build(); };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(go); else go();
+})();
+</script>
+</body>
+</html>

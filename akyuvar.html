@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Akyuvar</title>
+<meta name="description" content="Sen bir akyuvarsın. Bakteriler bölünmeden onları yakala.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500..800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7EEF2;--ink:#241521;--muted:#6E5A68;--card:#FFFFFF;--line:#E6D3DD;--acc:#7A3FB0;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#140C12;--ink:#F3E8EF;--muted:#B09CAA;--card:#1D1219;--line:#3A2733;--acc:#C495F0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#140C12;--ink:#F3E8EF;--muted:#B09CAA;--card:#1D1219;--line:#3A2733;--acc:#C495F0;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Baloo 2",ui-rounded,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.45}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px}
+header{padding:6vh 0 2vh}
+h1{margin:0;font-weight:800;font-size:clamp(60px,13vw,140px);line-height:.85;letter-spacing:-.02em;color:var(--acc)}
+.lede{margin:.4em 0 0;font-size:clamp(19px,2.4vw,24px);max-width:28em}
+.hud{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:12px 0 8px;font-weight:700;font-size:19px;font-variant-numeric:tabular-nums}
+.hud span b{font-size:26px;margin-left:4px}
+.arena{position:relative;border-radius:18px;overflow:hidden;border:2px solid var(--line);background:#F6DDE3}
+#cv{display:block;width:100%;height:clamp(360px,62vh,560px);touch-action:none;cursor:crosshair}
+.over{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;background:rgba(255,245,248,.9)}
+.over[hidden]{display:none}
+.over h2{margin:0 0 .2em;font-size:clamp(34px,6vw,56px);line-height:1;color:#3B1F47}
+.over p{margin:0 0 .8em;color:#4D3A48;max-width:28em}
+.btn{font:inherit;font-weight:800;font-size:20px;padding:12px 26px;min-height:54px;border-radius:999px;border:0;background:var(--acc);color:#fff;cursor:pointer}
+.btn:focus-visible{outline:3px solid #3B1F47;outline-offset:3px}
+.facts{max-width:44em;margin:2em 0 0}
+.facts h2{font-size:clamp(26px,3.4vw,36px);margin:0 0 .3em;line-height:1.1}
+.facts p{margin:0 0 .8em}
+.fine{margin:2em 0 4em;max-width:46em;font-size:14.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Akyuvar</h1>
+    <p class="lede">Sen bir nötrofilsin: vücudun bakteri avcısı. Kan damarından çıktın ve enfeksiyon bölgesindesin. Bakteriler bölünmeden onları yakala.</p>
+  </header>
+  <main>
+    <div class="hud" aria-live="polite"><span>Yutulan<b id="eaten">0</b></span><span>Bakteri<b id="alive">0</b> / 60</span><span>Süre<b id="time">60</b></span></div>
+    <div class="arena">
+      <canvas id="cv" role="img" aria-label="Oyun alanı: akyuvar ve bakteriler"></canvas>
+      <div class="over" id="over"><div>
+        <h2 id="oh">Hazır mısın?</h2>
+        <p id="op">Parmağınla ya da fareyle yön göster, akyuvar peşinden gelsin. Klavyede ok tuşları da olur. Bakteriler belli aralıklarla ikiye bölünüyor; sayıları 60'a ulaşırsa enfeksiyon yayılır. 60 saniye dayan.</p>
+        <button class="btn" id="start" type="button">Başla</button>
+      </div></div>
+    </div>
+    <section class="facts">
+      <h2>Gerçek hayatta</h2>
+      <p>Nötrofiller kandaki akyuvarların yarısından fazlasını oluşturur. Bir enfeksiyon başladığında damar duvarından sıyrılarak dokuya geçer ve bakterilerin bıraktığı kimyasal izleri takip ederek onları bulur. Buna kemotaksis denir.</p>
+      <p>Bakteriye ulaşan nötrofil onu zarıyla sarıp içine alır ve içinde sindirir: fagositoz. Tek bir nötrofil birkaç bakteriyi yuttuktan sonra genellikle kendisi de ölür. İltihaplı bir yaradaki irin, büyük ölçüde bu savaşta ölmüş nötrofillerden oluşur.</p>
+      <p>Oyunda her şey hızlandırıldı. Gerçek bir nötrofil dakikada yalnızca 10–20 mikrometre ilerler; bakteriler en hızlı koşullarda yaklaşık 20 dakikada bir bölünür.</p>
+    </section>
+  </main>
+  <p class="fine">Bilgilendirme ve eğlence amaçlıdır.</p>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const cv = $('cv'), ctx = cv.getContext('2d');
+  let W = 600, H = 400, P, bugs = [], rbcs = [], target = null, keys = {}, state = 'idle', t = 0, eaten = 0, last = 0, pops = [];
+  const LIMIT = 60, DUR = 60;
+  function size(){ const d = Math.min(devicePixelRatio || 1, 2), r = cv.getBoundingClientRect(); W = r.width || 600; H = r.height || 400; cv.width = Math.round(W * d); cv.height = Math.round(H * d); ctx.setTransform(d, 0, 0, d, 0, 0); }
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  function bug(x, y){ return { x: x ?? rnd(30, W - 30), y: y ?? rnd(30, H - 30), a: rnd(0, 6.28), v: rnd(22, 40), next: rnd(4.5, 7.5), wob: rnd(0, 6) }; }
+  function reset(){
+    P = { x: W / 2, y: H / 2, vx: 0, vy: 0, r: Math.max(18, Math.min(W, H) * .045), gulp: 0 };
+    bugs = Array.from({ length: 5 }, () => { let b; do { b = bug(); } while (Math.hypot(b.x - P.x, b.y - P.y) < 120); return b; });
+    rbcs = Array.from({ length: 14 }, () => ({ x: rnd(0, W), y: rnd(0, H), r: rnd(14, 20), s: rnd(8, 16), ph: rnd(0, 6) }));
+    t = 0; eaten = 0; pops = []; target = null;
+  }
+  function hud(){ $('eaten').textContent = eaten; $('alive').textContent = bugs.length; $('time').textContent = Math.max(0, Math.ceil(DUR - t)); }
+  function end(win){
+    state = 'over';
+    $('oh').textContent = win ? 'Enfeksiyonu durdurdun!' : 'Enfeksiyon yayıldı.';
+    $('op').textContent = win ? `60 saniyede ${eaten} bakteri yuttun. Vücudun sana teşekkür ediyor.` : `${Math.floor(t)} saniyede bakteri sayısı 60'a ulaştı. ${eaten} bakteri yuttun. Gerçek hayatta tek başına kalmazdın: milyonlarca nötrofil ve bağışıklık sisteminin geri kalanı yardıma gelirdi.`;
+    $('start').textContent = 'Yeniden oyna'; $('over').hidden = false; $('start').focus({ preventScroll: true });
+  }
+  function start(){ size(); reset(); state = 'play'; $('over').hidden = true; last = performance.now(); hud(); }
+  $('start').addEventListener('click', start);
+  const setT = e => { const r = cv.getBoundingClientRect(); target = { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  cv.addEventListener('pointerdown', e => { setT(e); cv.setPointerCapture?.(e.pointerId); });
+  cv.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' || e.buttons) setT(e); });
+  window.addEventListener('keydown', e => { if (e.key.startsWith('Arrow') && state === 'play'){ keys[e.key] = true; e.preventDefault(); target = null; } });
+  window.addEventListener('keyup', e => { keys[e.key] = false; });
+
+  function drawRBC(c){ const g = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r); g.addColorStop(0, 'rgba(240,190,185,.55)'); g.addColorStop(.7, 'rgba(214,120,112,.55)'); g.addColorStop(1, 'rgba(214,120,112,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, 7); ctx.fill(); }
+  function drawBug(b, time){
+    ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.a);
+    const split = b.next < .6 ? (1 - b.next / .6) : 0, L = 20 + split * 8;
+    ctx.fillStyle = '#5E9E2E'; ctx.strokeStyle = '#3E6E1A'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-L / 2, -5, L, 10, 5) : ctx.rect(-L / 2, -5, L, 10); ctx.fill(); ctx.stroke();
+    if (split > 0){ ctx.strokeStyle = '#2C5212'; ctx.beginPath(); ctx.moveTo(0, -5); ctx.lineTo(0, 5); ctx.stroke(); }
+    ctx.strokeStyle = 'rgba(62,110,26,.7)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-L / 2, 0); for (let i = 1; i <= 6; i++) ctx.lineTo(-L / 2 - i * 2.4, Math.sin(time * 14 + b.wob + i) * 2.5); ctx.stroke();
+    ctx.restore();
+  }
+  function drawPlayer(time){
+    const r = P.r * (1 + P.gulp * .12), sp = Math.hypot(P.vx, P.vy), ang = Math.atan2(P.vy, P.vx);
+    ctx.save(); ctx.translate(P.x, P.y);
+    ctx.fillStyle = 'rgba(233,213,228,.95)'; ctx.strokeStyle = '#9A6FB8'; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i <= 40; i++){ const a = i / 40 * 6.283, stretch = 1 + Math.min(.35, sp / 900) * Math.cos(a - ang), wob = 1 + .05 * Math.sin(a * 5 + time * 5);
+      const x = Math.cos(a) * r * stretch * wob, y = Math.sin(a) * r * wob; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#5B3A86';
+    [[-.3, -.15], [-.02, -.32], [.28, -.1], [.08, .28]].forEach(([a, b]) => { ctx.beginPath(); ctx.arc(a * r, b * r, r * .22, 0, 7); ctx.fill(); });
+    ctx.restore();
+  }
+  function frame(now){
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    ctx.fillStyle = '#F6DDE3'; ctx.fillRect(0, 0, W, H);
+    rbcs.forEach(c => { c.x += c.s * dt; c.y += Math.sin(now / 900 + c.ph) * 4 * dt; if (c.x - c.r > W) c.x = -c.r; drawRBC(c); });
+    if (state === 'play' && P){
+      t += dt;
+      let ax = 0, ay = 0;
+      if (target){ ax = target.x - P.x; ay = target.y - P.y; }
+      if (keys.ArrowLeft) ax = -1; if (keys.ArrowRight) ax = 1; if (keys.ArrowUp) ay = -1; if (keys.ArrowDown) ay = 1;
+      const d = Math.hypot(ax, ay), max = Math.max(170, Math.min(W, H) * .5);
+      if (d > 2){ const k = target && !(keys.ArrowLeft || keys.ArrowRight || keys.ArrowUp || keys.ArrowDown) ? Math.min(1, d / 60) : 1; P.vx += (ax / d * max * k - P.vx) * Math.min(1, dt * 6); P.vy += (ay / d * max * k - P.vy) * Math.min(1, dt * 6); }
+      else { P.vx *= .85; P.vy *= .85; }
+      P.x = Math.max(P.r, Math.min(W - P.r, P.x + P.vx * dt)); P.y = Math.max(P.r, Math.min(H - P.r, P.y + P.vy * dt));
+      P.gulp = Math.max(0, P.gulp - dt * 3);
+      const births = [];
+      const speedUp = 1 + t / 70;
+      bugs = bugs.filter(b => {
+        b.a += rnd(-2, 2) * dt; const fx = b.x - P.x, fy = b.y - P.y, fd = Math.hypot(fx, fy);
+        if (fd < 130){ const fa = Math.atan2(fy, fx); b.a += Math.sin(fa - b.a) * dt * 2.5; }
+        b.x += Math.cos(b.a) * b.v * dt; b.y += Math.sin(b.a) * b.v * dt;
+        if (b.x < 12 || b.x > W - 12) { b.a = Math.PI - b.a; b.x = Math.max(12, Math.min(W - 12, b.x)); }
+        if (b.y < 12 || b.y > H - 12) { b.a = -b.a; b.y = Math.max(12, Math.min(H - 12, b.y)); }
+        if (fd < P.r + 8){ eaten++; P.gulp = 1; pops.push({ x: b.x, y: b.y, t: 0 }); return false; }
+        b.next -= dt * speedUp;
+        if (b.next <= 0){ b.next = rnd(4.5, 7.5); const nb = bug(b.x + Math.cos(b.a) * 10, b.y + Math.sin(b.a) * 10); nb.a = b.a + Math.PI; births.push(nb); }
+        return true;
+      });
+      bugs.push(...births);
+      if (bugs.length === 0) bugs.push(bug());
+      hud();
+      if (bugs.length >= LIMIT) end(false); else if (t >= DUR) end(true);
+    }
+    const time = now / 1000;
+    bugs.forEach(b => drawBug(b, time));
+    pops = pops.filter(p => { p.t += dt; ctx.strokeStyle = `rgba(122,63,176,${1 - p.t * 2})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(p.x, p.y, 8 + p.t * 40, 0, 7); ctx.stroke(); return p.t < .5; });
+    if (P) drawPlayer(time);
+    requestAnimationFrame(frame);
+  }
+  window.addEventListener('resize', () => { size(); if (P){ P.x = Math.min(P.x, W - P.r); P.y = Math.min(P.y, H - P.r); } });
+  size(); reset(); last = performance.now(); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

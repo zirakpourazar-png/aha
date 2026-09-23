@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sıradaki Hasta</title>
+<meta name="description" content="Acilde tek doktor sensin. Altı hasta aynı anda geldi. Kimi önce görürsün?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wall:#E4EBE9;--surface:#FFFFFF;--ink:#142022;--muted:#566668;--line:#C3CFCC;--panel:#EEF3F2;--flash:#CFE5EE;
+  --act:#1C5A74;--act-ink:#FFFFFF;
+  --red:#C6372A;--yellow:#D89A0A;--green:#2A8350;
+  --red-bg:#FAE6E2;--yellow-bg:#FAF0D6;--green-bg:#E2F1E7;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--wall:#0E1618;--surface:#162124;--ink:#E0E9E8;--muted:#93A4A5;--line:#2B3C3F;--panel:#1C2A2D;--flash:#1F4452;--act:#7BC1DA;--act-ink:#0E1618;--red:#EE6A5C;--yellow:#ECBD48;--green:#5CBD88;--red-bg:#361F1C;--yellow-bg:#332B14;--green-bg:#152F27;color-scheme:dark}
+}
+:root[data-theme="dark"]{--wall:#0E1618;--surface:#162124;--ink:#E0E9E8;--muted:#93A4A5;--line:#2B3C3F;--panel:#1C2A2D;--flash:#1F4452;--act:#7BC1DA;--act-ink:#0E1618;--red:#EE6A5C;--yellow:#ECBD48;--green:#5CBD88;--red-bg:#361F1C;--yellow-bg:#332B14;--green-bg:#152F27;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--wall);color:var(--ink);font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px}
+header{padding:10vh 0 6vh}
+h1{margin:0 0 .3em;font-size:clamp(54px,12.5vw,128px);line-height:.9;font-weight:800;font-stretch:75%;letter-spacing:-.015em}
+.lede{margin:0;font-size:clamp(21px,2.6vw,27px);line-height:1.32;max-width:26em}
+.round{margin:0 0 .25em;font-size:clamp(22px,2.4vw,26px);line-height:1.25;font-weight:750;font-stretch:85%}
+.round-sub{margin:0 0 1.2em;color:var(--muted);max-width:40em}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:640px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1000px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pt{all:unset;box-sizing:border-box;position:relative;display:grid;grid-template-columns:48px minmax(0,1fr);column-gap:14px;align-items:start;padding:16px 16px 18px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;cursor:pointer;font:inherit;text-align:left;-webkit-tap-highlight-color:transparent;transition:border-color .15s ease,box-shadow .15s ease}
+.pt:hover{border-color:var(--muted)}
+.pt:focus-visible{outline:3px solid var(--act);outline-offset:2px}
+.pt[aria-pressed="true"]{border-color:var(--act);box-shadow:inset 0 0 0 1px var(--act)}
+.slot{width:48px;height:48px;border-radius:50%;border:2px dashed var(--line);display:grid;place-items:center;font-weight:800;font-size:24px;line-height:1;font-variant-numeric:tabular-nums}
+.pt[aria-pressed="true"] .slot{border:0;background:var(--act);color:var(--act-ink)}
+.body{display:block;min-width:0}
+.body > span,.body > q{display:block}
+.who{font-weight:750;font-size:19px;line-height:1.25}
+.look{color:var(--muted);margin:.3em 0 .55em;font-size:16px}
+.says{font-size:20px;line-height:1.35;font-weight:500;font-stretch:92%;quotes:"“" "”" "‘" "’"}
+.by{font-size:14px;color:var(--muted);margin-top:.2em}
+.nurse{margin-top:14px;padding:10px 12px 12px;background:var(--panel);border-radius:4px}
+.nurse[hidden]{display:none}
+.nurse.fresh{animation:fresh 1.4s ease-out}
+@keyframes fresh{from{background-color:var(--flash)}to{background-color:var(--panel)}}
+.nurse-h{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.vit{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:6px 12px;margin-bottom:8px}
+.vit > span{display:flex;flex-direction:column}
+.vit i{font-style:normal;font-size:12.5px;line-height:1.3;color:var(--muted)}
+.vit b{font-weight:750;font-size:18px;line-height:1.2;font-variant-numeric:tabular-nums}
+.nurse-note{display:block;font-size:15.5px;line-height:1.42}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;padding:0}
+.pt.done{cursor:default}
+.pt.done:hover{border-color:var(--line)}
+.pt.done::before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:7px;border-radius:6px 0 0 6px;background:var(--c)}
+.bar{position:sticky;bottom:0;z-index:5;margin-top:16px;padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px));background:var(--wall);border-top:1px solid var(--line)}
+.bar[hidden]{display:none}
+.bar-in{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px}
+.status{flex:1 1 12em;margin:0;color:var(--muted);font-size:15.5px}
+.btn{font:inherit;font-weight:750;font-size:16px;line-height:1.2;padding:12px 18px;min-height:46px;border:0;border-radius:6px;background:var(--act);color:var(--act-ink);cursor:pointer}
+.btn[disabled]{opacity:.42;cursor:not-allowed}
+.btn2{font:inherit;font-weight:650;font-size:15px;line-height:1.2;padding:11px 14px;min-height:46px;border:1.5px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);cursor:pointer}
+.btn2[disabled]{opacity:.45;cursor:not-allowed}
+.btn:focus-visible,.btn2:focus-visible{outline:3px solid var(--act);outline-offset:2px}
+.results{padding:9vh 0 10vh}
+.results[hidden]{display:none}
+.verdict{margin:0 0 .5em;font-size:clamp(36px,6.5vw,68px);line-height:1;font-weight:800;font-stretch:75%;letter-spacing:-.01em;max-width:16em}
+.caption{margin:0 0 .3em;color:var(--muted)}
+.scores{display:flex;flex-wrap:wrap;gap:12px 36px;margin:0 0 1.4em}
+.score{margin:0}
+.score b{display:block;font-size:clamp(48px,8vw,76px);line-height:1;font-weight:800;font-stretch:75%;font-variant-numeric:tabular-nums}
+.score span{color:var(--muted);font-size:15px}
+.facts p{margin:0 0 .7em;max-width:40em}
+.rule{color:var(--muted);font-size:15.5px}
+.lesson{margin:1.5em 0 1em;font-size:clamp(30px,5vw,52px);line-height:1.05;font-weight:800;font-stretch:75%;max-width:16em}
+.rv-list{display:grid;grid-template-columns:1fr;gap:12px;margin:0 0 2em}
+@media (min-width:860px){.rv-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.rv{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:20px 18px 18px}
+.rv::before{content:"";position:absolute;left:0;top:0;width:100%;height:6px;background:var(--c);transform-origin:left center;transform:scaleX(var(--fill,1));transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.rv-tag{display:inline-flex;align-items:center;gap:8px;padding:3px 10px 3px 8px;border-radius:4px;background:var(--cbg);font-weight:700;font-size:15px}
+.rv-tag::before{content:"";width:12px;height:12px;border-radius:2px;background:var(--c)}
+.rv h3{margin:.6em 0 .1em;font-size:21px;line-height:1.2;font-weight:750}
+.rv .dx{margin:0 0 .5em;font-weight:650}
+.rv .yours{margin:0 0 .6em;font-size:15px;color:var(--muted)}
+.rv .why{margin:0}
+.fine{margin:2em 0 0;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){
+  body{font-size:16px}
+  .wrap{padding:0 12px}
+  .pt{padding:14px 14px 16px;column-gap:12px;grid-template-columns:44px minmax(0,1fr)}
+  .slot{width:44px;height:44px;font-size:22px}
+  .says{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  .pt,.rv::before{transition:none}
+  .nurse.fresh{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Sıradaki Hasta</h1>
+    <p class="lede">Gece üç. Acilde tek doktor sensin ve altı hasta aynı anda geldi. Kimi önce görürsün?</p>
+  </header>
+  <main>
+    <section id="game" aria-labelledby="roundH">
+      <h2 class="round" id="roundH"></h2>
+      <p class="round-sub" id="roundSub"></p>
+      <div class="grid" id="grid"></div>
+      <div class="bar" id="bar">
+        <div class="bar-in">
+          <p class="status" id="status" aria-live="polite"></p>
+          <button class="btn2" id="clear" type="button">Numaraları sil</button>
+          <button class="btn" id="confirm" type="button">Sıralamayı onayla</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="results" id="results" hidden aria-labelledby="verdict">
+      <h2 class="verdict" id="verdict"></h2>
+      <p class="caption">Doğru önceliğe koyduğun hasta</p>
+      <div class="scores">
+        <p class="score"><b id="s1"></b><span>birinci tur</span></p>
+        <p class="score"><b id="s2"></b><span>ikinci tur</span></p>
+      </div>
+      <div class="facts">
+        <p id="wait"></p>
+        <p id="change"></p>
+        <p class="rule">Doğru öncelik: kırmızılar ilk iki sırada, sarılar sonraki iki sırada, yeşiller son iki sırada. Aynı renktekilerin kendi arasındaki sırası puanı etkilemez.</p>
+      </div>
+      <p class="lesson">Gürültü aciliyet değildir.</p>
+      <div class="rv-list" id="rvList"></div>
+      <button class="btn" id="again" type="button">Yeniden oyna</button>
+      <p class="fine">Hastalar kurgusaldır. Renk kodları temsilidir; kurumdan kuruma değişir. Bilgilendirme amaçlıdır, tıbbi tavsiye değildir.</p>
+    </section>
+  </main>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const P = [
+    { id:'mehmet', name:'Mehmet', age:58, gen:"Mehmet'in", c:'kirmizi',
+      look:'Sandalyede sessizce oturuyor, eli midesinin üstünde. Biraz solgun.',
+      says:'Akşam ağır bir şey yedim, midem yanıyor. Bir ilaç verseniz yeter.',
+      vit:[['Nabız','48'],['TA','92/58'],['SpO₂','%95'],['Ateş','36,4']],
+      note:'Diyabet hastası, sigara içiyor. Şikâyeti üç saat önce başlamış. Alnı ve sırtı terden sırılsıklam.',
+      dx:'İnferior miyokard enfarktüsü',
+      why:'Terleme, yavaş nabız ve düşük tansiyon hazımsızlık değildir. Kalbin alt yüzünü besleyen sağ koroner arter çoğu kişide sinüs ve AV düğümünü de besler; tıkanınca nabız yavaşlar. Diyabetiklerde göğüs ağrısı silik olabilir. Böyle bir hastada EKG ilk 10 dakikada çekilir.' },
+    { id:'elif', name:'Elif', age:26, gen:"Elif'in", c:'kirmizi',
+      look:'Köşede sakin oturuyor, telefonuna bakıyor. Arkadaşı zorla getirmiş.',
+      says:'Karnım ağrıyordu, bir ara bayılır gibi oldum ama şimdi iyiyim, gerçekten.',
+      vit:[['Nabız','118'],['TA','104/66'],['SpO₂','%99'],['Ateş','36,7']],
+      note:'Son adeti için ‘galiba 7 hafta önce’ diyor. Omzunda da tarif edemediği bir ağrı var.',
+      dx:'Rüptüre ektopik gebelik olasılığı',
+      why:'Doğurganlık çağındaki kadında karın ağrısı ve bayılma hissi, aksi kanıtlanana kadar ektopik gebelik kabul edilir. Tansiyon normal görünüyor ama nabzın sistolik basınca oranı (şok indeksi) 1’in üzerinde: kan kaybediyor. Genç hasta kaybı uzun süre telafi eder, sonra hızla bozulur. Omuz ağrısı, karın içindeki kanın diyaframı tahriş etmesinden olabilir.' },
+    { id:'kemal', name:'Kemal', age:45, gen:"Kemal'in", c:'sari',
+      look:'Sedyede kıvranıyor, bir yandan kusuyor. Yerinde duramıyor.',
+      says:'Böbreğim yine başladı, ne olur bir şey yapın!',
+      vit:[['Nabız','104'],['TA','148/92'],['SpO₂','%98'],['Ateş','36,8']],
+      note:'Daha önce iki kez taş düşürmüş. Ağrı sol böğründen kasığına vuruyor.',
+      dx:'Renal kolik',
+      why:'Ağrı çok şiddetli ama hayati tehlike nadirdir. Taş hastası kıvranır, yerinde duramaz; peritonitli hasta ise kıpırdamadan yatar. Ağrı kesici gecikmemeli, ama kanayan bir karnın önüne geçmemeli. 50 yaş üstünde ilk kez böbrek taşı ağrısı tarif eden hastada aort anevrizması akla gelmeli.' },
+    { id:'zeynep', name:'Zeynep', age:4, gen:"Zeynep'in", c:'sari',
+      look:'Annesinin kucağında avazı çıktığı kadar ağlıyor. Annesi panik halinde.',
+      says:'Ateşi 39’u geçti, ne yapacağımı bilmiyorum!', by:'Annesi',
+      vit:[['Nabız','132'],['SpO₂','%99'],['Ateş','39,4'],['Kapiller dolum','<2 sn']],
+      note:'Annesine sarılıyor, etrafına bakıyor, rengi pembe. Döküntüsü yok, ense sertliği yok.',
+      dx:'Ateşli çocuk, genel durumu iyi',
+      why:'Avazı çıktığı kadar ağlayan çocuğun hava yolu açık, solunumu güçlü, beyni iyi besleniyor demektir. Pediatrik değerlendirme üçgeni (görünüm, solunum çabası, cilt dolaşımı) normal. Asıl endişe verici olan sessiz, uyuşuk, çevresiyle ilgilenmeyen ateşli çocuktur.' },
+    { id:'ahmet', name:'Ahmet', age:34, gen:"Ahmet'in", c:'yesil',
+      look:'Alkol kokuyor. Kolunda kanlı bir bez, koridorda bağırıyor.',
+      says:'Bir saattir bekliyorum! Beni hemen görün!',
+      vit:[['Nabız','96'],['TA','134/86'],['SpO₂','%98'],['Ateş','36,6']],
+      note:'Kırık şişeyle ön kolunu kesmiş. Kanama baskıyla durmuş, parmaklarını oynatıyor, hissi tam.',
+      dx:'Basit kesi (laserasyon)',
+      why:'Gürültü aciliyet değildir. Kanaması durmuş, sinir ve damar muayenesi normal bir kesi bekleyebilir. Yine de alkollü hastada başka yaralanmalar gözden kaçabilir; tam muayene atlanmamalı.' },
+    { id:'serkan', name:'Serkan', age:29, gen:"Serkan'ın", c:'yesil',
+      look:'Ayakta ve rahat. Telefonla iş yerine mesaj yazıyor.',
+      says:'Üç gündür boğazım ağrıyor. Yarın işe gidemem, rapor alabilir miyim?',
+      vit:[['Nabız','76'],['TA','122/78'],['SpO₂','%99'],['Ateş','36,9']],
+      note:'Rahat yutkunuyor, sesi normal, ağzını tam açabiliyor.',
+      dx:'Farenjit',
+      why:'Rahat yutkunan, sesi değişmemiş, ateşsiz boğaz ağrısı acil değildir. Alarm işaretleri: salya akıtma, ağzını açamama (trismus), sıcak patates sesi, stridor.' }
+  ];
+  const COLORS = {
+    kirmizi:{ label:'Kırmızı', mean:'hemen', c:'var(--red)', bg:'var(--red-bg)', range:[1,2], o:0 },
+    sari:{ label:'Sarı', mean:'kısa sürede', c:'var(--yellow)', bg:'var(--yellow-bg)', range:[3,4], o:1 },
+    yesil:{ label:'Yeşil', mean:'bekleyebilir', c:'var(--green)', bg:'var(--green-bg)', range:[5,6], o:2 }
+  };
+  const $ = id => document.getElementById(id);
+  const grid = $('grid'), status = $('status'), confirmBtn = $('confirm'), clearBtn = $('clear');
+  const roundH = $('roundH'), roundSub = $('roundSub'), game = $('game'), bar = $('bar'), results = $('results');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const behavior = () => (reduce.matches ? 'auto' : 'smooth');
+  const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[ch]));
+
+  let round = 1, ranks = {}, r1 = null, order = [];
+
+  function shuffle(a){
+    for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  }
+
+  function tileHTML(p){
+    const vit = p.vit.map(([k, v]) => `<span><i>${esc(k)}</i><b>${esc(v)}</b></span>`).join('');
+    return `<span class="slot" aria-hidden="true"></span>
+      <span class="body">
+        <span class="who">${esc(p.name)}, ${p.age}</span>
+        <span class="look">${esc(p.look)}</span>
+        <q class="says">${esc(p.says)}</q>${p.by ? `<span class="by">${esc(p.by)}</span>` : ''}
+        <span class="nurse" hidden>
+          <span class="nurse-h">Hemşire notu</span>
+          <span class="vit">${vit}</span>
+          <span class="nurse-note">${esc(p.note)}</span>
+        </span>
+        <span class="sr" data-sr></span>
+      </span>`;
+  }
+
+  function build(){
+    grid.textContent = '';
+    order.forEach(p => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'pt';
+      b.innerHTML = tileHTML(p);
+      b.addEventListener('click', () => toggle(p.id));
+      grid.appendChild(b);
+      p._el = b;
+    });
+    paint();
+  }
+
+  function nextFree(){
+    const used = new Set(Object.values(ranks));
+    for (let i = 1; i <= 6; i++) if (!used.has(i)) return i;
+    return null;
+  }
+
+  function toggle(id){
+    if (!results.hidden) return;
+    if (ranks[id]) delete ranks[id];
+    else { const n = nextFree(); if (n) ranks[id] = n; }
+    paint();
+  }
+
+  function paint(){
+    const count = Object.keys(ranks).length;
+    order.forEach(p => {
+      const r = ranks[p.id];
+      p._el.setAttribute('aria-pressed', r ? 'true' : 'false');
+      p._el.querySelector('.slot').textContent = r || '';
+      p._el.querySelector('[data-sr]').textContent = r ? `Sıra: ${r}` : 'Sıra verilmedi';
+    });
+    const left = 6 - count;
+    status.textContent = left ? `Numaralanacak ${left} hasta kaldı.` : 'Sıralama tamam, onaylayabilirsin.';
+    confirmBtn.disabled = left !== 0;
+    clearBtn.disabled = count === 0;
+  }
+
+  const score = rk => P.filter(p => { const [a, b] = COLORS[p.c].range; return rk[p.id] >= a && rk[p.id] <= b; }).length;
+  const redWait = rk => P.filter(p => p.c === 'kirmizi').reduce((s, p) => s + (rk[p.id] - 1) * 10, 0);
+
+  function showResults(){
+    const r2 = { ...ranks };
+    const s2 = score(r2);
+    const redsLate = P.filter(p => p.c === 'kirmizi' && r2[p.id] > 2).length;
+    $('verdict').textContent =
+      s2 === 6 ? 'Kırmızılar önce. Tam isabet.'
+      : redsLate === 0 ? 'Kırmızılar önce. Gerisinde küçük kaymalar var.'
+      : redsLate === 1 ? 'Bir kırmızı hasta sırada bekledi.'
+      : 'İki kırmızı hasta da sırada bekledi.';
+    $('s1').textContent = `${score(r1)}/6`;
+    $('s2').textContent = `${s2}/6`;
+    $('wait').textContent = `Her hastaya yaklaşık 10 dakika ayırdığını varsayalım. Kırmızı hastalar birinci turdaki sıralamanda toplam ${redWait(r1)} dakika, ikinci turda ${redWait(r2)} dakika bekledi. En iyi durumda bu sayı 10: iki kırmızıdan biri diğerini bekler.`;
+    let best = null;
+    P.forEach(p => {
+      const d = r1[p.id] - r2[p.id];
+      if (d !== 0 && (!best || Math.abs(d) > Math.abs(best.d))) best = { p, d };
+    });
+    $('change').textContent = best
+      ? `Vitaller en çok ${best.p.gen} yerini değiştirdi: ${r1[best.p.id]}. sıradan ${r2[best.p.id]}. sıraya.`
+      : 'Vitaller sıralamanı değiştirmedi.';
+
+    const list = $('rvList');
+    list.textContent = '';
+    [...P].sort((a, b) => COLORS[a.c].o - COLORS[b.c].o || r2[a.id] - r2[b.id]).forEach((p, i) => {
+      const C = COLORS[p.c];
+      const a = document.createElement('article');
+      a.className = 'rv';
+      a.style.setProperty('--c', C.c);
+      a.style.setProperty('--cbg', C.bg);
+      a.innerHTML = `<span class="rv-tag">${C.label}: ${C.mean}</span>
+        <h3>${esc(p.name)}, ${p.age}</h3>
+        <p class="dx">${esc(p.dx)}</p>
+        <p class="yours">Senin sıran: birinci turda ${r1[p.id]}, ikinci turda ${r2[p.id]}</p>
+        <p class="why">${esc(p.why)}</p>`;
+      if (!reduce.matches){
+        a.style.setProperty('--fill', 0);
+        setTimeout(() => a.style.setProperty('--fill', 1), 350 + i * 130);
+      }
+      list.appendChild(a);
+    });
+
+    order.forEach(p => {
+      p._el.classList.add('done');
+      p._el.style.setProperty('--c', COLORS[p.c].c);
+      p._el.setAttribute('aria-disabled', 'true');
+    });
+    bar.hidden = true;
+    results.hidden = false;
+    results.scrollIntoView({ behavior: behavior(), block: 'start' });
+  }
+
+  confirmBtn.addEventListener('click', () => {
+    if (Object.keys(ranks).length !== 6) return;
+    if (round === 1){
+      r1 = { ...ranks };
+      round = 2;
+      roundH.textContent = 'İkinci tur: hemşire vitalleri aldı';
+      roundSub.textContent = 'Notlar kartların altında. Sıralamanı değiştirmek istersen hastaya dokunup numarasını sil, sonra yeniden numarala. Değişiklik yoksa onayla.';
+      order.forEach(p => {
+        const n = p._el.querySelector('.nurse');
+        n.hidden = false;
+        n.classList.add('fresh');
+      });
+      setTimeout(() => order.forEach(p => p._el.querySelector('.nurse').classList.remove('fresh')), 1500);
+      game.scrollIntoView({ behavior: behavior(), block: 'start' });
+      paint();
+    } else {
+      showResults();
+    }
+  });
+
+  clearBtn.addEventListener('click', () => { ranks = {}; paint(); });
+
+  function start(){
+    round = 1; ranks = {}; r1 = null;
+    order = shuffle([...P]);
+    roundH.textContent = 'Birinci tur: sadece gördüğün ve duyduğun';
+    roundSub.textContent = 'Hastalara görmek istediğin sırayla dokun. Fikrini değiştirirsen aynı hastaya tekrar dokun; numarası silinir.';
+    results.hidden = true;
+    bar.hidden = false;
+    build();
+  }
+
+  $('again').addEventListener('click', () => { start(); game.scrollIntoView({ behavior: behavior(), block: 'start' }); });
+  start();
+})();
+</script>
+</body>
+</html>
