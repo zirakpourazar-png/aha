@@ -67,6 +67,8 @@ Vücut, zaman ve acil servis üzerine küçük, bağımsız, etkileşimli web sa
 | Dört Kart | `dort-kart.html` | Wason kart seçimi; soyut ve sosyal versiyon arka arkaya, doğrulama yanlılığı açıklaması. |
 | Ortalamanın Üstü | `ortalamanin-ustu.html` | Altı konuda kendini yüzdelik olarak konumlandırma; ortalamanın üstü etkisi ve Dunning-Kruger düzeltmesi. |
 | Bekleyebilir misin? | `bekleyebilir-misin.html` | Marshmallow denemesi ve sözü tutulan/tutulmayan koşul; 2013 ve 2018 çalışmalarıyla düzeltme. |
+| Sana Özel | `sana-ozel.html` | Barnum etkisi: herkese aynı kişilik analizi, puanlama ve Forer 1948 deneyinin anlatımı. |
+| Değişim Körlüğü | `degisim-korlugu.html` | Yanıp sönme yöntemiyle değişen nesneyi bulma; Rensink 1997 ve kapı deneyi. |
 | On Saniye | `on-saniye.html` | Bilgisayarla üretilmiş 12 derivasyonlu EKG'lerle on saniyede "STEMI var mı?" oyunu. |
 
 ## Kategoriler

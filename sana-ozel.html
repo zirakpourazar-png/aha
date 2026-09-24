@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sana Özel</title>
+<meta name="description" content="Birkaç soru sor, kişilik analizini çıkaralım. Sonra küçük bir itirafımız olacak.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F0EA;--ink:#1B1712;--muted:#665E52;--card:#FFFFFF;--line:#E0D8CA;--acc:#7A5AA8;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131109;--ink:#F1ECE2;--muted:#A99F8E;--card:#1C1911;--line:#312C20;--acc:#C0A2F0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#131109;--ink:#F1ECE2;--muted:#A99F8E;--card:#1C1911;--line:#312C20;--acc:#C0A2F0;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.6}
+.wrap{max-width:780px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 2vh}
+h1{margin:0;font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:clamp(56px,13vw,140px);line-height:.92;letter-spacing:-.02em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:28em;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px 22px;margin:1.6em 0 0}
+.card .n{margin:0;color:var(--muted);font-weight:600;font-size:15px}
+.card h2{margin:.15em 0 .6em;font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:clamp(24px,3.6vw,34px);line-height:1.15}
+.opts{display:grid;gap:10px}
+@media (min-width:600px){.opts{grid-template-columns:1fr 1fr}}
+.opt{font:inherit;font-weight:600;text-align:left;font-size:16.5px;padding:14px 16px;min-height:54px;border-radius:12px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--muted)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.reading p{margin:0 0 1em;font-size:18px}
+.reading .sig{font-family:"Instrument Serif",Georgia,serif;font-style:italic;color:var(--muted)}
+.rate{margin:1.4em 0 0}
+.rate .stars{display:flex;gap:8px;margin:.6em 0}
+.rate .stars button{font:inherit;font-weight:700;font-size:20px;width:52px;height:52px;border-radius:12px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.rate .stars button.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 14%,transparent)}
+.btn{font:inherit;font-weight:700;font-size:17px;padding:12px 20px;min-height:50px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);cursor:pointer;margin-top:1em}
+.end[hidden]{display:none}
+.end h2{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:clamp(30px,5.4vw,52px);line-height:1.05;margin:1em 0 .3em}
+.facts p{margin:0 0 .9em;color:var(--muted);max-width:42em}
+.facts b{color:var(--ink)}
+.fine{margin:2em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}.card{padding:20px 18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Sana Özel</h1>
+    <p class="lede">Birkaç soru soracağız, sonra kişilik analizini çıkaracağız. Analizin ne kadar tuttuğunu da sen puanlayacaksın.</p>
+  </header>
+  <main>
+    <section class="card" id="stage" aria-live="polite">
+      <p class="n" id="n"></p>
+      <h2 id="title"></h2>
+      <div id="body"></div>
+    </section>
+    <section class="end" id="end" hidden>
+      <h2 id="eh"></h2>
+      <p id="et"></p>
+      <section class="facts">
+        <p><b>Okuduğun metin herkese aynı.</b> Sorduğumuz sorular hiçbir işe yaramadı; cevaplarını kullanmadık bile. Aynı paragrafları, hangi cevabı verirsen ver herkes okuyor.</p>
+        <p><b>Orijinal deney:</b> 1948'de psikolog Bertram Forer, öğrencilerine kişilik testleri uyguladı ve herkese aynı metni "sana özel analiz" diye dağıttı. Metni bir astroloji dergisinden derlemişti. Öğrenciler analizlerinin isabetini beş üzerinden ortalama <b>4,26</b> puanladı.</p>
+        <p><b>Numara nerede?</b> Cümleler iki yönlü kurulur: "bazen çok sosyalsin, bazen içine kapanırsın". Hem herkes için doğrudur hem de kişi kendi hayatından örnek bularak boşluğu doldurur. Övgü de işe yarar: olumlu ifadeleri daha kolay kabul ederiz.</p>
+        <p><b>Nerede karşına çıkıyor?</b> Burç yorumları, fal, bazı kişilik testleri, "kan grubuna göre karakter" yazıları ve soğuk okuma yapan medyumlar tam olarak bu etkiyi kullanır. Test etmenin basit yolu: yorumu başkasının burcuyla oku, yine tutuyor mu bak.</p>
+        <p><b>Bu, kişilik biliminin tamamı sahte demek değil.</b> Bilimsel kişilik ölçekleri tekrarlanabilir, başka ölçütlerle sınanır ve herkese aynı sonucu vermez. Ayırt edici soru şu: bu metin, benden başka birine verilseydi de aynı derecede doğru olur muydu?</p>
+      </section>
+      <button class="btn" id="again" type="button">Yeniden dene</button>
+    </section>
+    <p class="fine">Kaynak: Forer, Journal of Abnormal and Social Psychology, 1949. Bu sayfa hiçbir veri toplamaz; verdiğin cevaplar tarayıcından çıkmaz ve zaten kullanılmaz. Bilgilendirme amaçlıdır.</p>
+  </main>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const Q = [
+    { t: 'Bir sayı seç.', o: ['3', '7', '12', '21'] },
+    { t: 'Hangi renk sana daha yakın?', o: ['Lacivert', 'Yeşil', 'Bordo', 'Gri'] },
+    { t: 'Kalabalık bir ortamdan çıkınca genellikle…', o: ['Enerjim yükselir', 'Yorulurum'] },
+    { t: 'Bir karar verirken daha çok…', o: ['Sezgime güvenirim', 'Listeye güvenirim'] },
+    { t: 'Doğduğun mevsim?', o: ['İlkbahar', 'Yaz', 'Sonbahar', 'Kış'] }
+  ];
+  const READING = [
+    'Başkalarının seni sevmesine ve takdir etmesine ihtiyaç duyuyorsun, ama kendine karşı fazlasıyla eleştirel olabiliyorsun.',
+    'Kişiliğinde henüz kullanmadığın ciddi bir kapasite var; onu bazen boşa harcadığını düşünüyorsun.',
+    'Dışarıdan disiplinli ve kendine hâkim görünsen de içeride zaman zaman tedirgin ve kararsız olduğun anlar oluyor.',
+    'Bazen çok dışa dönük, konuşkan ve sosyal olurken, bazı zamanlarda içine kapanıp kendi başına kalmayı tercih ediyorsun.',
+    'Verdiğin kararların doğru olup olmadığını zaman zaman ciddi biçimde sorguluyorsun.',
+    'Değişiklik ve çeşitlilik hoşuna gidiyor; kısıtlandığında ve kurallarla çevrildiğinde huzursuz oluyorsun.',
+    'Bağımsız düşünmekle gurur duyuyorsun; yeterli kanıt olmadan söylenenleri olduğu gibi kabul etmiyorsun.',
+    'Başkalarına kendinle ilgili çok fazla şey anlatmanın akıllıca olmadığını öğrendin.',
+    'Bazı isteklerin gerçekçi olmayabilir; ama güvenlik arzun da en az o kadar güçlü.'
+  ];
+  let i = 0;
+  function ask(){
+    $('n').textContent = `${i + 1} / ${Q.length}`;
+    $('title').textContent = Q[i].t;
+    const box = $('body'); box.innerHTML = '<div class="opts"></div>';
+    const g = box.querySelector('.opts');
+    Q[i].o.forEach(o => { const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.textContent = o;
+      b.addEventListener('click', () => { i++; i < Q.length ? ask() : reading(); }); g.appendChild(b); });
+  }
+  function reading(){
+    $('n').textContent = 'Analiz hazır';
+    $('title').textContent = 'Cevaplarına göre kişilik profilin';
+    const box = $('body');
+    box.innerHTML = `<div class="reading">${READING.map(p => `<p>${p}</p>`).join('')}<p class="sig">Analiz, verdiğin beş cevabın örüntüsüne göre hazırlandı.</p></div>
+      <div class="rate"><b>Bu analiz seni ne kadar doğru anlatıyor?</b><div class="stars" id="stars"></div><button class="btn" id="ok" type="button" disabled>Gönder</button></div>`;
+    let val = 0;
+    const st = $('stars');
+    for (let k = 1; k <= 5; k++){ const b = document.createElement('button'); b.type = 'button'; b.textContent = k;
+      b.addEventListener('click', () => { val = k; [...st.children].forEach((x, j) => x.classList.toggle('on', j < k)); $('ok').disabled = false; }); st.appendChild(b); }
+    $('ok').addEventListener('click', () => end(val));
+  }
+  function end(val){
+    $('stage').hidden = true; $('end').hidden = false;
+    $('eh').textContent = `Beş üzerinden ${val} verdin.`;
+    $('et').textContent = val >= 4
+      ? `Forer'in 1948'deki öğrencileri ortalama 4,26 vermişti; sen de o aralıktasın. Şimdi itiraf vakti.`
+      : val === 3 ? 'Ortalamanın biraz altında bir puan verdin. Yine de metnin bir kısmını tanıdık bulmuş olman muhtemel. Şimdi itiraf vakti.'
+      : 'Düşük puan verdin, bu da olur; metne şüpheyle yaklaşmış olabilirsin. Yine de asıl mesele şu: şimdi itiraf vakti.';
+    $('end').scrollIntoView({ block: 'start' });
+  }
+  $('again').addEventListener('click', () => { i = 0; $('end').hidden = true; $('stage').hidden = false; ask(); });
+  ask();
+})();
+</script>
+</body>
+</html>

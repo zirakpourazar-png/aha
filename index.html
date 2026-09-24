@@ -120,6 +120,8 @@ footer{padding:0 0 6vh;color:var(--muted);font-size:14px;max-width:44em}
     <li data-tags="num game"><a href="dort-kart.html" style="--h:200"><canvas data-p="wason"></canvas><div class="txt"><h2 data-i="t60"></h2><p data-i="d60"></p><span class="kind"><span data-i="k60"></span> <span class="only" data-i="only"></span></span></div></a></li>
     <li data-tags="body game"><a href="ortalamanin-ustu.html" style="--h:300"><canvas data-p="above"></canvas><div class="txt"><h2 data-i="t61"></h2><p data-i="d61"></p><span class="kind"><span data-i="k61"></span> <span class="only" data-i="only"></span></span></div></a></li>
     <li data-tags="body game"><a href="bekleyebilir-misin.html" style="--h:25"><canvas data-p="wait"></canvas><div class="txt"><h2 data-i="t62"></h2><p data-i="d62"></p><span class="kind"><span data-i="k62"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="game"><a href="sana-ozel.html" style="--h:310"><canvas data-p="barnum"></canvas><div class="txt"><h2 data-i="t63"></h2><p data-i="d63"></p><span class="kind"><span data-i="k63"></span> <span class="only" data-i="only"></span></span></div></a></li>
+    <li data-tags="body game"><a href="degisim-korlugu.html" style="--h:210"><canvas data-p="change"></canvas><div class="txt"><h2 data-i="t64"></h2><p data-i="d64"></p><span class="kind"><span data-i="k64"></span> <span class="only" data-i="only"></span></span></div></a></li>
   </ul>
   <footer data-i="foot"></footer>
 </div>
@@ -189,6 +191,8 @@ footer{padding:0 0 6vh;color:var(--muted);font-size:14px;max-width:44em}
       t60:'Dört Kart', d60:'Basit bir mantık sorusu. Yüz kişiden onu çözüyor. Sonra aynı soru, başka kelimelerle.', k60:'Mantık',
       t61:'Ortalamanın Üstü', d61:'Altı konuda kendini nereye koyuyorsun? Herkes aynı yere koyuyor ve bu imkânsız.', k61:'Deney',
       t62:'Bekleyebilir misin?', d62:'Şimdi bir tane mi, sonra iki tane mi? Ünlü deneyin hikâyesi bildiğinden farklı.', k62:'Deney',
+      t63:'Sana Özel', d63:'Birkaç soru, sonra kişilik analizin. Sonunda küçük bir itirafımız olacak.', k63:'Deney',
+      t64:'Değişim Körlüğü', d64:'Resim gözünün önünde değişiyor. Bulmak sandığından çok daha zor.', k64:'Deney',
       f_all:'Hepsi', f_body:'Vücut', f_er:'Acil tıp', f_space:'Uzay ve fizik', f_time:'Zaman', f_num:'Sayılar', f_game:'Oyun',
       only:'', foot:'Bilgilendirme amaçlıdır, tıbbi tavsiye değildir. Acil bir durumda 112’yi ara.', title:'Aha' },
     en:{ lede:'Small interactive pages about science, the body and time.',
@@ -254,6 +258,8 @@ footer{padding:0 0 6vh;color:var(--muted);font-size:14px;max-width:44em}
       t60:'Four Cards', d60:'A simple logic puzzle. One in ten people solves it. Then the same puzzle in other words.', k60:'Logic',
       t61:'Above Average', d61:'Where do you place yourself? Everyone picks the same half, and that is impossible.', k61:'Experiment',
       t62:'Can You Wait?', d62:'One now or two later? The famous study is not what you were told.', k62:'Experiment',
+      t63:'Just for You', d63:'A few questions, then your personality profile. We have a confession at the end.', k63:'Experiment',
+      t64:'Change Blindness', d64:'The picture changes right in front of you. Finding it is far harder than you think.', k64:'Experiment',
       f_all:'All', f_body:'Body', f_er:'Emergency medicine', f_space:'Space and physics', f_time:'Time', f_num:'Numbers', f_game:'Games',
       only:'(Turkish for now)', foot:'For information only, not medical advice. In an emergency, call your local emergency number.', title:'Aha' }
   };
@@ -302,6 +308,20 @@ footer{padding:0 0 6vh;color:var(--muted);font-size:14px;max-width:44em}
       const fig = (x > .36 && x < .64 && y > .3 && y < .38) || (Math.abs((x - .64) + (y - .38) * .45) < .045 && y > .34 && y < .72);
       out.push([x, y, .008 + r() * .014, fig, .82 + r() * .3]); } return out; })();
   const draw = {
+    barnum(ctx, w, h, t){
+      const lines = ['bazen dışa dönük,', 'bazen içine kapanık', 'kendine eleştirelsin'];
+      ctx.fillStyle = dark() ? '#A99F8E' : '#665E52'; ctx.font = 'italic 15px "Instrument Sans", system-ui, serif'; ctx.textAlign = 'center';
+      lines.forEach((l, i) => { ctx.globalAlpha = (t * .8 + i * .33) % 1 < .8 ? 1 : .3; ctx.fillText(l, w / 2, h / 2 - 16 + i * 20); });
+      ctx.globalAlpha = 1; ctx.textAlign = 'left';
+    },
+    change(ctx, w, h, t){
+      const alt = (t % 2) > 1;
+      const cols = ['#D8574B', '#2F6FD8', '#E0A63A', '#3E9E68'];
+      for (let i = 0; i < 8; i++){ const x = 26 + (i % 4) * (w - 52) / 4, y = h * .35 + Math.floor(i / 4) * h * .3;
+        ctx.fillStyle = (i === 5 && alt) ? '#8A5AC0' : cols[i % 4];
+        if (i % 3 === 0) ctx.fillRect(x - 10, y - 10, 20, 20);
+        else { ctx.beginPath(); ctx.arc(x, y, 11, 0, 7); ctx.fill(); } }
+    },
     wason(ctx, w, h, t){
       const lit = Math.floor(t) % 4, lbl = ['A', 'K', '4', '7'];
       for (let i = 0; i < 4; i++){ const bw = (w - 60) / 4, x = 18 + i * (bw + 8);
