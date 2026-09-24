@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seçim Körlüğü</title>
+<meta name="description" content="Seçtiğin yüzü sana geri gösteriyoruz. Ama aynı yüz mü?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1EFEC;--ink:#17161A;--muted:#5F5C63;--card:#FFFFFF;--line:#DCD8D2;--acc:#6B4EE6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111013;--ink:#EFEDF2;--muted:#A19DA8;--card:#1A181D;--line:#2C2932;--acc:#A896FF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111013;--ink:#EFEDF2;--muted:#A19DA8;--card:#1A181D;--line:#2C2932;--acc:#A896FF;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 2vh}
+h1{margin:0;font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:clamp(56px,12vw,132px);line-height:.94;letter-spacing:-.02em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:28em;color:var(--muted)}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;margin:1.6em 0 0}
+.stage .n{margin:0;color:var(--muted);font-weight:600;font-size:15px}
+.stage h2{margin:.15em 0 .8em;font-size:clamp(22px,3.2vw,28px);line-height:1.15}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.face{padding:0;border:3px solid var(--line);border-radius:18px;background:transparent;cursor:pointer;overflow:hidden}
+.face:hover{border-color:var(--muted)}
+.face.sel{border-color:var(--acc)}
+.face canvas{display:block;width:100%;height:auto}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.one{display:grid;place-items:center}
+.one canvas{width:min(260px,64vw);height:auto;border:3px solid var(--acc);border-radius:18px}
+textarea{width:100%;font:inherit;font-size:16px;padding:12px;min-height:88px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);margin:12px 0 10px;resize:vertical}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;font-size:17px;padding:12px 20px;min-height:50px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.btn2{font:inherit;font-weight:600;font-size:16px;padding:11px 16px;min-height:50px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.end[hidden]{display:none}
+.end h2{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:clamp(30px,5.4vw,52px);line-height:1.05;margin:1em 0 .3em}
+.rounds{list-style:none;padding:0;margin:1em 0 1.6em}
+.rounds li{display:grid;grid-template-columns:1fr auto;gap:12px;border-top:1px solid var(--line);padding:10px 0}
+.rounds span{color:var(--muted);font-size:15.5px}
+.facts p{margin:0 0 .9em;color:var(--muted);max-width:42em}
+.facts b{color:var(--ink)}
+.fine{margin:2em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}.stage{padding:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Seçim Körlüğü</h1>
+    <p class="lede">İki yüz göreceksin. Birini seç, sonra sana seçtiğini geri göstereceğiz ve nedenini soracağız. Basit görünüyor.</p>
+  </header>
+  <main>
+    <section class="stage" id="stage" aria-live="polite">
+      <p class="n" id="n"></p>
+      <h2 id="ask"></h2>
+      <div id="body"></div>
+    </section>
+    <section class="end" id="end" hidden>
+      <h2 id="vh"></h2>
+      <p id="verdict"></p>
+      <ul class="rounds" id="rounds"></ul>
+      <section class="facts">
+        <p><b>Ne yaptık?</b> Üç turun ikisinde, sana geri gösterdiğimiz yüz seçtiğin yüz değildi: diğerini gösterdik. Sen de çoğu kişi gibi, seçmediğin yüzü neden seçtiğini açıklamış olabilirsin.</p>
+        <p><b>Orijinal deney.</b> Petter Johansson ve ekibi 2005'te bunu kartlarla yaptı: katılımcı iki fotoğraftan birini seçiyor, deneyci el çabukluğuyla diğerini uzatıyor ve "neden bunu seçtin?" diye soruyordu. Katılımcılar değişimin <b>yüzde 30'undan azını</b> fark etti. Geri kalanında, hiç seçmedikleri yüzü savunan ayrıntılı gerekçeler ürettiler: "gülüşü daha samimi", "küpeleri hoşuma gitti".</p>
+        <p><b>Asıl rahatsız edici kısım.</b> Aynı yöntem ahlaki ve siyasi görüşlerle de denendi. İnsanlar, az önce verdikleri cevabın tersini savunurken bile bunu fark etmedi ve yeni pozisyonu gerekçelendirdi.</p>
+        <p><b>Ne anlama geliyor?</b> Tercihlerimiz sandığımız kadar sabit değil ve "neden" sorusuna verdiğimiz cevaplar, çoğu zaman kararın gerçek sebebi değil, sonradan üretilmiş bir hikâye. Beyin karar verir; konuşan kısım ise o kararı açıklamakla görevlidir ve gerekirse uydurur.</p>
+      </section>
+      <button class="btn" id="again" type="button">Yeniden dene</button>
+    </section>
+    <p class="fine">Yüzler bilgisayarla üretilmiştir, gerçek kişilere ait değildir. Kaynak: Johansson, Hall, Sikström ve Olsson, Science 2005. Yazdığın hiçbir şey kaydedilmez, tarayıcından dışarı çıkmaz. Bilgilendirme amaçlıdır.</p>
+  </main>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const S = 260;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  function face(seed){
+    let s = seed;
+    const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    return { skin: `hsl(${28 + r() * 12} ${38 + r() * 18}% ${58 + r() * 22}%)`, hair: `hsl(${20 + r() * 30} ${20 + r() * 30}% ${12 + r() * 30}%)`,
+      eyeD: .18 + r() * .07, eyeY: .44 + r() * .04, eyeR: .035 + r() * .02, brow: .02 + r() * .03, browA: -.2 + r() * .4,
+      nose: .1 + r() * .06, mouthW: .13 + r() * .08, mouthC: .02 + r() * .05, jaw: .3 + r() * .08, hairS: Math.floor(r() * 3), glasses: r() < .25 };
+  }
+  function draw(cv, f){
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    cv.width = S * dpr; cv.height = S * dpr; cv.style.width = '100%';
+    const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.fillStyle = '#EDE9E3'; c.fillRect(0, 0, S, S);
+    const cx = S / 2, cy = S * .52;
+    c.fillStyle = f.hair; c.beginPath(); c.ellipse(cx, cy - S * .16, S * f.jaw * 1.02, S * .3, 0, 0, 7); c.fill();
+    c.fillStyle = f.skin; c.beginPath(); c.ellipse(cx, cy, S * f.jaw, S * .36, 0, 0, 7); c.fill();
+    c.fillStyle = f.hair;
+    if (f.hairS === 0){ c.beginPath(); c.ellipse(cx, cy - S * .26, S * f.jaw * .98, S * .16, 0, Math.PI, 0); c.fill(); }
+    if (f.hairS === 1){ c.beginPath(); c.moveTo(cx - S * f.jaw, cy - S * .2); c.quadraticCurveTo(cx, cy - S * .46, cx + S * f.jaw, cy - S * .2); c.quadraticCurveTo(cx, cy - S * .3, cx - S * f.jaw, cy - S * .2); c.fill(); }
+    if (f.hairS === 2){ c.beginPath(); c.ellipse(cx, cy - S * .3, S * f.jaw * .9, S * .12, 0, 0, 7); c.fill(); }
+    const ex = S * f.eyeD, ey = S * f.eyeY;
+    [-1, 1].forEach(k => {
+      c.fillStyle = '#fff'; c.beginPath(); c.ellipse(cx + k * ex, ey, S * f.eyeR * 1.5, S * f.eyeR, 0, 0, 7); c.fill();
+      c.fillStyle = '#2A2118'; c.beginPath(); c.arc(cx + k * ex, ey, S * f.eyeR * .62, 0, 7); c.fill();
+      c.strokeStyle = f.hair; c.lineWidth = S * .014; c.beginPath();
+      c.moveTo(cx + k * ex - S * .05, ey - S * (.055 + f.brow) + k * f.browA * S * .02);
+      c.lineTo(cx + k * ex + S * .05, ey - S * (.055 + f.brow) - k * f.browA * S * .02); c.stroke();
+    });
+    if (f.glasses){ c.strokeStyle = 'rgba(40,40,45,.8)'; c.lineWidth = S * .008;
+      [-1, 1].forEach(k => { c.beginPath(); c.ellipse(cx + k * ex, ey, S * f.eyeR * 2, S * f.eyeR * 1.7, 0, 0, 7); c.stroke(); });
+      c.beginPath(); c.moveTo(cx - ex + S * f.eyeR * 2, ey); c.lineTo(cx + ex - S * f.eyeR * 2, ey); c.stroke(); }
+    c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = S * .01; c.beginPath();
+    c.moveTo(cx, ey + S * .03); c.lineTo(cx - S * .02, ey + S * f.nose); c.lineTo(cx + S * .02, ey + S * f.nose); c.stroke();
+    c.strokeStyle = 'rgba(120,50,50,.85)'; c.lineWidth = S * .016; c.beginPath();
+    c.moveTo(cx - S * f.mouthW, ey + S * .19); c.quadraticCurveTo(cx, ey + S * (.19 + f.mouthC * 2), cx + S * f.mouthW, ey + S * .19); c.stroke();
+  }
+  const ASK = ['Hangisi sana daha sempatik geldi?', 'Hangisine iş görüşmesinde daha çok güvenirdin?', 'Hangisiyle uzun bir yolculuğa çıkardın?'];
+  let round = 0, picks = [], detected = [], pair = [], manipulated = [];
+  const N = 3;
+  function newPair(){ const a = face(Math.floor(Math.random() * 1e6) + 1), b = face(Math.floor(Math.random() * 1e6) + 1); return [a, b]; }
+  function show(){
+    $('n').textContent = `${round + 1} / ${N}`; $('ask').textContent = ASK[round];
+    pair = newPair();
+    const box = $('body'); box.innerHTML = '<div class="pair"><button class="face" data-i="0" type="button"><canvas></canvas></button><button class="face" data-i="1" type="button"><canvas></canvas></button></div>';
+    [...box.querySelectorAll('.face')].forEach((b, i) => { draw(b.querySelector('canvas'), pair[i]); b.addEventListener('click', () => choose(i)); });
+  }
+  function choose(i){
+    picks.push(i);
+    const swap = round !== 1;           // üç turun ikisinde değiştiriyoruz
+    manipulated.push(swap);
+    const shown = swap ? pair[1 - i] : pair[i];
+    $('ask').textContent = 'Seçtiğin yüz buydu. Neden bunu seçtin?';
+    const box = $('body');
+    box.innerHTML = '<div class="one"><canvas></canvas></div><textarea placeholder="Birkaç kelime yeter..."></textarea><div class="row"><button class="btn" id="ok" type="button">Devam</button><button class="btn2" id="no" type="button">Bir dakika, bu benim seçtiğim değil</button></div>';
+    draw(box.querySelector('canvas'), shown);
+    $('ok').addEventListener('click', () => { detected.push(false); next(); });
+    $('no').addEventListener('click', () => { detected.push(true); next(); });
+  }
+  function next(){ round++; if (round < N) show(); else end(); }
+  function end(){
+    $('stage').hidden = true; $('end').hidden = false;
+    const man = manipulated.filter(Boolean).length;
+    const caught = manipulated.reduce((a, m, k) => a + (m && detected[k] ? 1 : 0), 0);
+    $('vh').textContent = caught === man ? 'Hepsini yakaladın.' : caught === 0 ? 'Hiçbirini fark etmedin.' : `${man} değişimden ${caught} tanesini fark ettin.`;
+    $('verdict').textContent = caught === man
+      ? 'Değişimlerin tamamını yakalamak azınlıkta kalan bir sonuç. Orijinal deneyde katılımcıların çoğu bunu başaramadı; ekran karşısında olman ve dikkatinin bu konuda olması da işini kolaylaştırmış olabilir.'
+      : 'Bu sonuç, deneyin bulduğunun aynısı: kendi seçimimizi tanımakta sandığımızdan çok daha kötüyüz.';
+    const ul = $('rounds'); ul.textContent = '';
+    manipulated.forEach((m, k) => { const li = document.createElement('li');
+      const b = document.createElement('b'); b.textContent = `${k + 1}. tur`;
+      const s = document.createElement('span'); s.textContent = m ? (detected[k] ? 'Değiştirildi, fark ettin' : 'Değiştirildi, fark etmedin') : (detected[k] ? 'Değiştirilmedi, yine de şüphelendin' : 'Değiştirilmedi');
+      li.append(b, s); ul.appendChild(li); });
+    $('end').scrollIntoView({ block: 'start' });
+  }
+  $('again').addEventListener('click', () => { round = 0; picks = []; detected = []; manipulated = []; $('end').hidden = true; $('stage').hidden = false; show(); });
+  show();
+})();
+</script>
+</body>
+</html>

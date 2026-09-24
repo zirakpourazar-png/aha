@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kırmızı Alanda Karar</title>
+<meta name="description" content="Acil serviste doğru cevabı olmayan altı karar. Sen ne yapardın, gerçekte ne yapılıyor?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4F1F0;--ink:#1C1718;--muted:#665D5E;--card:#FFFFFF;--line:#DED4D3;--acc:#A32C33;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141010;--ink:#F1E9E8;--muted:#AC9E9D;--card:#1D1717;--line:#352B2B;--acc:#FF6B72;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141010;--ink:#F1E9E8;--muted:#AC9E9D;--card:#1D1717;--line:#352B2B;--acc:#FF6B72;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Archivo",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:820px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 2vh}
+h1{margin:0;font-stretch:70%;font-weight:900;font-size:clamp(50px,11vw,124px);line-height:.88;letter-spacing:-.01em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:28em;color:var(--muted)}
+.note{margin:1.2em 0 0;padding:12px 14px;border-left:3px solid var(--acc);background:color-mix(in srgb,var(--acc) 8%,transparent);border-radius:0 10px 10px 0;font-size:15.5px;color:var(--muted);max-width:40em}
+.prog{display:flex;gap:6px;margin:1.6em 0 12px}
+.prog i{flex:1;height:5px;border-radius:3px;background:var(--line)}
+.prog i.done{background:var(--acc)} .prog i.cur{background:var(--ink)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.q .n{margin:0;color:var(--muted);font-weight:600;font-size:15px}
+.q h2{margin:.15em 0 .4em;font-stretch:85%;font-size:clamp(24px,3.6vw,34px);line-height:1.12}
+.q .sit{margin:0 0 1.1em}
+.opts{display:grid;gap:10px}
+.opt{font:inherit;text-align:left;font-size:17px;padding:14px 16px;min-height:56px;border-radius:12px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--muted)}
+.opt.pick{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,transparent)}
+.opt[disabled]{cursor:default}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.fb{margin:16px 0 0}
+.fb[hidden]{display:none}
+.fb h3{margin:0 0 .2em;font-size:18px}
+.fb p{margin:0 0 .9em}
+.fb .law{padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--acc) 7%,transparent);font-size:15.5px}
+.btn{font:inherit;font-weight:700;font-size:17px;padding:12px 20px;min-height:50px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.end[hidden]{display:none}
+.end h2{font-stretch:75%;font-size:clamp(30px,5vw,48px);line-height:1.05;margin:0 0 .4em}
+.sum{list-style:none;padding:0;margin:1em 0 2em}
+.sum li{border-top:1px solid var(--line);padding:12px 0}
+.sum b{display:block;font-weight:700}
+.sum span{color:var(--muted);font-size:15.5px}
+.fine{margin:2em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}.q{padding:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Kırmızı Alanda Karar</h1>
+    <p class="lede">Acil tıbbın zor kısmı teşhis değildir. Zor kısmı, doğru cevabın olmadığı anlardır. Altı durum; sen ne yapardın?</p>
+    <p class="note">Bu sayfa puan vermez ve seni yanlışlamaz. Her seçimden sonra gerçekte nasıl davranıldığını ve nedenini okuyacaksın. Hukuki danışmanlık değildir; uygulamalar ülkeye, kuruma ve olaya göre değişir.</p>
+  </header>
+  <main>
+    <div class="prog" id="prog" aria-hidden="true"></div>
+    <section class="q" id="q" aria-live="polite">
+      <p class="n" id="n"></p>
+      <h2 id="title"></h2>
+      <p class="sit" id="sit"></p>
+      <div class="opts" id="opts"></div>
+      <div class="fb" id="fb" hidden>
+        <h3>Gerçekte ne oluyor?</h3>
+        <p id="real"></p>
+        <p class="law" id="law"></p>
+        <button class="btn" id="next" type="button">Sonraki</button>
+      </div>
+    </section>
+    <section class="end" id="end" hidden>
+      <h2>Kararların</h2>
+      <p>Bunlar “doğru” ya da “yanlış” değil; farklı değerlere ağırlık veriyorlar. Gerçek hayatta bu kararlar tek başına verilmez: nöbetçi uzman, etik kurul, hukuk birimi ve çoğu zaman hastanın kendi sözü devrededir.</p>
+      <ul class="sum" id="sum"></ul>
+      <button class="btn" id="again" type="button">Yeniden başla</button>
+    </section>
+    <p class="fine">Senaryolar kurgusaldır. Türkiye'de hasta hakları, aydınlatılmış onam ve reddetme hakkı Hasta Hakları Yönetmeliği ile düzenlenir; acil ve rıza alınamayan durumlar için ayrı hükümler vardır. Yaşam desteğinin sınırlandırılması konusunda net bir yasal çerçeve bulunmadığı için uygulama kurumdan kuruma değişir. Bu sayfa bilgilendirme amaçlıdır.</p>
+  </main>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const Q = [
+    { t: 'Tek ventilatör', s: 'Aynı anda iki hasta geldi ve elinde tek bir ventilatör var. Biri 38 yaşında, önceden sağlıklı, ağır zatürre; diğeri 71 yaşında, ileri evre akciğer hastalığı olan, aynı tabloda. İkisi de birkaç dakika içinde entübe edilmezse kaybedilecek.',
+      o: ['Genç ve önceden sağlıklı olana ver', 'Yaşlı olana ver; sıra ve saygı gereği ilk gelen o', 'Kura çek'],
+      r: 'Kıt kaynak dağıtımında dünyadaki protokollerin ortak ölçütü, kısa vadeli hayatta kalma olasılığıdır: hangi hastanın o tedaviyle hayatta kalma şansı daha yüksekse kaynak ona verilir. Yaş tek başına bir ölçüt değildir; yaşın etkisi, ancak hastalık yükü ve organ rezervi üzerinden dolaylı olur. Karar mümkünse tek hekim tarafından değil, hasta bakımına doğrudan katılmayan bir triyaj sorumlusu ya da komite tarafından verilir.',
+      l: 'Kilit nokta: ölçüt açık, önceden yazılmış ve herkese aynı uygulanıyor olmalı. Kararın tarafsızlığı, kararın kendisi kadar önemlidir.' },
+    { t: 'Kan reddi', s: 'Trafik kazası sonrası ağır kanaması olan 42 yaşında hasta bilinci açık, yönelimi tam. "Dini inancım nedeniyle kan ürünü kabul etmiyorum" diyor ve bunu yazılı olarak da belgelemiş. Kan verilmezse ölüm riski yüksek.',
+      o: ['Kararına saygı göster, kansız tedavi seçeneklerini zorla', 'Hayatını kurtarmak için yine de kan ver', 'Ailesini ikna etmeye çalış, onlar karar versin'],
+      r: 'Karar verme yetisi yerinde olan erişkin bir hasta, hayati bir tedaviyi bile reddedebilir. Bu durumda hekimin işi ikna etmek ya da göz ardı etmek değil, alternatifleri sonuna kadar kullanmaktır: kanamanın hızla durdurulması, traneksamik asit, hücre kurtarma sistemleri, demir ve eritropoetin desteği, cerrahi tekniklerin buna göre seçilmesi. Aile, karar verebilen bir hastanın yerine karar veremez.',
+      l: 'Türkiye\'de tedaviyi reddetme hakkı tanınmıştır; buna karşılık acil ve rıza alınamayan durumlar için ayrı hükümler vardır. Hastanın bilinci açıkken verdiği red kararı belgelenir, tanık altına alınır ve kurumun hukuk birimi bilgilendirilir.' },
+    { t: '"Babama söylemeyin"', s: 'Yaptığın tetkikler 68 yaşındaki hastada ileri evre bir kanser düşündürüyor. Hasta bilinci açık ve senden sonucu öğrenmek istiyor. Kızı seni koridora çekip "lütfen söylemeyin, dayanamaz" diyor.',
+      o: ['Aileye uy, hastaya söyleme', 'Hastaya doğrudan ve tam olarak söyle', 'Hastaya ne kadar bilmek istediğini sor, ona göre ilerle'],
+      r: 'Bilgi hastanındır. Ailenin iyi niyetli talebi tek başına bilgiyi saklamak için yeterli değildir. Uygulamada tercih edilen yol, hastaya ne kadar bilmek istediğini sormaktır: bazı hastalar her ayrıntıyı ister, bazıları "siz aileme anlatın" der. Bu tercih de hastanın kendi kararıdır ve kayda geçirilir. Kötü haber tek cümlede değil, hastanın hızına göre kademeli verilir.',
+      l: 'Hasta bilgi istemiyorsa bilgilendirilmeme hakkı da vardır. Belirleyici olan ailenin değil, hastanın tercihidir.' },
+    { t: 'Son yatak', s: 'Gözlem biriminde tek yatak kaldı. Biri göğüs ağrısıyla gelen ve henüz ayırıcı tanısı netleşmemiş 55 yaşında hasta; diğeri ağır ağrısı olan, tetkikleri normal gelen 30 yaşında böbrek taşı hastası. İkisi de "ben daha önce geldim" diyor.',
+      o: ['İlk gelen yatsın, sıra adalettir', 'Riski yüksek olan yatsın', 'İkisini de oturarak izle, yatağı boş tut'],
+      r: 'Acil serviste sıra değil, risk belirleyicidir. Triyajın bütün mantığı budur: kaynak, en kötü sonuca en yakın olana gider. Bunu hastaya açıklamak da işin parçasıdır; "sizden sonra gelen neden önce alındı" sorusunun cevabı, kimseyi suçlamadan ve hastanın mahremiyetini ihlal etmeden verilir.',
+      l: 'Bekletilen hastaya ne kadar bekleyeceğini ve kötüleşirse ne yapması gerektiğini söylemek, kararın kendisi kadar önemlidir.' },
+    { t: 'Aile "her şeyi yapın" diyor', s: 'İleri evre hastalığı olan, yatağa bağımlı 84 yaşında hasta arrest oluyor. Dosyasında yaşam sonu tercihine dair bir kayıt yok. Aile "ne gerekiyorsa yapın" diyor, ekipten biri "bu hastaya faydası olmaz" diyor.',
+      o: ['Tam resüsitasyon uygula', 'Kısa süreli dene, yanıt yoksa sonlandır', 'Başlatma, aileyle konuş'],
+      r: 'Böyle bir kayıt yoksa uygulamada resüsitasyon başlatılır; tartışma sonradan yapılamaz, o an karar verilir. Devam süresi ise tıbbi gerekçeye dayanır: geri dönüşümlü bir neden yoksa ve yanıt alınamıyorsa, resüsitasyonu sürdürmek hastaya fayda sağlamaz. Aileyle konuşma, arrest anında değil, hastalığın seyri belli olduğunda önceden yapılması gereken bir konuşmadır.',
+      l: 'Türkiye\'de yaşam desteğinin sınırlandırılmasının net bir yasal çerçevesi yoktur; bu yüzden uygulamalar kurumlara ve hekimlere göre farklılaşır. Bu belirsizlik, alandaki en zorlayıcı konulardan biridir.' },
+    { t: 'On yedi yaşında', s: '17 yaşındaki hasta tek başına geldi. Elinde derin bir kesi var, dikiş gerekiyor. "Ailem duymasın, lütfen aramayın" diyor. Hayati tehlike yok, hasta sakin ve durumu kavrıyor.',
+      o: ['Aileyi hemen ara, çünkü reşit değil', 'Tedaviyi yap, aileyi arama', 'Neden istemediğini konuş, sonra birlikte karar ver'],
+      r: 'Reşit olmayan hastada yasal onam velisinindir; bu yüzden aileyi tamamen devre dışı bırakmak çoğu durumda mümkün değildir. Ama ilk adım telefon değil, konuşmadır: gencin neden istemediğini anlamak, gerekirse aile ile arasında köprü kurmak ve bu arada acil tedaviyi geciktirmemek. Evde şiddet ya da ihmal şüphesi varsa tablo tamamen değişir ve bildirim yükümlülüğü doğar.',
+      l: 'Gence mahremiyetin sınırlarını baştan söylemek güven kurar: neyi saklayabileceğini, neyi saklayamayacağını bilsin.' }
+  ];
+  let i = 0, picks = [];
+  function prog(){ const p = $('prog'); p.textContent = ''; Q.forEach((_, k) => { const e = document.createElement('i'); if (k < picks.length) e.className = 'done'; else if (k === i) e.className = 'cur'; p.appendChild(e); }); }
+  function show(){
+    const q = Q[i]; prog();
+    $('n').textContent = `Durum ${i + 1} / ${Q.length}`; $('title').textContent = q.t; $('sit').textContent = q.s;
+    const box = $('opts'); box.textContent = '';
+    q.o.forEach((txt, j) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.textContent = txt;
+      b.addEventListener('click', () => pick(j, b)); box.appendChild(b); });
+    $('fb').hidden = true;
+  }
+  function pick(j, b){
+    picks.push(j);
+    [...$('opts').children].forEach(x => { x.disabled = true; });
+    b.classList.add('pick');
+    $('real').textContent = Q[i].r; $('law').textContent = Q[i].l;
+    $('next').textContent = i + 1 < Q.length ? 'Sonraki' : 'Kararlarımı gör';
+    $('fb').hidden = false; prog(); $('next').focus({ preventScroll: true });
+  }
+  $('next').addEventListener('click', () => { i++; if (i < Q.length) show(); else end(); });
+  function end(){
+    $('q').hidden = true; $('end').hidden = false;
+    const ul = $('sum'); ul.textContent = '';
+    Q.forEach((q, k) => { const li = document.createElement('li');
+      const b = document.createElement('b'); b.textContent = q.t;
+      const s = document.createElement('span'); s.textContent = 'Senin seçimin: ' + q.o[picks[k]];
+      li.append(b, s); ul.appendChild(li); });
+    $('end').scrollIntoView({ block: 'start' });
+  }
+  $('again').addEventListener('click', () => { i = 0; picks = []; $('end').hidden = true; $('q').hidden = false; show(); });
+  show();
+})();
+</script>
+</body>
+</html>

@@ -49,11 +49,25 @@ Vücut, zaman ve acil servis üzerine küçük, bağımsız, etkileşimli web sa
 | Ölümden Sonra | `olumden-sonra.html` | Ölüm sonrası değişimlerin aşama aşama zaman çizelgesi ve adli tıbbın ölüm zamanı tahmini. |
 | Neren Daha Hassas? | `neren-hassas.html` | Vücut bölgelerine göre iki nokta ayrım eşiği, ekran ölçeğiyle gerçek milimetre gösterimi ve homunculus. |
 | Zaman Esner | `zaman-esner.html` | Rakım ve hıza göre zaman genişlemesi hesabı; GPS, astronot ve atom saati örnekleri. |
+| Kırmızı Alanda Karar | `kirmizi-alanda-karar.html` | Acil serviste altı etik ikilem; puan yok, her seçimden sonra gerçek uygulama ve gerekçesi. |
+| Bir Karaciğer, Beş Hasta | `bir-karaciger.html` | Organ tahsisi ikilemi; seçimden sonra MELD sıralaması ve tahsis ölçütlerinin mantığı. |
+| Vagon Problemi | `vagon-problemi.html` | Altı klasik ahlak deneyi ve sonunda kural-sonuç ekseninde özet. |
+| Direksiyonda Kim Var? | `direksiyonda-kim-var.html` | Sürücüsüz araç ikilemleri; Moral Machine bulguları ve Alman etik komisyonunun ayrım yasağı. |
+| Söyler miydin? | `soyler-miydin.html` | Sekiz sadakat-ifşa ikilemi; söyleme ve susma bedellerinin karşılaştırması. |
+| Kalabalıkta | `kalabalikta.html` | Beş klasik sosyal psikoloji deneyi; önce tahmin, sonra gerçek oran. |
+| Gölette Bir Çocuk | `golette-bir-cocuk.html` | Singer'ın boğulan çocuk deneyi altı adımda; mesafe, kalabalık, belirsizlik ve süreklilik itirazları. |
+| Bir Hayat Kaç Para? | `bir-hayat-kac-para.html` | 100 birimlik güvenlik bütçesini dağıtma oyunu; istatistiksel hayat değeri ve maliyet-etkililik. |
+| Yalan Merdiveni | `yalan-merdiveni.html` | On basamaklık yalan ölçeği; kişinin çizgisini nereye koyduğunu gösteren özet. |
+| Seçim Körlüğü | `secim-korlugu.html` | Üretilmiş yüzlerle seçim körlüğü denemesi; Johansson 2005 deneyinin anlatımı. |
+| Çapa Etkisi | `capa-etkisi.html` | Rastgele çapa gösterip tahmin alma; çapa, tahmin ve gerçek değerin aynı ölçekte karşılaştırılması. |
+| Hatırlamadığın Kelime | `hatirlamadigin-kelime.html` | DRM yanlış hatırlama deneyi; iki liste, tuzak kelime ve sonuç tablosu. |
+| Dikkat Körlüğü | `dikkat-korlugu.html` | Pas sayma görevi sırasında ekrandan geçen şekli fark etme denemesi; Simons ve Chabris 1999. |
+| Aynı Soru, İki Cümle | `ayni-soru-iki-cumle.html` | Çerçeveleme etkisi; her soruda rastgele kazanç ya da kayıp anlatımı, sonunda diğer anlatım gösterilir. |
+| Üç Kapı | `uc-kapi.html` | Monty Hall oyunu, kişisel istatistik ve 10.000 oyunluk simülasyon. |
+| Dört Kart | `dort-kart.html` | Wason kart seçimi; soyut ve sosyal versiyon arka arkaya, doğrulama yanlılığı açıklaması. |
+| Ortalamanın Üstü | `ortalamanin-ustu.html` | Altı konuda kendini yüzdelik olarak konumlandırma; ortalamanın üstü etkisi ve Dunning-Kruger düzeltmesi. |
+| Bekleyebilir misin? | `bekleyebilir-misin.html` | Marshmallow denemesi ve sözü tutulan/tutulmayan koşul; 2013 ve 2018 çalışmalarıyla düzeltme. |
 | On Saniye | `on-saniye.html` | Bilgisayarla üretilmiş 12 derivasyonlu EKG'lerle on saniyede "STEMI var mı?" oyunu. |
-
-## Dosya yapısı
-
-Bu sürümde bütün sayfalar tek klasörde, `on-dakika.html` gibi düz dosyalar hâlindedir; alt klasör yoktur. Böylece tarayıcıdan toplu yükleme sırasında klasör yapısı bozulmaz. Adresler `site/on-dakika.html` biçiminde olur.
 
 ## Kategoriler
 

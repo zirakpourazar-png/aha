@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Direksiyonda Kim Var?</title>
+<meta name="description" content="Freni boşalan sürücüsüz araç kimi çiğneyeceğine karar vermek zorunda. Kodu yazan sensin.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Inter+Tight:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0E1016;--ink:#E8EBF3;--muted:#949CB2;--card:#161A24;--line:#242A38;--a:#4ADE80;--b:#F87171;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Inter Tight",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:880px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 2vh}
+h1{margin:0;font-family:"Chakra Petch",ui-sans-serif,system-ui,sans-serif;font-weight:700;font-size:clamp(44px,9vw,104px);line-height:.95;letter-spacing:-.03em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:28em;color:var(--muted)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:1.6em 0 0}
+.q .n{margin:0;color:var(--muted);font-weight:600;font-size:15px;font-family:"Chakra Petch",sans-serif}
+.q h2{margin:.15em 0 .5em;font-family:"Chakra Petch",sans-serif;font-size:clamp(24px,3.6vw,32px);line-height:1.12}
+.q .sit{margin:0 0 1.1em}
+.opts{display:grid;gap:10px}
+@media (min-width:640px){.opts{grid-template-columns:1fr 1fr}}
+.opt{font:inherit;font-weight:600;text-align:left;font-size:16.5px;padding:16px;min-height:76px;border-radius:12px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--muted)}
+.opt small{display:block;font-weight:400;color:var(--muted);margin-top:4px}
+.opt.pick{border-color:var(--a);background:rgba(74,222,128,.1)}
+.opt[disabled]{cursor:default}
+button:focus-visible{outline:3px solid var(--a);outline-offset:2px}
+.fb{margin:16px 0 0}
+.fb[hidden]{display:none}
+.fb p{margin:0 0 .8em}
+.fb .world{padding:10px 12px;border-radius:10px;background:rgba(74,222,128,.08);font-size:15.5px}
+.btn{font:inherit;font-weight:700;font-size:17px;padding:12px 20px;min-height:50px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.end[hidden]{display:none}
+.end h2{font-family:"Chakra Petch",sans-serif;font-size:clamp(28px,5vw,46px);line-height:1.05;margin:1em 0 .3em}
+.sum{list-style:none;padding:0;margin:1em 0 1.5em}
+.sum li{border-top:1px solid var(--line);padding:10px 0;display:grid;grid-template-columns:1fr auto;gap:12px}
+.sum span{color:var(--muted);font-size:15.5px}
+.facts p{margin:0 0 .9em;color:var(--muted);max-width:42em}
+.facts b{color:var(--ink)}
+.fine{margin:2em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}.q{padding:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Direksiyonda Kim Var?</h1>
+    <p class="lede">Sürücüsüz aracın freni boşaldı. Kaçınılmaz bir kaza var ve araç kime çarpacağına saniyenin binde birinde karar verecek. O kararı önceden yazan mühendis sensin.</p>
+  </header>
+  <main>
+    <section class="q" id="q" aria-live="polite">
+      <p class="n" id="n"></p>
+      <h2 id="title"></h2>
+      <p class="sit" id="sit"></p>
+      <div class="opts" id="opts"></div>
+      <div class="fb" id="fb" hidden>
+        <p id="why"></p>
+        <p class="world" id="world"></p>
+        <button class="btn" id="next" type="button">Sonraki</button>
+      </div>
+    </section>
+    <section class="end" id="end" hidden>
+      <h2>Yazdığın kural</h2>
+      <p id="verdict"></p>
+      <ul class="sum" id="sum"></ul>
+      <section class="facts">
+        <h2 style="font-size:26px">Dünya ne dedi?</h2>
+        <p>MIT'nin "Moral Machine" deneyinde 233 ülkeden milyonlarca insan bu tür ikilemleri cevapladı. Üç eğilim neredeyse her yerde aynı çıktı: <b>hayvan yerine insan</b>, <b>az sayı yerine çok sayı</b>, ve <b>yaşlı yerine genç</b> kurtarılıyor.</p>
+        <p>Ama ayrıntıda kültürler ayrışıyor. Bazı ülkelerde gençliği korumak çok daha baskınken, bazılarında yaşlıya öncelik verme eğilimi belirgin biçimde daha güçlü. Kanunu çiğneyerek karşıya geçeni koruma isteği de ülkeden ülkeye ciddi biçimde değişiyor. Yani "insanlığın ortak ahlakı" diye tek bir kural yok.</p>
+        <p><b>Gerçek mevzuat bu oylamayı izlemiyor.</b> Almanya'nın otomatik sürüş etik komisyonu, kişisel özelliklere göre ayrım yapılmasını açıkça yasakladı: yaş, cinsiyet, engellilik gibi özellikler programlamada ölçüt olamaz. Yani "gençleri kurtar" kuralı halkın çoğunluğunun istediği bir şey olsa bile, hukukun kabul etmediği bir şey olabilir.</p>
+        <p>Bir de az konuşulan taraf var: bu ikilemler nadirdir. Sürücüsüz araçların asıl kazancı, dikkati dağılan, yorulan, alkollü ya da hızlı giden insan sürücünün yaptığı sıradan kazaları azaltmaktır. Fren boşalması senaryosunu tartışırken bu asıl konuyu kaçırmamak gerekir.</p>
+      </section>
+      <button class="btn" id="again" type="button">Yeniden başla</button>
+    </section>
+    <p class="fine">Senaryolar kurgusaldır ve gerçek araç yazılımları bu şekilde "kimi seçeceğini" belirleyen listeler içermez; sistemler hız azaltmaya, çarpışmayı önlemeye ve öngörülebilir davranmaya göre tasarlanır. Kaynaklar: Awad ve ark., Nature 2018 (Moral Machine); Almanya Federal Ulaştırma Bakanlığı Otomatik Sürüş Etik Komisyonu raporu, 2017. Bilgilendirme amaçlıdır.</p>
+  </main>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const Q = [
+    { t: 'Yaya mı, yolcu mu?', s: 'Araç düz giderse kırmızı ışıkta karşıya geçen üç yayaya çarpacak. Direksiyonu kırarsa betona çarpacak ve içindeki tek yolcu, yani aracın sahibi ölecek.',
+      o: [['Yayaları kurtar', 'Aracın sahibi ölür'], ['Yolcuyu kurtar', 'Üç yaya ölür']],
+      w: 'İnsanların büyük çoğunluğu "yayalar kurtulsun" diyor. Ama aynı insanlara "böyle programlanmış bir araba satın alır mıydın" diye sorulduğunda çoğu hayır diyor: kendini feda edecek bir araba kimse istemiyor.',
+      d: 'Bu çelişkinin adı var: herkesin fedakâr araçlar istemesi ama kimsenin onu satın almak istememesi. Üretici bencil davranırsa toplam ölüm artıyor, fedakâr davranırsa kimse o aracı almıyor ve eski, çok daha tehlikeli araçlar yollarda kalıyor.' },
+    { t: 'Bir kişi mi, beş kişi mi?', s: 'Şeritte beş kişi var, yan şeritte bir kişi. Araç şerit değiştirirse beş kişi kurtulur, bir kişi ölür.',
+      o: [['Şerit değiştir', 'Beş kişi kurtulur, bir kişi ölür'], ['Düz devam et', 'Beş kişi ölür']],
+      w: 'Bu sorunun cevabı dünyanın her yerinde aynı yöne çıkıyor: daha az ölüm. Sayı, insanların en kolay uzlaştığı ölçüt.',
+      d: 'Yine de bir ayrım var: aktif olarak direksiyonu kırmak, olmasına izin vermekten farklı hissettiriyor. Bir insan sürücü refleksle yaptığında bu "kaza"; bir yazılım önceden karar verdiğinde ise "tasarım tercihi" oluyor.' },
+    { t: 'Yaş', s: 'Bir tarafta seksenli yaşlarda iki kişi, diğer tarafta iki çocuk var. Başka hiçbir fark yok.',
+      o: [['Çocukları kurtar', 'Yaşlılar ölür'], ['Ayrım yapma, düz devam et', 'Önünde kim varsa o ölür']],
+      w: 'Çalışmalarda gençleri kurtarma eğilimi çok güçlü; ama bu eğilim kültürden kültüre değişiyor ve bazı toplumlarda yaşlıya öncelik verme isteği belirgin biçimde daha yüksek.',
+      d: 'Burada hukuk halktan ayrılıyor. Almanya\'nın etik komisyonu, yaşa göre ayrım yapılmasını açıkça yasakladı: bir insanın hayatının değeri başka bir insanınkiyle kıyaslanamaz, dolayısıyla yazılım kimin daha "değerli" olduğuna karar veremez.' },
+    { t: 'Kurallara uyan', s: 'Bir tarafta yeşil ışıkta geçen bir kişi, diğer tarafta kırmızıda karşıya koşan bir kişi var. Sayılar eşit.',
+      o: [['Kurallara uyanı kurtar', 'Kırmızıda geçen ölür'], ['Ayrım yapma', 'Önünde kim varsa o ölür']],
+      w: 'Kurala uyanı koruma eğilimi güçlü, ama ülkeden ülkeye ciddi biçimde değişiyor: kurumlara güvenin yüksek olduğu toplumlarda bu eğilim daha belirgin.',
+      d: 'Bu seçim aslında cezalandırma ile korumayı karıştırıyor. Trafik kuralını çiğnemenin cezası bir trafik cezasıdır; ölüm değil. Bir yazılımın bu iki şeyi birbirine bağlaması, mahkemenin işini yola devretmek demek.' },
+    { t: 'Köpek', s: 'Bir tarafta bir köpek, diğer tarafta bir insan var.',
+      o: [['İnsanı kurtar', 'Köpek ölür'], ['Köpeği kurtar', 'İnsan ölür']],
+      w: 'Bu, deneydeki en net sonuç: neredeyse herkes insanı kurtarıyor. Ama ilginç olan, tercihin ne kadar güçlü olduğunun ülkeden ülkeye değişmesi.',
+      d: 'Kolay görünen soru, asıl tartışmayı gösteriyor: kolay olduğu için üzerinde uzlaşıyoruz. Zor soruların hiçbirinde böyle bir uzlaşma yok ve yazılımın onlara da bir cevap vermesi gerekiyor.' },
+    { t: 'Kural kimin olacak?', s: 'Son soru senaryo değil. Bu kararları kim vermeli?',
+      o: [['Üretici, müşterisini korusun', 'Araç sahibini önceleyen yazılım'], ['Devlet, herkes için tek kural koysun', 'Standart ve denetlenebilir kural']],
+      w: 'Bu, alanın gerçek tartışması. Üretici kendi müşterisini koruyan bir araç satmak ister; devlet ise yollarda herkes için aynı kuralın geçerli olmasını.',
+      d: 'Bugün eğilim ikinci yönde: kararların üreticiye bırakılmaması, kuralların şeffaf, denetlenebilir ve herkes için aynı olması. Tartışmanın ağırlığı "kimi seçelim" sorusundan "kim karar verecek ve hesabını kim verecek" sorusuna kaymış durumda.' }
+  ];
+  let i = 0, picks = [];
+  function show(){
+    const q = Q[i];
+    $('n').textContent = `${i + 1} / ${Q.length}`; $('title').textContent = q.t; $('sit').textContent = q.s;
+    const box = $('opts'); box.textContent = '';
+    q.o.forEach(([txt, sub], j) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'opt';
+      b.innerHTML = '<span></span><small></small>'; b.querySelector('span').textContent = txt; b.querySelector('small').textContent = sub;
+      b.addEventListener('click', () => pick(j, b)); box.appendChild(b); });
+    $('fb').hidden = true;
+  }
+  function pick(j, b){
+    picks.push(j);
+    [...$('opts').children].forEach(x => x.disabled = true);
+    b.classList.add('pick');
+    $('why').textContent = Q[i].w; $('world').textContent = Q[i].d;
+    $('next').textContent = i + 1 < Q.length ? 'Sonraki' : 'Kuralımı gör';
+    $('fb').hidden = false; $('next').focus({ preventScroll: true });
+  }
+  $('next').addEventListener('click', () => { i++; if (i < Q.length) show(); else end(); });
+  function end(){
+    $('q').hidden = true; $('end').hidden = false;
+    const disc = [picks[2] === 0, picks[3] === 0].filter(Boolean).length;
+    $('verdict').textContent = disc === 2
+      ? 'Yazdığın kural, insanlar arasında kimin kurtulacağına dair ayrım yapıyor: yaşa ve kurala uyup uymamaya bakıyor. Bu, çoğu insanın sezgisine uyuyor ama pek çok ülkenin hukuku buna izin vermiyor.'
+      : disc === 1
+        ? 'Kuralın bazı yerlerde ayrım yapıyor, bazı yerlerde yapmıyor. Çoğu insanın yaptığı da bu: ayrımın nerede durması gerektiği konusunda net bir çizgi bulmak zor.'
+        : 'Yazdığın kural insanlar arasında ayrım yapmıyor: kimin daha değerli olduğuna karar vermeyi reddediyorsun. Bu, bugünkü düzenlemelerin gittiği yön; bedeli ise bazı durumlarda "daha iyi" görünen sonucu seçmemek.';
+    const ul = $('sum'); ul.textContent = '';
+    Q.forEach((q, k) => { const li = document.createElement('li');
+      const b = document.createElement('b'); b.textContent = q.t;
+      const s = document.createElement('span'); s.textContent = q.o[picks[k]][0];
+      li.append(b, s); ul.appendChild(li); });
+    $('end').scrollIntoView({ block: 'start' });
+  }
+  $('again').addEventListener('click', () => { i = 0; picks = []; $('end').hidden = true; $('q').hidden = false; show(); });
+  show();
+})();
+</script>
+</body>
+</html>

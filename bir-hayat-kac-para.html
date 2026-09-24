@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bir Hayat Kaç Para?</title>
+<meta name="description" content="Devletler bir insan hayatına fiyat biçmek zorunda. Bütçe sende: sen nasıl dağıtırdın?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400..700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EFF1EE;--ink:#151814;--muted:#5C625A;--card:#FFFFFF;--line:#D5DAD2;--acc:#3F6B3A;--over:#B4452E;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E110D;--ink:#E8EDE6;--muted:#9AA398;--card:#161A14;--line:#272E25;--acc:#7CC177;--over:#EE7A5F;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E110D;--ink:#E8EDE6;--muted:#9AA398;--card:#161A14;--line:#272E25;--acc:#7CC177;--over:#EE7A5F;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+header{padding:8vh 0 2vh}
+h1{margin:0;font-weight:700;font-size:clamp(46px,9.5vw,110px);line-height:.95;letter-spacing:-.035em}
+.lede{margin:.5em 0 0;font-size:clamp(19px,2.4vw,24px);line-height:1.35;max-width:28em;color:var(--muted)}
+.budget{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 0;margin:1.4em 0 0}
+.budget .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.budget b{font-family:"IBM Plex Mono",monospace;font-size:clamp(24px,4.4vw,34px);font-variant-numeric:tabular-nums}
+.budget b.over{color:var(--over)}
+.budget .t{height:10px;border-radius:5px;background:var(--line);margin-top:8px;overflow:hidden}
+.budget .t i{display:block;height:100%;background:var(--acc)}
+.items{display:grid;gap:12px;margin:1.2em 0 1.4em}
+.item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.item h2{margin:0 0 .2em;font-size:19px}
+.item p{margin:0 0 .6em;color:var(--muted);font-size:15.5px}
+.item .ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.item input{flex:1 1 180px;accent-color:var(--acc)}
+.item .cost{font-family:"IBM Plex Mono",monospace;font-weight:600;font-variant-numeric:tabular-nums;min-width:7.5em;text-align:right}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.btn{font:inherit;font-weight:700;font-size:17px;padding:12px 20px;min-height:50px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.res{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:1.4em 0}
+.res[hidden]{display:none}
+.res .big{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:clamp(34px,6.5vw,56px);line-height:1;margin:0 0 .2em;font-variant-numeric:tabular-nums}
+.res ul{padding-left:1.1em;margin:.8em 0 0;color:var(--muted)}
+.facts h2{font-size:clamp(24px,3.2vw,32px);margin:1.4em 0 .4em;letter-spacing:-.02em}
+.facts p{margin:0 0 .9em;color:var(--muted);max-width:42em}
+.facts b{color:var(--ink)}
+.fine{margin:2em 0 4em;max-width:46em;font-size:14px;color:var(--muted)}
+@media (max-width:560px){body{font-size:16px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Bir Hayat Kaç Para?</h1>
+    <p class="lede">Hiç kimse bu soruyu sevmez, ama bütçe yapan herkes cevaplamak zorundadır. Bu yıl elinde 100 birim var; nereye harcarsın?</p>
+  </header>
+  <main>
+    <div class="budget">
+      <div class="row"><span>Kalan bütçe</span><b id="left">100</b></div>
+      <div class="t"><i id="bar" style="width:0%"></i></div>
+    </div>
+    <div class="items" id="items"></div>
+    <p><button class="btn" id="go" type="button">Kararımı ver</button></p>
+    <section class="res" id="res" hidden aria-live="polite">
+      <p class="big" id="saved"></p>
+      <p id="txt"></p>
+      <ul id="list"></ul>
+      <p style="margin-top:1em"><button class="btn" id="again" type="button">Yeniden dağıt</button></p>
+    </section>
+    <section class="facts">
+      <h2>Devletler gerçekten fiyat biçiyor</h2>
+      <p>Bir kavşağa sinyalizasyon konacak mı, bir ilaç geri ödeme listesine girecek mi, fabrikaya hangi filtre zorunlu olacak? Bu kararların hepsi, örtük ya da açık biçimde "bir hayatı kurtarmak kaç paraya değer" sorusunu cevaplar. ABD'de çevre ve ulaştırma kurumları bu değeri açıkça yayımlar ve yaklaşık <b>10 milyon dolar</b> civarındadır. İngiltere'de sağlık teknolojilerini değerlendiren kurum, kazanılan her <b>sağlıklı yaşam yılı</b> için kabaca 20–30 bin sterlinlik bir eşik kullanır.</p>
+      <h2>Rakamın anlamı sandığın gibi değil</h2>
+      <p>Bu sayı "bir insanın değeri" demek değildir. Anlamı şudur: insanlar küçük risk azalmaları için ne kadar ödemeye razı? Örneğin yüz binde bir ölüm riskini azaltmak için herkes 100 lira veriyorsa, hesap bir "istatistiksel hayatı" bulur. Kimsenin adı yoktur; kurtarılan kişi önceden bilinemez.</p>
+      <h2>Fiyat biçmemek de bir karar</h2>
+      <p>"Hayat paha biçilmezdir" demek, uygulamada kaynakların rastgele ya da en gürültülü talebe göre dağılması anlamına gelir. Açık bir sayı koymak soğuk görünür; ama görünmez bir sayıyla karar vermek, hesabını kimsenin veremeyeceği bir dağılım üretir. Etik tartışma bu yüzden "fiyat biçilsin mi" değil, "kim, hangi verilerle ve ne kadar şeffaf biçimde biçecek" sorusudur.</p>
+    </section>
+    <p class="fine">Kalemler ve "kurtarılan hayat" sayıları bu sayfa için kurgulanmış, gerçekçi büyüklük sıralarını yansıtan örneklerdir; gerçek maliyet-etkililik hesapları ülkeye, yıla ve yönteme göre büyük fark gösterir. Türkiye için resmî bir istatistiksel hayat değeri bilmiyorum. Bilgilendirme amaçlıdır.</p>
+  </main>
+</div>
+<nav style="max-width:1040px;margin:0 auto;padding:8px 18px 40px;font-size:15px"><a href="index.html" style="color:inherit;font-weight:600">Aha’daki diğer sayfalar</a></nav>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const TOTAL = 100;
+  // birim başına kurtarılan hayat, maksimum harcanabilir birim
+  const I = [
+    { n: 'Karayolunda bariyer ve aydınlatma', d: 'Şehirler arası yolda ölümlü kaza sıklığını düşürür. Ucuz ve etkili.', per: 9, max: 30 },
+    { n: 'Bebek ölümlerini azaltma programı', d: 'Gebelik takibi ve doğum sonrası izlem. Etkisi yıllar içinde birikir.', per: 7, max: 30 },
+    { n: 'Tütün bırakma kampanyası', d: 'Geniş kitleye ulaşır, etkisi uzun vadede ortaya çıkar.', per: 6, max: 25 },
+    { n: 'Nadir bir hastalığın çok pahalı ilacı', d: 'Ülkede 40 hasta var. İlaç, hastaların bir kısmını kurtarıyor ama fiyatı çok yüksek.', per: 0.35, max: 40 },
+    { n: 'Deprem güçlendirme', d: 'Riskli binaların güçlendirilmesi. Fayda, deprem olduğunda ortaya çıkar.', per: 5, max: 40 },
+    { n: 'Acil servis ve 112 kapasitesi', d: 'Ambulans, personel ve yatak sayısı. Doğrudan ve hemen görülür etki.', per: 6.5, max: 30 }
+  ];
+  const items = $('items');
+  I.forEach((it, k) => {
+    const d = document.createElement('div'); d.className = 'item';
+    d.innerHTML = `<h2></h2><p></p><div class="ctl"><input type="range" min="0" max="${it.max}" step="1" value="0" aria-label="${it.n} için bütçe"><span class="cost">0 birim</span></div>`;
+    d.querySelector('h2').textContent = it.n; d.querySelector('p').textContent = it.d;
+    const r = d.querySelector('input'), c = d.querySelector('.cost');
+    r.addEventListener('input', () => { it.v = +r.value; c.textContent = it.v + ' birim'; upd(); });
+    it.el = r; it.cel = c; it.v = 0;
+    items.appendChild(d);
+  });
+  function spent(){ return I.reduce((a, b) => a + (b.v || 0), 0); }
+  function upd(){
+    const s = spent(), left = TOTAL - s;
+    $('left').textContent = left;
+    $('left').className = left < 0 ? 'over' : '';
+    $('bar').style.width = Math.min(100, s / TOTAL * 100) + '%';
+    $('go').disabled = left < 0 || s === 0;
+  }
+  $('go').addEventListener('click', () => {
+    const saved = I.reduce((a, b) => a + (b.v || 0) * b.per, 0);
+    const best = [...I].sort((a, b) => b.per - a.per);
+    let rest = TOTAL, opt = 0;
+    best.forEach(it => { const use = Math.min(it.max, rest); opt += use * it.per; rest -= use; });
+    $('saved').textContent = Math.round(saved) + ' hayat';
+    $('txt').textContent = `Bu dağılımla yılda yaklaşık ${Math.round(saved)} hayat kurtarılıyor. Aynı bütçeyi yalnızca "birim başına en çok hayat" kuralına göre dağıtsaydın bu sayı ${Math.round(opt)} olurdu. Aradaki fark, sayıya bakmayan ölçütlere ayırdığın paydır: görünürlük, adalet duygusu, bir avuç insanın çok pahalı tedavisi, ya da felaket anında hazır olma isteği.`;
+    const ul = $('list'); ul.textContent = '';
+    const lines = [];
+    if ((I[3].v || 0) > 0) lines.push('Nadir hastalık ilacına pay ayırdın: birim başına en az hayat kurtaran kalem bu. Buna rağmen pek çok ülke bunu yapar, çünkü "sayıca az diye kimseyi yok saymamak" da bir ilkedir.');
+    if ((I[4].v || 0) > 0) lines.push('Deprem güçlendirmesine pay ayırdın: faydası belirsiz bir gelecekte ve tek seferde ortaya çıkar. Bu tür harcamaların siyasi getirisi düşüktür; bu yüzden gerçek hayatta en çok ertelenen kalemlerden biridir.');
+    if ((I[2].v || 0) > 0) lines.push('Tütün kampanyasına pay ayırdın: etkisi yıllar sonra görünür, kimse kurtulduğunu bilmez. En çok hayat kurtaran müdahaleler genellikle en görünmez olanlardır.');
+    if ((I[5].v || 0) >= 15) lines.push('Acil kapasitesine büyük pay verdin: etkisi hemen ve görünür. Ama aynı parayla önleme tarafında çoğu zaman daha fazla hayat kurtarılır; yine de kimse acil servisin kapısında kuyruk istemez.');
+    lines.forEach(t => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+    $('res').hidden = false; $('res').scrollIntoView({ block: 'nearest' });
+  });
+  $('again').addEventListener('click', () => { I.forEach(it => { it.v = 0; it.el.value = 0; it.cel.textContent = '0 birim'; }); $('res').hidden = true; upd(); });
+  upd();
+})();
+</script>
+</body>
+</html>
